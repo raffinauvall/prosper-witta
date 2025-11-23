@@ -25,7 +25,6 @@ export default function Navbar() {
         <ul className="hidden md:flex items-center gap-10 text-sm">
           <li><Link href="/" className="border-b-2 text-[20px] border-white pb-1">Home</Link></li>
           <li><Link href="#about" className="hover:opacity-80 text-[20px]">About</Link></li>
-          <li><Link href="#services" className="hover:opacity-80 text-[20px]">Services</Link></li>
           <li><Link href="#product" className="hover:opacity-80 text-[20px]">Product</Link></li>
           <li><Link href="#contact" className="hidden md:inline-block bg-yellow-500 text-white px-5 py-2 rounded-lg font-semibold hover:bg-yellow-400 transition"
         >
