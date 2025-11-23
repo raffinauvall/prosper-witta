@@ -1,50 +1,101 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
       {/* Navbar */}
-      <nav className="absolute top-0 left-0 w-full z-50 px-6 md:px-10 py-6 flex items-center justify-between text-white">
-
+      <nav
+        className={`fixed top-0 left-0 w-full z-50 px-6 md:px-10 py-5 flex items-center justify-between transition-all duration-300
+        ${scrolled ? "bg-white shadow-md text-black" : "bg-transparent text-white"}`}
+      >
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <div className="w-14 h-14  rounded-full flex items-center justify-center font-bold text-black">
+          <div className="w-14 h-14 rounded-full flex items-center justify-center font-bold">
             <img src="/logo.png" width={100} height={100} alt="" />
           </div>
-          <span className="font-semibold text-lg font-maison leading-tight">
+          <span
+            className={`font-semibold text-lg font-maison leading-tight transition ${
+              scrolled ? "text-black" : "text-white"
+            }`}
+          >
             Prosper <br /> Witta Sejahtera
           </span>
         </div>
 
         {/* Desktop Menu */}
-        <ul className="hidden md:flex items-center gap-10 text-sm">
-          <li><Link href="/" className="border-b-2 text-[20px] border-white pb-1">Home</Link></li>
-          <li><Link href="#about" className="hover:opacity-80 text-[20px]">About</Link></li>
-          <li><Link href="#product" className="hover:opacity-80 text-[20px]">Product</Link></li>
-          <li><Link href="#contact" className="hidden md:inline-block bg-yellow-500 text-white px-5 py-2 rounded-lg font-semibold hover:bg-yellow-400 transition"
+        <ul
+          className={`hidden md:flex items-center gap-10 text-sm transition ${
+            scrolled ? "text-black" : "text-white"
+          }`}
         >
-          Contact us!
-        </Link></li>
+          <li>
+            <Link
+              href="/"
+              className={`border-b-2 pb-1 text-[20px] ${
+                scrolled ? "border-black" : "border-white"
+              }`}
+            >
+              Home
+            </Link>
+          </li>
+
+          <li>
+            <Link href="#about" className="hover:opacity-80 text-[20px]">
+              About
+            </Link>
+          </li>
+
+          <li>
+            <Link href="/products" className="hover:opacity-80 text-[20px]">
+              Product
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              href="#contact"
+              className={`hidden md:inline-block px-5 py-2 rounded-lg font-semibold transition text-[16px] ${
+                scrolled
+                  ? "bg-yellow-500 text-white hover:bg-yellow-400"
+                  : "border border-white text-white hover:bg-white hover:text-black"
+              }`}
+            >
+              Contact us!
+            </Link>
+          </li>
         </ul>
 
-        {/* Desktop Button */}
-
-
-        {/* Hamburger Button */}
-        <button 
-          onClick={() => setOpen(true)} 
-          className="md:hidden text-2xl"
+        {/* Hamburger */}
+        <button
+          onClick={() => setOpen(true)}
+          className={`md:hidden text-2xl ${
+            scrolled ? "text-black" : "text-white"
+          }`}
         >
           ☰
         </button>
       </nav>
 
-      {/* Overlay Background */}
+      {/* Overlay */}
       <div
         className={`fixed inset-0 bg-black/60 z-40 transition-opacity ${
           open ? "opacity-100" : "opacity-0 pointer-events-none"
