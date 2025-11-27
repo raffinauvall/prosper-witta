@@ -1,5 +1,39 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import Link from "next/link";
+
+const categories = [
+  {
+    title: "Home & Personal Care",
+    desc: "High-quality chemicals for daily hygiene, formulation, and personal care products.",
+    slug: "home-care"
+  },
+  {
+    title: "Institutional & Industrial Cleaner",
+    desc: "Industrial-grade cleaning chemicals for plants, facilities, and heavy equipment.",
+    slug: "cleaner"
+  },
+  {
+    title: "Veterinary",
+    desc: "Chemical solutions supporting animal health and biosecurity systems.",
+    slug: "veterinary"
+  },
+  {
+    title: "Mining",
+    desc: "Specialized chemicals for mineral processing, flotation, and mining performance.",
+    slug: "mining"
+  },
+  {
+    title: "Water Treatment",
+    desc: "Water purification & treatment solutions for industrial and commercial sectors.",
+    slug: "water-treatment"
+  },
+  {
+    title: "Metal Working",
+    desc: "Chemicals for metal processing, machining fluids, and surface treatments.",
+    slug: "metal-working"
+  }
+];
 
 export default function ProductPage() {
   return (
@@ -7,20 +41,17 @@ export default function ProductPage() {
 
       {/* HERO SECTION */}
       <section className="relative flex flex-col">
-
-        {/* Background */}
         <div className="absolute inset-0">
           <img 
             src="/productsec.jpg" 
             alt="Chemical Industry" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/85" />
+          <div className="absolute inset-0 bg-black/80" />
         </div>
 
         <Navbar />
 
-        {/* Hero Content */}
         <div className="relative z-10 flex-1 flex items-center justify-center px-6 pt-36 pb-24">
           <div className="max-w-4xl text-center">
             <h1 className="text-[40px] text-white md:text-[64px] xl:text-[72px] font-bold leading-tight">
@@ -52,32 +83,7 @@ export default function ProductPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-            {[
-              {
-                title: "Home & Personal Care",
-                desc: "High-quality chemicals for daily hygiene, formulation, and personal care products."
-              },
-              {
-                title: "Institutional & Industrial Cleaner",
-                desc: "Industrial-grade cleaning chemicals for plants, facilities, and heavy equipment."
-              },
-              {
-                title: "Veterinary",
-                desc: "Chemical solutions supporting animal health and biosecurity systems."
-              },
-              {
-                title: "Mining",
-                desc: "Specialized chemicals for mineral processing, flotation, and mining performance."
-              },
-              {
-                title: "Water Treatment",
-                desc: "Water purification & treatment solutions for industrial and commercial sectors."
-              },
-              {
-                title: "Metal Working",
-                desc: "Chemicals for metal processing, machining fluids, and surface treatments."
-              }
-            ].map((cat, i) => (
+            {categories.map((cat, i) => (
               <div
                 key={i}
                 className="bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-xl transition hover:border-[#CFA54B]"
@@ -90,12 +96,12 @@ export default function ProductPage() {
                   {cat.desc}
                 </p>
 
-                <a
-                  href="#"
+                <Link
+                  href={`/products/${cat.slug}`}
                   className="text-[#CFA54B] font-medium hover:underline"
                 >
                   View Category →
-                </a>
+                </Link>
               </div>
             ))}
 
@@ -103,12 +109,7 @@ export default function ProductPage() {
         </div>
       </section>
 
-     
-
-     
-
       <Footer />
-
     </main>
   );
 }
