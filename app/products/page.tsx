@@ -11,7 +11,7 @@ const categories = [
   {
     title: "Institutional & Industrial Cleaner",
     desc: "Industrial-grade cleaning chemicals for plants, facilities, and heavy equipment.",
-    slug: "cleaner"
+    slug: "industrial-cleaner"
   },
   {
     title: "Veterinary",
