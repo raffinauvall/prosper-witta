@@ -117,7 +117,6 @@ export default function Navbar() {
         <ul className="flex flex-col gap-6 px-6 py-10 text-lg">
           <li><Link onClick={() => setOpen(false)} href="/">Home</Link></li>
           <li><Link onClick={() => setOpen(false)} href="#about">About</Link></li>
-          <li><Link onClick={() => setOpen(false)} href="#services">Services</Link></li>
           <li><Link onClick={() => setOpen(false)} href="/products">Product</Link></li>
         </ul>
 
