@@ -1,72 +1,164 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowLeft, House, Pickaxe } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowLeft, Cog, House, LucideSprayCan, Pickaxe, SprayCan } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import ProductHeader from "@/components/products/ProductHeader";
 import ProductSidebar from "@/components/products/ProductSidebar";
 import ProductDetail from "@/components/products/ProductDetail";
 import ProductIngredient from "@/components/products/ProductIngredient";
+import RequestAccessModal from "@/components/products/RequestAccessModal";
+import ApprovedNotification from "@/components/ui/ApprovedNotification";
 
-import { homeCareProducts } from "@/data/homePersonalCare";
 import { Colors } from "@/lib/color";
+import { requestAccess } from "@/lib/api/access";
+import { fetchProducts } from "@/lib/api/products";
 
 export default function HomeCarePage() {
-    const router = useRouter();
+  const router = useRouter();
 
-    const theme = Colors.homeCare;
+  const [showModal, setShowModal] = useState(false);
+  const [companyName, setCompanyName] = useState("");
+  const [purpose, setPurpose] = useState("");
+  const [userEmail] = useState("jawwwa@example.com"); // ambil dari auth nanti
+  const [products, setProducts] = useState<any[]>([]);
+  const [selected, setSelected] = useState<any | null>(null);
+  const [hasAccess, setHasAccess] = useState(false);
+  const [showNotif, setShowNotif] = useState(false);
+  const [accessMap, setAccessMap] = useState<Record<number, boolean>>({});
 
-    const [selected, setSelected] = useState(homeCareProducts[0]);
+  const theme = Colors.metal;
 
-    return (
-        <main className="min-h-screen bg-gray-50 px-6 py-12">
-            <div className="max-w-7xl mx-auto">
+  // 1️⃣ Fetch products
+  useEffect(() => {
+    fetchProducts("Homecare").then((data) => {
+      setProducts(data);
+      if (data.length > 0) setSelected(data[0]);
+    });
+  }, []);
 
-                <button
-                    onClick={() => router.back()}
-                    className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 mb-6"
-                >
-                    <ArrowLeft size={18} />
-                    Back
-                </button>
+  // 2️⃣ Polling/check-access per produk + user
+  useEffect(() => {
+  if (!selected?.id) return;
 
-                <ProductHeader
-                    selected={selected.id} 
-                    Icon={House}
-                    color={Colors.homeCare}
-                    title="Home Care Division"
-                    desc="Home Care Products"
-                />
+  let prevAccess = accessMap[selected.id] ?? false;
+
+  const checkAccess = async () => {
+    try {
+      const res = await fetch("/api/check-access", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: userEmail, productId: selected.id }),
+      });
+      const data = await res.json();
+
+      setAccessMap(prev => {
+        const updated = { ...prev, [selected.id]: data.hasAccess };
+        if (!prevAccess && data.hasAccess) {
+          setShowNotif(true);
+          setTimeout(() => setShowNotif(false), 2000);
+        }
+
+        prevAccess = data.hasAccess;
+        return updated;
+      });
+    } catch (err) {
+      console.error("Check access error:", err);
+    }
+  };
+
+  checkAccess();
+  const interval = setInterval(checkAccess, 5000);
+  return () => clearInterval(interval);
+}, [selected?.id, userEmail]);
 
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+  const handleRequestAccess = async () => {
+    if (!selected?.id) return;
 
-                    <div className="lg:col-span-3">
-                        <ProductSidebar
-                            products={homeCareProducts}
-                            selected={selected.id}    
-                            setSelected={(id) => {
-                                const prod = homeCareProducts.find(p => p.id === id);
-                                if (prod) setSelected(prod);
-                            }}
-                            themeColor={theme}
-                        />
-                    </div>
+    try {
+      const data = await requestAccess(userEmail, selected.id, companyName, purpose);
+      alert(data?.message || "Request sent!");
+    } catch (err) {
+      console.error("Request access error:", err);
+      alert("Failed to request access");
+    }
 
-                    <div className="lg:col-span-6">
-                        <ProductDetail selected={selected} />
-                    </div>
+    setShowModal(false);
+    setCompanyName("");
+    setPurpose("");
+  };
 
-                    <div className="lg:col-span-3">
-                        <ProductIngredient
-                            ingredients={selected.ingredients}
-                            themeColor={theme}
-                        />
-                    </div>
+  return (
+    <main className="min-h-screen bg-gray-50 px-6 py-12">
+      <div className="max-w-7xl mx-auto">
+        {/* Back button */}
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 mb-6"
+        >
+          <ArrowLeft size={18} />
+          Back
+        </button>
 
-                </div>
-            </div>
-        </main>
-    );
+        {/* Header */}
+        <ProductHeader
+          selected={selected?.id}
+          Icon={House}
+          color={theme}
+          title="Home & Personal Care Division"
+          desc="Home & Personal Care Products"
+        />
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Sidebar */}
+          <div className="lg:col-span-3">
+            <ProductSidebar
+              products={products}
+              selected={selected?.id}
+              setSelected={(id) => {
+                const prod = products.find((p) => p.id === id);
+                if (prod) setSelected(prod);
+              }}
+              themeColor={theme}
+            />
+          </div>
+
+          {/* Product Detail */}
+          <div className="lg:col-span-6">
+            {selected && <ProductDetail selected={selected} />}
+          </div>
+
+          {/* Ingredients + Notification */}
+          <div className="lg:col-span-3 space-y-4">
+            {selected && (
+              <ProductIngredient
+                ingredients={selected.ingredients}
+                themeColor={theme}
+                hasAccess={accessMap[selected.id] ?? false} 
+                setShowModal={setShowModal}
+              />
+            )}
+
+            <ApprovedNotification
+              show={showNotif}
+              onClose={() => setShowNotif(false)}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Request Access Modal */}
+      <RequestAccessModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={handleRequestAccess}
+        company={companyName}
+        setCompany={setCompanyName}
+        purpose={purpose}
+        setPurpose={setPurpose}
+      />
+    </main>
+  );
 }
