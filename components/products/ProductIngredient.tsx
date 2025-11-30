@@ -2,14 +2,15 @@ type IngredientListProps = {
   ingredients: string[];
   themeColor: string;
   hasAccess: boolean;
-  onRequestAccess: () => void;
+  setShowModal: (value: boolean) => void; // ✅
 };
+
 
 export default function ProductIngredients({
   ingredients,
   themeColor,
   hasAccess,
-  onRequestAccess,
+  setShowModal,
 }: IngredientListProps) {
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm  flex flex-col justify-between w-full min-w-[260px]">
@@ -26,7 +27,7 @@ export default function ProductIngredients({
             </p>
 
             <button
-              onClick={onRequestAccess}
+              onClick={() => setShowModal(true)}
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition"
             >
               Request Access
