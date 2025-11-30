@@ -1,5 +1,5 @@
 type CardProps = {
-  selected: number | string  // sesuain
+  selected: number  // sesuain
   Icon: React.ElementType
   color: string
   title: string
