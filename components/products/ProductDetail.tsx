@@ -3,8 +3,8 @@ import Image from "next/image";
 type Product = {
   id: number;
   name: string;
-  desc: string;
-  fullDesc: string;
+  description: string;
+  full_desc: string;
   image?: string;
 };
 
@@ -39,7 +39,7 @@ export default function ProductDetail({ selected }: ProductDetailProps) {
       </h2>
 
       <p className="text-gray-600 mt-3 leading-relaxed">
-        {selected.fullDesc}
+        {selected.full_desc}
       </p>
     </div>
   );
