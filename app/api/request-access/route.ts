@@ -1,40 +1,69 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { Resend } from "resend";
+import crypto from "crypto";
+import { generateAccessRequestEmail } from "@/lib/email/accessRequestEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function POST(req: Request) {
-  const { email, productId } = await req.json();
+  try {
+    // Ambil data dari request body
+    const { email, productId, company = "", purpose = "" } = await req.json();
+    console.log({ email, productId, company, purpose });
 
-  // Generate token
-  const token = crypto.randomUUID();
+    if (!email || !productId) {
+      return NextResponse.json(
+        { error: "Email or productId missing" },
+        { status: 400 }
+      );
+    }
 
-  // Insert ke Supabase
-  const { error } = await supabase.from("access_requests").insert({
-    email,
-    product_id: productId,
-    token,
-    status: "pending",
-  });
+    // Generate unique token
+    const token = crypto.randomUUID();
 
-  if (error)
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    // Insert ke Supabase, mapping camelCase frontend -> snake_case DB
+    const { error: insertError } = await supabase
+      .from("access_requests")
+      .insert({
+        email,
+        product_id: productId, // <-- snake_case di DB
+        token,
+        status: "pending",
+      });
 
-  // Send email ke admin
-  await resend.emails.send({
-    from: "PT Prosper Witta <no-reply@prosperwitta.com>",
-    to: process.env.ADMIN_EMAIL!,
-    subject: "New Ingredient Access Request",
-    text: `A new access request received.
+    if (insertError) {
+      console.error("Supabase insert error:", insertError);
+      return NextResponse.json(
+        { error: "Failed to save request" },
+        { status: 500 }
+      );
+    }
 
-Email: ${email}
-Product ID: ${productId}
+    // URL approve
+    const approveUrl = `${process.env.BASE_URL}/approve?token=${token}`;
 
-Approve here:
-${process.env.NEXT_PUBLIC_URL}/approve?token=${token}
-    `,
-  });
+    // Generate HTML email (company & purpose hanya untuk tampilan email)
+    const html = generateAccessRequestEmail(email, productId, approveUrl, company, purpose);
 
-  return NextResponse.json({ ok: true });
+    try {
+      await resend.emails.send({
+        from: "onboarding@resend.dev",
+        to: process.env.ADMIN_EMAIL!,
+        subject: "🔔 New Ingredient Access Request",
+        html,
+      });
+    } catch (err) {
+      console.error("Resend email error:", err);
+      // Tidak mengganggu response, tetap return sukses
+    }
+
+    return NextResponse.json({
+      ok: true,
+      message: "Request submitted successfully",
+    });
+  } catch (err) {
+    console.error("Request access error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
 }
