@@ -31,45 +31,52 @@ export default function IndustrialCleanerPage() {
 
   // Fetch products
   useEffect(() => {
-    fetchProducts("Industrial Cleaner").then((data) => {
-      setProducts(data);
-      if (data.length > 0) setSelected(data[0]);
-    });
+    let isMounted = true;
+    fetchProducts("Industrial Cleaner")
+      .then((data) => {
+        if (!isMounted) return;
+        setProducts(data);
+        if (data.length > 0) setSelected(data[0]);
+      })
+      .catch((err) => console.error("Fetch products error:", err));
+    return () => { isMounted = false };
   }, []);
 
   // Polling check access per product/device
   useEffect(() => {
     if (!selected?.id) return;
-
+    let isMounted = true;
     let prevAccess = accessMap[selected.id] ?? false;
 
     const doCheck = async () => {
-      const result = await checkAccess(selected.id);
+      try {
+        const result = await checkAccess(selected.id);
+        if (!isMounted) return;
 
-      setAccessMap((prev) => {
-        const updated = { ...prev, [selected.id]: result };
-
-        if (!prevAccess && result) {
-          setShowNotif(true);
-          setTimeout(() => setShowNotif(false), 2000);
-        }
-
-        prevAccess = result;
-        return updated;
-      });
+        setAccessMap((prev) => {
+          const updated = { ...prev, [selected.id]: result };
+          if (!prevAccess && result) {
+            setShowNotif(true);
+            setTimeout(() => setShowNotif(false), 2000);
+          }
+          prevAccess = result;
+          return updated;
+        });
+      } catch (err) {
+        console.error("Check access error:", err);
+      }
     };
 
     doCheck();
     const interval = setInterval(doCheck, 5000);
-    return () => clearInterval(interval);
+
+    return () => { isMounted = false; clearInterval(interval); };
   }, [selected?.id]);
 
-  // Request Access Submit
+  // Request access submit
   const handleRequestAccess = async () => {
     if (!selected?.id) return;
-
     try {
-      // ✅ Panggil requestAccess sesuai signature: 3 argumen
       const data = await requestAccess(selected.id, companyName, purpose);
       alert(data?.message || "Request sent!");
     } catch (err) {
@@ -85,7 +92,6 @@ export default function IndustrialCleanerPage() {
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-12">
       <div className="max-w-7xl mx-auto">
-        {/* Back button */}
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 mb-6"

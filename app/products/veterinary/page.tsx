@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArrowLeft, PawPrint } from "lucide-react";
+import { ArrowLeft, Cog, LucideSprayCan, PawPrint } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import ProductHeader from "@/components/products/ProductHeader";
@@ -12,79 +12,72 @@ import RequestAccessModal from "@/components/products/RequestAccessModal";
 import ApprovedNotification from "@/components/ui/ApprovedNotification";
 
 import { Colors } from "@/lib/color";
-import { requestAccess } from "@/lib/api/access";
 import { fetchProducts } from "@/lib/api/products";
+import { requestAccess, checkAccess } from "@/lib/api/access";
 
 export default function VeterinaryPage() {
   const router = useRouter();
+  const theme = Colors.veterinary;
+
+  const [products, setProducts] = useState<any[]>([]);
+  const [selected, setSelected] = useState<any | null>(null);
+
+  const [accessMap, setAccessMap] = useState<Record<number, boolean>>({});
+  const [showNotif, setShowNotif] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [purpose, setPurpose] = useState("");
-  const [userEmail] = useState("jawwwa@example.com"); // ambil dari auth nanti
-  const [products, setProducts] = useState<any[]>([]);
-  const [selected, setSelected] = useState<any | null>(null);
-  const [hasAccess, setHasAccess] = useState(false);
-  const [showNotif, setShowNotif] = useState(false);
-  const [accessMap, setAccessMap] = useState<Record<number, boolean>>({});
 
-  const theme = Colors.veterinary;
-
-  // 1️⃣ Fetch products
+  // Fetch products
   useEffect(() => {
-    fetchProducts("Veterinary").then((data) => {
-      setProducts(data);
-      if (data.length > 0) setSelected(data[0]);
-    });
+    let isMounted = true;
+    fetchProducts("Veterinary")
+      .then((data) => {
+        if (!isMounted) return;
+        setProducts(data);
+        if (data.length > 0) setSelected(data[0]);
+      })
+      .catch((err) => console.error("Fetch products error:", err));
+    return () => { isMounted = false };
   }, []);
 
-  // 2️⃣ Polling/check-access per produk + user
+  // Polling check access per product/device
   useEffect(() => {
-  if (!selected?.id) return;
+    if (!selected?.id) return;
+    let isMounted = true;
+    let prevAccess = accessMap[selected.id] ?? false;
 
-  let prevAccess = accessMap[selected.id] ?? false;
+    const doCheck = async () => {
+      try {
+        const result = await checkAccess(selected.id);
+        if (!isMounted) return;
 
-  const checkAccess = async () => {
-    try {
-      const res = await fetch("/api/check-access", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: userEmail, productId: selected.id }),
-      });
-      const data = await res.json();
+        setAccessMap((prev) => {
+          const updated = { ...prev, [selected.id]: result };
+          if (!prevAccess && result) {
+            setShowNotif(true);
+            setTimeout(() => setShowNotif(false), 2000);
+          }
+          prevAccess = result;
+          return updated;
+        });
+      } catch (err) {
+        console.error("Check access error:", err);
+      }
+    };
 
-      setAccessMap(prev => {
-        const updated = { ...prev, [selected.id]: data.hasAccess };
+    doCheck();
+    const interval = setInterval(doCheck, 5000);
 
-        // notif cuma kalau akses baru
-        if (!prevAccess && data.hasAccess) {
-          setShowNotif(true);
+    return () => { isMounted = false; clearInterval(interval); };
+  }, [selected?.id]);
 
-          // hilang otomatis 2 detik
-          setTimeout(() => setShowNotif(false), 2000);
-        }
-
-        prevAccess = data.hasAccess;
-        return updated;
-      });
-    } catch (err) {
-      console.error("Check access error:", err);
-    }
-  };
-
-  checkAccess(); // cek langsung
-  const interval = setInterval(checkAccess, 5000);
-  return () => clearInterval(interval);
-}, [selected?.id, userEmail]);
-
-
-
-  // 3️⃣ Handle Request Access
+  // Request access submit
   const handleRequestAccess = async () => {
     if (!selected?.id) return;
-
     try {
-      const data = await requestAccess(userEmail, selected.id, companyName, purpose);
+      const data = await requestAccess(selected.id, companyName, purpose);
       alert(data?.message || "Request sent!");
     } catch (err) {
       console.error("Request access error:", err);
@@ -99,7 +92,6 @@ export default function VeterinaryPage() {
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-12">
       <div className="max-w-7xl mx-auto">
-        {/* Back button */}
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 mb-6"
@@ -108,7 +100,6 @@ export default function VeterinaryPage() {
           Back
         </button>
 
-        {/* Header */}
         <ProductHeader
           selected={selected?.id}
           Icon={PawPrint}
@@ -118,7 +109,6 @@ export default function VeterinaryPage() {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Sidebar */}
           <div className="lg:col-span-3">
             <ProductSidebar
               products={products}
@@ -131,18 +121,16 @@ export default function VeterinaryPage() {
             />
           </div>
 
-          {/* Product Detail */}
           <div className="lg:col-span-6">
             {selected && <ProductDetail selected={selected} />}
           </div>
 
-          {/* Ingredients + Notification */}
           <div className="lg:col-span-3 space-y-4">
             {selected && (
               <ProductIngredient
                 ingredients={selected.ingredients}
                 themeColor={theme}
-                hasAccess={accessMap[selected.id] ?? false} 
+                hasAccess={accessMap[selected.id] ?? false}
                 setShowModal={setShowModal}
               />
             )}
@@ -155,7 +143,6 @@ export default function VeterinaryPage() {
         </div>
       </div>
 
-      {/* Request Access Modal */}
       <RequestAccessModal
         open={showModal}
         onClose={() => setShowModal(false)}

@@ -1,4 +1,5 @@
 export function generateAccessRequestEmail(
+  email: string,
   approveUrl: string,
   company: string,
   purpose: string,
