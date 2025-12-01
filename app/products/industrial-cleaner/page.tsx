@@ -14,6 +14,7 @@ import ApprovedNotification from "@/components/ui/ApprovedNotification";
 import { Colors } from "@/lib/color";
 import { fetchProducts } from "@/lib/api/products";
 import { requestAccess, checkAccess } from "@/lib/api/access";
+import { getDeviceToken } from "@/lib/deviceToken";
 
 export default function IndustrialCleanerPage() {
   const router = useRouter();
@@ -28,6 +29,8 @@ export default function IndustrialCleanerPage() {
   const [showModal, setShowModal] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [purpose, setPurpose] = useState("");
+
+  const deviceToken = getDeviceToken(); // ambil device token di client
 
   // Fetch products
   useEffect(() => {
@@ -44,7 +47,7 @@ export default function IndustrialCleanerPage() {
     let prevAccess = accessMap[selected.id] ?? false;
 
     const doCheck = async () => {
-      const result = await checkAccess(selected.id);
+      const result = await checkAccess(selected.id, deviceToken);
 
       setAccessMap((prev) => {
         const updated = { ...prev, [selected.id]: result };
@@ -62,12 +65,12 @@ export default function IndustrialCleanerPage() {
     doCheck();
     const interval = setInterval(doCheck, 5000);
     return () => clearInterval(interval);
-  }, [selected?.id]);
+  }, [selected?.id, deviceToken]);
 
   const handleRequestAccess = async () => {
     if (!selected?.id) return;
 
-    const data = await requestAccess(selected.id, companyName, purpose);
+    const data = await requestAccess(selected.id, companyName, purpose, deviceToken);
     alert(data?.message || "Request sent!");
 
     setShowModal(false);
