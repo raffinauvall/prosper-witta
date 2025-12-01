@@ -29,6 +29,7 @@ export default function IndustrialCleanerPage() {
   const [companyName, setCompanyName] = useState("");
   const [purpose, setPurpose] = useState("");
 
+  // Fetch products
   useEffect(() => {
     fetchProducts("Industrial Cleaner").then((data) => {
       setProducts(data);
@@ -36,6 +37,7 @@ export default function IndustrialCleanerPage() {
     });
   }, []);
 
+  // Polling check access per product/device
   useEffect(() => {
     if (!selected?.id) return;
 
@@ -46,10 +48,12 @@ export default function IndustrialCleanerPage() {
 
       setAccessMap((prev) => {
         const updated = { ...prev, [selected.id]: result };
+
         if (!prevAccess && result) {
           setShowNotif(true);
           setTimeout(() => setShowNotif(false), 2000);
         }
+
         prevAccess = result;
         return updated;
       });
@@ -60,11 +64,18 @@ export default function IndustrialCleanerPage() {
     return () => clearInterval(interval);
   }, [selected?.id]);
 
+  // Request Access Submit
   const handleRequestAccess = async () => {
     if (!selected?.id) return;
 
-    const data = await requestAccess(selected.id, companyName, purpose);
-    alert(data?.message || "Request sent!");
+    try {
+      // ✅ Panggil requestAccess sesuai signature: 3 argumen
+      const data = await requestAccess(selected.id, companyName, purpose);
+      alert(data?.message || "Request sent!");
+    } catch (err) {
+      console.error("Request access error:", err);
+      alert("Failed to request access");
+    }
 
     setShowModal(false);
     setCompanyName("");
@@ -74,6 +85,7 @@ export default function IndustrialCleanerPage() {
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-12">
       <div className="max-w-7xl mx-auto">
+        {/* Back button */}
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 mb-6"
