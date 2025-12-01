@@ -1,13 +1,13 @@
-// lib/api/access.ts
+import { getDeviceToken } from "../deviceToken";
 
-export async function checkAccess(productId: number, deviceToken: string) {
-  if (!productId || !deviceToken) return false;
+export async function checkAccess(productId: number) {
+  if (!productId) return false;
 
   try {
     const res = await fetch("/api/check-access", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId, deviceToken }),
+      body: JSON.stringify({ productId, deviceToken: getDeviceToken() }),
     });
 
     if (!res.ok) {
@@ -26,16 +26,20 @@ export async function checkAccess(productId: number, deviceToken: string) {
 export async function requestAccess(
   productId: number,
   company: string,
-  purpose: string,
-  deviceToken: string
+  purpose: string
 ) {
-  if (!productId || !deviceToken) return null;
+  if (!productId) return null;
 
   try {
     const res = await fetch("/api/request-access", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId, company, purpose, deviceToken }),
+      body: JSON.stringify({
+        productId,
+        company,
+        purpose,
+        deviceToken: getDeviceToken(),
+      }),
     });
 
     if (!res.ok) {
@@ -43,7 +47,8 @@ export async function requestAccess(
       return null;
     }
 
-    return await res.json();
+    const data = await res.json();
+    return data;
   } catch (err) {
     console.error("Request access error:", err);
     return null;

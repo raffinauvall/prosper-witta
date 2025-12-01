@@ -1,15 +1,11 @@
 // lib/deviceToken.ts
-import { cookies } from "next/headers";
-
 export function getDeviceToken(): string {
-  // Cek cookie dulu
-  let deviceToken = "";
-  if (typeof window !== "undefined") {
-    deviceToken = localStorage.getItem("device_token") || "";
-    if (!deviceToken) {
-      deviceToken = crypto.randomUUID();
-      localStorage.setItem("device_token", deviceToken);
-    }
+  if (typeof window === "undefined") return "";
+
+  let token = localStorage.getItem("device_token");
+  if (!token) {
+    token = crypto.randomUUID();
+    localStorage.setItem("device_token", token);
   }
-  return deviceToken;
+  return token;
 }

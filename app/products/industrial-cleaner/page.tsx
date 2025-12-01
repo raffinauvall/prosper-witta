@@ -14,7 +14,6 @@ import ApprovedNotification from "@/components/ui/ApprovedNotification";
 import { Colors } from "@/lib/color";
 import { fetchProducts } from "@/lib/api/products";
 import { requestAccess, checkAccess } from "@/lib/api/access";
-import { getDeviceToken } from "@/lib/deviceToken";
 
 export default function IndustrialCleanerPage() {
   const router = useRouter();
@@ -22,17 +21,12 @@ export default function IndustrialCleanerPage() {
 
   const [products, setProducts] = useState<any[]>([]);
   const [selected, setSelected] = useState<any | null>(null);
-
   const [accessMap, setAccessMap] = useState<Record<number, boolean>>({});
   const [showNotif, setShowNotif] = useState(false);
-
   const [showModal, setShowModal] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [purpose, setPurpose] = useState("");
 
-  const deviceToken = getDeviceToken(); // ambil device token di client
-
-  // Fetch products
   useEffect(() => {
     fetchProducts("Industrial Cleaner").then((data) => {
       setProducts(data);
@@ -40,23 +34,19 @@ export default function IndustrialCleanerPage() {
     });
   }, []);
 
-  // Polling check access per product/device
   useEffect(() => {
     if (!selected?.id) return;
 
     let prevAccess = accessMap[selected.id] ?? false;
 
     const doCheck = async () => {
-      const result = await checkAccess(selected.id, deviceToken);
-
+      const result = await checkAccess(selected.id);
       setAccessMap((prev) => {
         const updated = { ...prev, [selected.id]: result };
-
         if (!prevAccess && result) {
           setShowNotif(true);
           setTimeout(() => setShowNotif(false), 2000);
         }
-
         prevAccess = result;
         return updated;
       });
@@ -65,14 +55,13 @@ export default function IndustrialCleanerPage() {
     doCheck();
     const interval = setInterval(doCheck, 5000);
     return () => clearInterval(interval);
-  }, [selected?.id, deviceToken]);
+  }, [selected?.id]);
 
   const handleRequestAccess = async () => {
     if (!selected?.id) return;
 
-    const data = await requestAccess(selected.id, companyName, purpose, deviceToken);
+    const data = await requestAccess(selected.id, companyName, purpose);
     alert(data?.message || "Request sent!");
-
     setShowModal(false);
     setCompanyName("");
     setPurpose("");
