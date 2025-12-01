@@ -1,11 +1,13 @@
-export async function checkAccess(email: string, productId: number) {
-  if (!email || !productId) return false;
+// lib/api/access.ts
+
+export async function checkAccess(productId: number) {
+  if (!productId) return false;
 
   try {
     const res = await fetch("/api/check-access", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, productId }), // tetap camelCase
+      body: JSON.stringify({ productId }),
     });
 
     if (!res.ok) {
@@ -14,7 +16,7 @@ export async function checkAccess(email: string, productId: number) {
     }
 
     const data = await res.json();
-    return data.has_access ?? false; // <-- sesuaikan dengan response dari API
+    return data.hasAccess ?? false;
   } catch (err) {
     console.error("Check access error:", err);
     return false;
@@ -22,22 +24,20 @@ export async function checkAccess(email: string, productId: number) {
 }
 
 export async function requestAccess(
-  email: string,
   productId: number,
-  company?: string,
-  purpose?: string
+  company: string,
+  purpose: string
 ) {
-  if (!email || !productId) return null;
+  if (!productId) return null;
 
   try {
     const res = await fetch("/api/request-access", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email,
-        productId, // tetap camelCase
-        company: company ?? "",
-        purpose: purpose ?? "",
+        productId,
+        company,
+        purpose,
       }),
     });
 
@@ -47,7 +47,7 @@ export async function requestAccess(
     }
 
     const data = await res.json();
-    return data ?? null;
+    return data;
   } catch (err) {
     console.error("Request access error:", err);
     return null;
