@@ -21,10 +21,21 @@ export async function GET(req: Request) {
     .select()
     .single();
 
-  if (error) {
+  if (error || !data) {
     console.error("Approve error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Invalid token" }, { status: 400 });
   }
 
-  return NextResponse.json({ ok: true, data });
+ 
+  const response = NextResponse.redirect(new URL("/products", req.url));
+
+  // SET COOKIE
+  response.cookies.set("access_token", token, {
+    httpOnly: true,
+    secure: true,
+    path: "/",
+    maxAge: 60 * 60 * 24 * 30, // 30 hari
+  });
+
+  return response;
 }
