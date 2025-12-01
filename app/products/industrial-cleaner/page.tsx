@@ -21,8 +21,10 @@ export default function IndustrialCleanerPage() {
 
   const [products, setProducts] = useState<any[]>([]);
   const [selected, setSelected] = useState<any | null>(null);
+
   const [accessMap, setAccessMap] = useState<Record<number, boolean>>({});
   const [showNotif, setShowNotif] = useState(false);
+
   const [showModal, setShowModal] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [purpose, setPurpose] = useState("");
@@ -41,6 +43,7 @@ export default function IndustrialCleanerPage() {
 
     const doCheck = async () => {
       const result = await checkAccess(selected.id);
+
       setAccessMap((prev) => {
         const updated = { ...prev, [selected.id]: result };
         if (!prevAccess && result) {
@@ -62,6 +65,7 @@ export default function IndustrialCleanerPage() {
 
     const data = await requestAccess(selected.id, companyName, purpose);
     alert(data?.message || "Request sent!");
+
     setShowModal(false);
     setCompanyName("");
     setPurpose("");
