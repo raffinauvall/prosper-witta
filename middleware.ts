@@ -1,27 +1,27 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// PATH yang mau dilindungi
-const protectedPaths = ["/products"];
-
 export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+  const pathname = req.nextUrl.pathname;
 
-  // Cek apakah path yang diakses termasuk protected
-  const isProtected = protectedPaths.some((p) => pathname.startsWith(p));
+  // ROUTE YANG DI-PROTEKSI (HANYA INI!)
+  const protectedRoutes = ["/access-request", "/approve"];
+
+  const isProtected = protectedRoutes.some((p) => pathname.startsWith(p));
+
   if (!isProtected) return NextResponse.next();
 
-  // Ambil token dari cookies
-  const token = req.cookies.get("access_token");
+  // ambil email dari cookie
+  const email = req.cookies.get("approved_email")?.value;
 
-  if (!token) {
-    const redirectUrl = new URL("/request-access", req.url);
-    return NextResponse.redirect(redirectUrl);
+  // kalau belum ada cookie → redirect ke request access
+  if (!email && pathname !== "/request-access") {
+    return NextResponse.redirect(new URL("/request-access", req.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/products/:path*"],
+  matcher: ["/access-request/:path*", "/approve/:path*"],
 };
