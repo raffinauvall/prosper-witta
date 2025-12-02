@@ -1,9 +1,9 @@
 export function generateAccessRequestEmail(
   email: string,
+  productId: number,
   approveUrl: string,
-  company: string,
-  purpose: string,
-  productId: number
+  company?: string,
+  purpose?: string
 ) {
   return `
     <div style="font-family:Arial,sans-serif;padding:40px;background:#f4f4f7;">

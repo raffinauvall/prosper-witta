@@ -14,20 +14,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    // Ambil atau buat device token
     const cookieStore = await cookies();
     const deviceToken =
       cookieStore.get("device_token")?.value || crypto.randomUUID();
 
-    // Simpan device token ke cookie kalau baru
     if (!cookieStore.get("device_token")) {
       cookieStore.set("device_token", deviceToken, { path: "/" });
     }
 
-    // Generate unique token untuk approve link
     const token = crypto.randomUUID();
 
-    // Insert ke DB
     const { error } = await supabase.from("access_requests").insert({
       product_id: productId,
       token,
@@ -39,12 +35,10 @@ export async function POST(req: Request) {
 
     if (error) return NextResponse.json({ error }, { status: 500 });
 
-    // Buat approve URL
     const approveUrl = `${process.env.BASE_URL}/approve?token=${token}`;
 
-    // Kirim email ke admin (hardcoded dari env)
     const html = generateAccessRequestEmail(
-      process.env.ADMIN_EMAIL!, // email admin
+      process.env.ADMIN_EMAIL!,
       productId,
       approveUrl,
       company,
