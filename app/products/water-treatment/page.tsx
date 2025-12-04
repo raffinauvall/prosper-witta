@@ -1,7 +1,7 @@
   "use client";
 
   import { useState, useEffect } from "react";
-  import { ArrowLeft, Cog, LucideSprayCan } from "lucide-react";
+  import { ArrowLeft, Cog, Droplets, LucideSprayCan } from "lucide-react";
   import { useRouter } from "next/navigation";
 
   import ProductHeader from "@/components/products/ProductHeader";
@@ -102,7 +102,7 @@
 
           <ProductHeader
             selected={selected?.id}
-            Icon={Cog}
+            Icon={Droplets}
             color={theme}
             title="Water Treatment Division"
             desc="Water Treatment Products"
