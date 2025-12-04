@@ -9,7 +9,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="font-maison">
+      <body className="font-maison leading-normal">
         {children}
       </body>
     </html>

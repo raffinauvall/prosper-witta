@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArrowLeft, Cog, LucideSprayCan } from "lucide-react";
+import { ArrowLeft, Cog, House, LucideSprayCan } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import ProductHeader from "@/components/products/ProductHeader";
@@ -102,7 +102,7 @@ export default function HomeCarePage() {
 
         <ProductHeader
           selected={selected?.id}
-          Icon={Cog}
+          Icon={House}
           color={theme}
           title="Home & Personal Care Division"
           desc="Home & Personal Care Products"

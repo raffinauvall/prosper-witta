@@ -1,10 +1,13 @@
-/* ========== MAISON NEUE FONTS ========== */
+/* ========== MAISON NEUE FONTS (FIXED METRICS) ========== */
 
 @font-face {
   font-family: "MaisonNeue";
   src: url("/fonts/maison/Maison_Neue_Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
+  ascent-override: 90%;
+  descent-override: 10%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -12,6 +15,9 @@
   src: url("/fonts/maison/Maison_Neue_Book.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
+  ascent-override: 90%;
+  descent-override: 10%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -19,6 +25,9 @@
   src: url("/fonts/maison/Maison_Neue_Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
+  ascent-override: 88%;
+  descent-override: 10%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -26,6 +35,9 @@
   src: url("/fonts/maison/Maison_Neue_Mono.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
+  ascent-override: 108%;
+  descent-override: 10%;
+  line-gap-override: 0%;
 }
 
 /* ========== CUSTOM UTILITIES ========== */

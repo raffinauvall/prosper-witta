@@ -19,7 +19,7 @@ export default function ProductSidebar({
   themeColor
 }: ProductSelectorProps) {
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm">
+    <div className="bg-white rounded-2xl p-5 shadow-sm max-h-[400px] product-sidebar overflow-y-auto">
       <h3 className="font-semibold text-lg mb-4 text-gray-800">
         Product List
       </h3>

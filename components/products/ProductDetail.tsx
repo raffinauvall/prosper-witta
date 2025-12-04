@@ -3,13 +3,13 @@ import Image from "next/image";
 type Product = {
   id: number;
   name: string;
-  description: string;
+  desc: string;
   full_desc: string;
-  image?: string;
+  image?: string | null;
 };
 
 type ProductDetailProps = {
-  selected?: Product; 
+  selected?: Product;
 };
 
 export default function ProductDetail({ selected }: ProductDetailProps) {

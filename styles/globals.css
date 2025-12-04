@@ -1,8 +1,42 @@
 @import "tailwindcss";
 
+/* ---- FIX GLOBAL SCROLLBAR (html + body) ---- */
 
-*::-webkit-scrollbar{
-  display: none;
+html, body {
+  overflow-y: auto !important;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none !important;
+}
+
+html, body {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
 
+/* ---- SIDEBAR CUSTOM SCROLLBAR ---- */
+
+.product-sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.25) transparent;
+}
+
+.product-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.product-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.product-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.25);
+  border-radius: 9999px;
+}
+
+.product-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.4);
+}
