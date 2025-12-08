@@ -1,0 +1,69 @@
+type Product = {
+  id: number;
+  name: string;
+  desc: string;
+  fullDesc: string;
+};
+
+type ProductSelectorProps = {
+  products: Product[];
+  selected: number;
+  setSelected: (id: number) => void;
+  themeColor: string; // misal "blue", "amber", "emerald"
+  loading?: boolean;
+};
+
+export default function ProductSidebar({
+  products,
+  selected,
+  setSelected,
+  themeColor,
+  loading, // ⬅ tambahin ini biar nggak error
+}: ProductSelectorProps) {
+
+  // Skeleton loading
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl p-5 shadow-sm max-h-[400px] overflow-y-auto">
+        <h3 className="font-semibold text-lg mb-4 text-gray-800">Product List</h3>
+        <div className="flex flex-col gap-3 animate-pulse">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="h-12 bg-gray-200 rounded-xl" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-2xl p-5 shadow-sm max-h-[400px] overflow-y-auto">
+      <h3 className="font-semibold text-lg mb-4 text-gray-800">
+        Product List
+      </h3>
+
+      <div className="flex flex-col gap-3">
+        {products.map((item) => {
+          const active = selected === item.id;
+
+          return (
+            <button
+              key={item.id}
+              onClick={() => setSelected(item.id)}
+              className={`group text-left p-4 rounded-xl border transition 
+                ${active ? `border-${themeColor}-500 bg-${themeColor}-100` : "border-gray-200 bg-white"}`}
+            >
+              <p
+                className={`font-semibold ${active ? `text-${themeColor}-600` : "text-gray-900"} group-hover:text-${themeColor}-600`}
+              >
+                {item.name}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {item.desc}
+              </p>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
