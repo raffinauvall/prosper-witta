@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -6,18 +6,18 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-export async function DELETE(
+export const DELETE = async (
   req: NextRequest,
-  context: { params: { id: string } }
-) {
-  const { id } = context.params;
+  context: { params: Promise<{ id: string }> } // wajib pakai Promise
+) => {
+  const { id } = await context.params; // harus await karena Promise
   const productId = Number(id);
 
   if (!productId || isNaN(productId)) {
     return NextResponse.json({ error: "Invalid product id" }, { status: 400 });
   }
 
-  
+  // hapus relasi dulu
   const { error: mappingError } = await supabase
     .from("product_categories")
     .delete()
@@ -34,4 +34,4 @@ export async function DELETE(
   }
 
   return NextResponse.json({ message: "Product deleted" }, { status: 200 });
-}
+};
