@@ -1,5 +1,4 @@
-// app/api/products/[id]/route.ts
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -8,27 +7,27 @@ const supabase = createClient(
 );
 
 export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  context: { params: { id: string } }
 ) {
-  const id = Number(params.id);
-  console.log("DELETE product id:", id);
+  const { id } = context.params;
+  const productId = Number(id);
 
-  if (!id || isNaN(id)) {
+  if (!productId || isNaN(productId)) {
     return NextResponse.json({ error: "Invalid product id" }, { status: 400 });
   }
 
-  // hapus mapping di product_categories dulu (relasi many-to-many)
+  
   const { error: mappingError } = await supabase
     .from("product_categories")
     .delete()
-    .eq("product_id", id);
+    .eq("product_id", productId);
 
   if (mappingError) {
     return NextResponse.json({ error: mappingError.message }, { status: 500 });
   }
 
-  const { error } = await supabase.from("products").delete().eq("id", id);
+  const { error } = await supabase.from("products").delete().eq("id", productId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
