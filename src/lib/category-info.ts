@@ -5,6 +5,8 @@ import {
   Hammer,
   Layers,
   Droplets,
+  House,
+  PawPrint,
 } from "lucide-react";
 
 export const CATEGORY_INFO = {
@@ -12,7 +14,7 @@ export const CATEGORY_INFO = {
     title: "Home & Personal Care Division",
     desc: "Home & Personal Care Products",
     theme: "emerald",
-    icon: Sparkles,
+    icon: House,
     ingredient_desc:
       "Produk ini digunakan untuk kebutuhan rumah tangga dan personal care seperti pembersih, detergen, dan perawatan tubuh.",
   },
@@ -30,7 +32,7 @@ export const CATEGORY_INFO = {
     title: "Veterinary Division",
     desc: "Veterinary Products",
     theme: "red",
-    icon: HeartPulse,
+    icon: PawPrint,
     ingredient_desc:
       "Produk ini digunakan untuk kebutuhan perawatan hewan, peternakan, dan kesehatan hewan skala komersial.",
   },
@@ -47,7 +49,7 @@ export const CATEGORY_INFO = {
   "water-treatment": {
     title: "Water Treatment Division",
     desc: "Water Treatment Products",
-    theme: "cyan",
+    theme: "blue",
     icon: Droplets,
     ingredient_desc:
       "Produk ini digunakan untuk kebutuhan pengolahan air bersih, wastewater treatment, dan proses filtrasi industri.",

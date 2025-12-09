@@ -53,7 +53,7 @@ export default function AboutPage() {
           />
 
           <div>
-            <h2 className="text-3xl font-bold mb-4 text-[#CFA54B]">Profil Perusahaan</h2>
+            <h2 className="text-3xl font-bold mb-4 text-[#CFA54B]">Company Overview</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
               PT Prosper Witta Sejahtera didirikan pada tahun 2024 sebagai perusahaan
               perdagangan bahan kimia yang fokus menyediakan produk dan solusi untuk berbagai
@@ -61,8 +61,7 @@ export default function AboutPage() {
             </p>
             <p className="text-gray-700 leading-relaxed">
               Kami melayani aplikasi industri seperti: Home & Personal Care, Institutional &
-              Industrial Cleaner, Veterinary, Mining, Water Treatment, Metal Working, serta
-              Oil & Gas. Kami hadir dengan standar kualitas tinggi untuk mendukung kebutuhan
+              Industrial Cleaner, Veterinary, Mining, Water Treatment, Metal Working Kami hadir dengan standar kualitas tinggi untuk mendukung kebutuhan
               produksi maupun operasional klien kami.
             </p>
           </div>
@@ -75,10 +74,10 @@ export default function AboutPage() {
 <section className="px-6 md:px-20 py-20 max-w-8xl mx-auto">
   <div className="text-center mb-14">
     <span className="uppercase text-xs tracking-widest text-[#CFA54B]">
-      Prinsip Kami
+      Our Principles
     </span>
     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2">
-      Nilai Perusahaan
+      Company Value
     </h2>
 
     <div className="w-16 h-[3px] bg-[#CFA54B] mx-auto mt-4"></div>

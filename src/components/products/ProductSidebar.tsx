@@ -9,7 +9,7 @@ type ProductSelectorProps = {
   products: Product[];
   selected: number;
   setSelected: (id: number) => void;
-  themeColor: string; // misal "blue", "amber", "emerald"
+  themeColor: string; 
   loading?: boolean;
 };
 
@@ -18,10 +18,9 @@ export default function ProductSidebar({
   selected,
   setSelected,
   themeColor,
-  loading, // ⬅ tambahin ini biar nggak error
+  loading,
 }: ProductSelectorProps) {
 
-  // Skeleton loading
   if (loading) {
     return (
       <div className="bg-white rounded-2xl p-5 shadow-sm max-h-[400px] overflow-y-auto">
@@ -49,7 +48,7 @@ export default function ProductSidebar({
             <button
               key={item.id}
               onClick={() => setSelected(item.id)}
-              className={`group text-left p-4 rounded-xl border transition 
+              className={`group text-left p-4 rounded-xl border border-${themeColor}-900 transition 
                 ${active ? `border-${themeColor}-500 bg-${themeColor}-100` : "border-gray-200 bg-white"}`}
             >
               <p

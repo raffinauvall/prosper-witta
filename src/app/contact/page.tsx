@@ -50,9 +50,9 @@ export default function ContactUs() {
 
             <div className="space-y-8">
               {[ 
-                { icon: Mail, label: "Email", value: "support@company.com" },
-                { icon: Phone, label: "Telepon", value: "+62 812-3456-7890" },
-                { icon: MapPin, label: "Alamat Kantor", value: "Jl. Merdeka Raya No. 15, Jakarta" }
+                { icon: Mail, label: "Email", value: "admin@prosperwittasejahtera.com" },
+                { icon: Phone, label: "Telepon", value: "(021) 2188 5249" },
+                { icon: MapPin, label: "Alamat Kantor", value: "Scientia Business Park Tower 2, Lantai 2 Jl. Boulevard Gading Serpong Blok O/2 Tangerang 15810" }
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-5">
                   <div className="p-4 bg-[#CFA54B]/10 border border-[#CFA54B]/30 rounded-2xl shadow-inner">

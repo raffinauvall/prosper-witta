@@ -26,7 +26,6 @@ export default function ProductContainer({ category }: ProductContainerProps) {
   const router = useRouter();
   const info = CATEGORY_INFO[category];
 
-  // Guard: category tidak valid
   if (!info) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12">
@@ -43,12 +42,11 @@ export default function ProductContainer({ category }: ProductContainerProps) {
     );
   }
 
-  // TypeScript yakin info pasti ada setelah guard
   const { products, selected, setSelected, loading, accessMap, showNotif, error } = useProductStore();
   const { openModal, setOpenModal, companyName, setCompanyName, purpose, setPurpose, reset } = useAccessModal();
 
   usePollingAccess(selected?.id);
-  useProducts(category); // filter by category otomatis
+  useProducts(category);
 
   const { submit } = useSubmitAccess();
   const handleSubmit = () => {
@@ -61,21 +59,22 @@ export default function ProductContainer({ category }: ProductContainerProps) {
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-12">
       <div className="max-w-7xl mx-auto">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 mb-6"
-        >
-          <ArrowLeft size={18} /> Back
-        </button>
 
-        <ProductHeader
-          selected={selected?.id}
-          Icon={info.icon}
-          color={info.theme}
-          title={info.title}
-          desc={info.desc}
-        />
-
+        <div className="flex justify-between items-center">
+          <ProductHeader
+            selected={selected?.id}
+            Icon={info.icon}
+            color={info.theme}
+            title={info.title}
+            desc={info.desc}
+          />
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-2 text-sm text-white p-4 px-6 rounded-4xl bg-blue-900 hover:font-bold mb-6"
+          >
+            <ArrowLeft size={18} /> Back
+          </button>
+        </div>
         {error && <p className="text-red-600 font-medium my-4">⚠ {error}</p>}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -104,7 +103,7 @@ export default function ProductContainer({ category }: ProductContainerProps) {
               />
             )}
 
-            <ApprovedNotification show={showNotif} onClose={() => {}} />
+            <ApprovedNotification show={showNotif} onClose={() => { }} />
           </div>
         </div>
       </div>

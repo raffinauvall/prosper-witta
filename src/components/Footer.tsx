@@ -1,3 +1,4 @@
+import Link from "next/link"
 export default function Footer() {
   return (
     <footer className="bg-black text-white pt-20 pb-10 px-6 md:px-16">
@@ -18,31 +19,31 @@ export default function Footer() {
         <div>
           <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
           <ul className="space-y-3 text-white/70 text-sm">
-            <li><a href="#" className="hover:text-white transition">Home</a></li>
-            <li><a href="#" className="hover:text-white transition">About Us</a></li>
-            <li><a href="#" className="hover:text-white transition">Products</a></li>
-            <li><a href="#" className="hover:text-white transition">Contact</a></li>
+            <li><Link className="hover:text-white" href={"/"}>Home</Link></li>
+            <li><Link className="hover:text-white" href={"/about"}>About</Link></li>
+            <li><Link className="hover:text-white" href={"/products"}>Products</Link></li>
+            <li><Link className="hover:text-white" href={"/contact"}>Contact</Link></li>
           </ul>
         </div>
 
-        {/* Products */}
         <div>
           <h4 className="text-lg font-semibold mb-4">Our Products</h4>
           <ul className="space-y-3 text-white/70 text-sm">
-            <li>Industrial Chemicals</li>
-            <li>Mining Chemicals</li>
-            <li>Specialty Chemicals</li>
-            <li>Laboratory Supplies</li>
+            <li><Link href={"/products/home-care"}>Home & Personal Care</Link></li>
+            <li><Link href={"/products/industrial-cleaner"}>Industrial Cleaner</Link></li>
+            <li><Link href={"/products/veterinary"}>Veterinary</Link></li>
+            <li><Link href={"/products/mining"}>Mining</Link></li>
+            <li><Link href={"/products/water-treatment"}>Water Treatment</Link></li>
+            <li><Link href={"/products/metal-working"}>Metal Working</Link></li>
           </ul>
         </div>
 
-        {/* Contact */}
         <div>
           <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
           <ul className="space-y-3 text-white/70 text-sm">
             <li>Jakarta, Indonesia</li>
-            <li>info@prosperwitta.com</li>
-            <li>+62 812-3456-7890</li>
+            <li>admin@prosperwittasejahtera.com</li>
+            <li>(021) 2188 5249</li>
           </ul>
         </div>
       </div>
@@ -55,7 +56,6 @@ export default function Footer() {
 
         <div className="flex space-x-6 mt-4 md:mt-0">
           <a href="#" className="hover:text-white transition">LinkedIn</a>
-          <a href="#" className="hover:text-white transition">Instagram</a>
           <a href="#" className="hover:text-white transition">WhatsApp</a>
         </div>
       </div>

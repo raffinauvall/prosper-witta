@@ -22,7 +22,7 @@ export default function ProductDetail({ selected }: ProductDetailProps) {
   }
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm">
+    <div className="bg-white rounded-2xl shadow-sm">
       <div className="relative w-full h-[300px] bg-gray-100 rounded-xl overflow-hidden">
         {selected.image && (
           <Image
@@ -33,7 +33,7 @@ export default function ProductDetail({ selected }: ProductDetailProps) {
           />
         )}
       </div>
-
+        <div className="p-6">
       <h2 className="text-2xl font-bold text-gray-900 mt-6">
         {selected.name}
       </h2>
@@ -41,6 +41,7 @@ export default function ProductDetail({ selected }: ProductDetailProps) {
       <p className="text-gray-600 mt-3 leading-relaxed">
         {selected.full_desc}
       </p>
+    </div>
     </div>
   );
 }
