@@ -6,7 +6,7 @@ export default function FeatureSection() {
 
         {/* VISION */}
         <div className="relative border border-gray-300 rounded-2xl p-8 md:p-10 bg-white shadow-sm hover:shadow-lg transition">
-          
+
           {/* Accent Line */}
           <div className="absolute top-6 right-6 h-12 w-[2px] bg-[#CFA54B]" />
 
@@ -21,16 +21,13 @@ export default function FeatureSection() {
           <div className="w-12 h-[2px] bg-[#CFA54B] mt-4 mb-6"></div>
 
           <p className="text-gray-700 leading-relaxed text-base">
-            To establish ourselves as a globally recognized specialty company in 
-            the Cleaning, Feed & Veterinary, and Mining industries by delivering 
-            innovative products, reliable services, and sustainable solutions that 
-            support industrial progress worldwide.
+            Untuk memantapkan diri sebagai perusahaan spesialis yang diakui secara global dalam industri Pembersihan, Pakan & Hewan, serta Pertambangan melalui penyediaan produk inovatif, layanan yang andal, dan solusi berkelanjutan yang mendukung kemajuan industri di seluruh dunia.
           </p>
         </div>
 
         {/* MISSION */}
         <div className="relative border border-gray-300 rounded-2xl p-8 md:p-10 bg-white shadow-sm hover:shadow-lg transition">
-          
+
           {/* Accent Line */}
           <div className="absolute top-6 right-6 h-12 w-[2px] bg-[#CFA54B]" />
 
@@ -45,10 +42,8 @@ export default function FeatureSection() {
           <div className="w-12 h-[2px] bg-[#CFA54B] mt-4 mb-6"></div>
 
           <p className="text-gray-700 leading-relaxed text-base">
-            To place our customers at the heart of everything we do by providing 
-            consistent quality, reliable supply, exceptional service, and continuous 
-            innovation that ensures long-term operational success and trusted
-            partnerships.
+            Untuk menempatkan pelanggan kami sebagai pusat dari segala hal yang kami lakukan dengan menyediakan
+            kualitas yang konsisten, pasokan yang andal, layanan yang luar biasa, dan inovasi berkelanjutan yang memastikan keberhasilan operasional jangka panjang dan kemitraan yang terpercaya.
           </p>
         </div>
 
