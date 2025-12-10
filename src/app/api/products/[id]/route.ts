@@ -17,7 +17,7 @@ export const DELETE = async (
     return NextResponse.json({ error: "Invalid product id" }, { status: 400 });
   }
 
-  // hapus relasi dulu
+  
   const { error: mappingError } = await supabase
     .from("product_categories")
     .delete()
