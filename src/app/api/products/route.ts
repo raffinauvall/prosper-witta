@@ -48,12 +48,12 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, description, full_desc, image, ingredients, categories } = body;
+    const { name, description, full_desc, ingredients, categories } = body;
 
     // insert product
     const { data: product, error: productError } = await supabase
       .from("products")
-      .insert([{ name, description, full_desc, image, ingredients }])
+      .insert([{ name, description, full_desc,  ingredients }])
       .select()
       .single();
 
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Failed create product" }, { status: 500 });
     }
 
-    // insert product category mapping
+
     const mapping = categories.map((catId: number) => ({
       product_id: product.id,
       category_id: catId,
