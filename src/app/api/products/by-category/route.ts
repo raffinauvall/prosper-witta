@@ -33,7 +33,6 @@ export async function GET(req: Request) {
         description,
         full_desc,
         ingredients,
-        image,
         product_categories!inner (
           categories:categories!inner (
             id,

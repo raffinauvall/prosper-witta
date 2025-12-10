@@ -8,9 +8,9 @@ const supabase = createClient(
 
 export const DELETE = async (
   req: NextRequest,
-  context: { params: Promise<{ id: string }> } // wajib pakai Promise
+  context: { params: Promise<{ id: string }> } 
 ) => {
-  const { id } = await context.params; // harus await karena Promise
+  const { id } = await context.params; 
   const productId = Number(id);
 
   if (!productId || isNaN(productId)) {

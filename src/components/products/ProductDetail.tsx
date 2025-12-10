@@ -5,7 +5,6 @@ type Product = {
   name: string;
   desc: string;
   full_desc: string;
-  image?: string | null;
 };
 
 type ProductDetailProps = {
@@ -23,16 +22,7 @@ export default function ProductDetail({ selected }: ProductDetailProps) {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm">
-      <div className="relative w-full h-[300px] bg-gray-100 rounded-xl overflow-hidden">
-        {selected.image && (
-          <Image
-            src={selected.image}
-            alt={selected.name}
-            fill
-            className="object-cover hover:scale-105 transition duration-500"
-          />
-        )}
-      </div>
+     
         <div className="p-6">
       <h2 className="text-2xl font-bold text-gray-900 mt-6">
         {selected.name}
