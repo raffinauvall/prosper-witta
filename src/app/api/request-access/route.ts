@@ -24,6 +24,19 @@ export async function POST(req: Request) {
 
     const token = crypto.randomUUID();
 
+  
+    const { data: productData, error: productError } = await supabase
+      .from("products")
+      .select("name")
+      .eq("id", productId)
+      .single();
+
+    if (productError || !productData) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    const productName = productData.name;
+
     const { error } = await supabase.from("access_requests").insert({
       product_id: productId,
       token,
@@ -39,7 +52,7 @@ export async function POST(req: Request) {
 
     const html = generateAccessRequestEmail(
       process.env.ADMIN_EMAIL!,
-      productId,
+      productName,
       approveUrl,
       company,
       purpose
