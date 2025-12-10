@@ -1,4 +1,3 @@
-// api/products/by-category/route.ts
 import { NextResponse } from "next/server";
 import { supabase } from "@/src/lib/supabase";
 
@@ -11,7 +10,6 @@ export async function GET(req: Request) {
   }
 
   try {
-    // 1. Ambil category_id dulu
     const { data: categoryData, error: catErr } = await supabase
       .from("categories")
       .select("id, name")
@@ -24,7 +22,6 @@ export async function GET(req: Request) {
 
     const categoryId = categoryData.id;
 
-    // 2. Ambil products dengan join product_categories -> categories
     const { data: products, error: prodErr } = await supabase
       .from("products")
       .select(`
