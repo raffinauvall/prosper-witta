@@ -1,6 +1,6 @@
 export function generateAccessRequestEmail(
   email: string,
-  productId: number,
+  productName: string,
   approveUrl: string,
   company?: string,
   purpose?: string
@@ -21,8 +21,8 @@ export function generateAccessRequestEmail(
           <td style="padding:4px 0; font-weight:600;">${email}</td>
         </tr>
         <tr>
-          <td style="padding:4px 0; color:#555;">Product ID:</td>
-          <td style="padding:4px 0; font-weight:600;">${productId}</td>
+          <td style="padding:4px 0; color:#555;">Product Name:</td>
+          <td style="padding:4px 0; font-weight:600;">${productName}</td>
         </tr>
         <tr>
           <td style="padding:4px 0; color:#555;">Company:</td>
