@@ -11,7 +11,7 @@ export default function ContactUs() {
       <Navbar />
 
       {/* Hero */}
-      <div className="px-4 sm:px-6 py-16 md:px-20 md:py-24">
+      <div className="px-4 sm:px-6 pt-25  py-16 md:px-20 md:py-24">
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
