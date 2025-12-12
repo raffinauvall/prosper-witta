@@ -41,7 +41,6 @@ export async function createProduct(product: Product) {
   }
 }
 
-// UPDATE PRODUCT
 export async function updateProduct(id: string, product: Product) {
   try {
     const res = await fetch(`/api/products/${id}`, {

@@ -6,9 +6,10 @@ import { Product } from "@/src/lib/types/types";
 interface Props {
   products: Product[];
   onDelete: (id: number) => void;
+  onUpdate: (p: Product) => void;
 }
 
-export default function ProductTable({ products, onDelete }: Props) {
+export default function ProductTable({ products, onDelete, onUpdate }: Props) {
   return (
     <table className="w-full border">
       <thead>
@@ -20,7 +21,7 @@ export default function ProductTable({ products, onDelete }: Props) {
       </thead>
       <tbody>
         {products.map((product) => (
-          <ProductRow key={product.id} product={product} onDelete={onDelete} />
+          <ProductRow key={product.id} product={product} onDelete={onDelete} onUpdate={onUpdate} />
         ))}
       </tbody>
     </table>

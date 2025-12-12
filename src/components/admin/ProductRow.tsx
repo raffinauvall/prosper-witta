@@ -8,9 +8,11 @@ import { Product } from "@/src/lib/types/types";
 interface Props {
   product: Product;
   onDelete: (id: number) => void;
+  onUpdate: (product: Product) => void;
 }
 
-export default function ProductRow({ product, onDelete }: Props) {
+
+export default function ProductRow({ product, onDelete , onUpdate}: Props) {
   const [modalOpen, setModalOpen] = useState(false);
 
   // Flatten categories
@@ -53,12 +55,9 @@ export default function ProductRow({ product, onDelete }: Props) {
 
         <td className="p-4 whitespace-nowrap">
           <div className="flex gap-3 items-center">
-            <Link
-              href={`/admin/products/edit/${product.id}`}
-              className="text-blue-600"
-            >
-              Edit
-            </Link>
+            <button
+            onClick={() => onUpdate(product)}>Edit</button>
+             
             <button
               onClick={() => onDelete(product.id)}
               className="text-red-600"

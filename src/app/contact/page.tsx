@@ -9,8 +9,6 @@ export default function ContactUs() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 text-gray-900 pt-6 md:pt-10">
       <Navbar />
-
-      {/* Hero */}
       <div className="px-4 sm:px-6 pt-25  py-16 md:px-20 md:py-24">
         <motion.div
           initial={{ opacity: 0, y: 25 }}
@@ -37,7 +35,6 @@ export default function ContactUs() {
         {/* Main Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 max-w-7xl mx-auto">
 
-          {/* Left: Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -35 }}
             animate={{ opacity: 1, x: 0 }}

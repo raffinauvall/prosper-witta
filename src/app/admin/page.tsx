@@ -8,6 +8,7 @@ import CreateProductModal from "@/src/components/admin/modals/CreateProductModal
 import DeleteConfirmModal from "@/src/components/admin/modals/DeleteConfirmModal";
 import { fetchAdminProducts, deleteProduct } from "@/src/lib/api/products";
 import { Product } from "@/src/lib/types/types";
+import UpdateProductModal from "@/src/components/admin/modals/UpdateProductModal";
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -15,6 +16,7 @@ export default function AdminProducts() {
   const [modalCreateOpen, setModalCreateOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [editProduct, setEditProduct] = useState<Product | null>(null); // ← FIX
 
   const loadProducts = async () => {
     try {
@@ -56,6 +58,10 @@ export default function AdminProducts() {
     }
   };
 
+  const handleUpdateClick = (product: Product) => {
+    setEditProduct(product); // buka modal
+  };
+
   return (
     <main className="p-10 bg-gray-50 min-h-screen">
       <div className="flex items-center justify-between mb-6">
@@ -73,7 +79,11 @@ export default function AdminProducts() {
         <CategoryFilter products={products} setFilteredProducts={setFilteredProducts} />
       </div>
 
-      <ProductTable products={filteredProducts} onDelete={handleDeleteClick} />
+      <ProductTable 
+        products={filteredProducts} 
+        onDelete={handleDeleteClick} 
+        onUpdate={(p) => setEditProduct(p)}
+      />
 
       {modalCreateOpen && (
         <CreateProductModal
@@ -86,6 +96,14 @@ export default function AdminProducts() {
         <DeleteConfirmModal
           onClose={() => setDeleteModalOpen(false)}
           onConfirm={handleDeleteConfirm}
+        />
+      )}
+
+      {editProduct && (
+        <UpdateProductModal
+          product={editProduct}
+          onClose={() => setEditProduct(null)}
+          onUpdated={loadProducts} // ← FIX
         />
       )}
     </main>
