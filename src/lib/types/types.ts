@@ -12,7 +12,6 @@ export type Product = {
   name: string;
   description: string;
   full_desc: string;
-  ingredients: string;
   image: string;
   product_categories: ProductCategory;
 };

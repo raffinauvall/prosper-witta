@@ -107,42 +107,6 @@ export default function CreateProductModal({ onClose, onCreated }: any) {
             onChange={(e) => setFullDesc(e.target.value)}
           />
 
-          {/* INGREDIENTS FIELD */}
-          <div>
-            <label className="font-medium">Ingredients</label>
-            <div className="flex gap-2 mt-2">
-              <input
-                className="border p-2 rounded-lg w-full"
-                placeholder="Add ingredient"
-                value={ingredientInput}
-                onChange={(e) => setIngredientInput(e.target.value)}
-              />
-              <button
-                type="button"
-                onClick={addIngredient}
-                className="px-3 py-2 bg-black text-white rounded-lg"
-              >
-                Add
-              </button>
-            </div>
-
-            <div className="flex flex-wrap gap-2 mt-2">
-              {ingredients.map((i, index) => (
-                <span
-                  key={index}
-                  className="px-2 py-1 bg-gray-200 rounded text-sm flex items-center gap-1"
-                >
-                  {i}
-                  <button
-                    onClick={() => removeIngredient(index)}
-                    className="text-red-500 font-bold"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-          </div>
 
           {/* CATEGORY BADGE PICKER */}
           <div>

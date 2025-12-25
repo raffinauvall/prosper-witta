@@ -51,7 +51,7 @@ export async function PUT(req: Request, context: { params: Promise<{ id: string 
 
     const { data: updatedProduct, error: updateError} = await supabase
     .from("products")
-    .update({ name, description, full_desc, ingredients })
+    .update({ name, description, full_desc})
     .eq("id", id)
     .select()
     .single();
