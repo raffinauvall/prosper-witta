@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         res.cookies.set("session_token", token, {
             httpOnly: true,
             secure: true,
-            path: "/",
+            path: "/admin",
             maxAge: 60 * 60 * 24 * 7,
         });
 
