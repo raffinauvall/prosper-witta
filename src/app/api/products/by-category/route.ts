@@ -6,21 +6,27 @@ export async function GET(req: Request) {
   const category = searchParams.get("category");
 
   if (!category) {
-    return NextResponse.json({ error: "Category is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Category is required" },
+      { status: 400 }
+    );
   }
 
   try {
     const { data: categoryData, error: catErr } = await supabase
       .from("categories")
-      .select("id, name")
-      .ilike("name", category)
+      .select("id")
+      .eq("name", category)
       .single();
 
     if (catErr || !categoryData) {
-      return NextResponse.json({ error: "Category not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Category not found" },
+        { status: 404 }
+      );
     }
 
-    const categoryId = categoryData.id;
+    const categoryId = categoryData.id; // ✅ WAJIB ADA
 
     const { data: products, error: prodErr } = await supabase
       .from("products")
@@ -29,22 +35,45 @@ export async function GET(req: Request) {
         name,
         description,
         full_desc,
-        ingredients,
+        display,
         product_categories!inner (
-          categories:categories!inner (
+          category_id,
+          categories (
             id,
             name
           )
         )
       `)
-      .in("product_categories.category_id", [categoryId]);
+      .eq("product_categories.category_id", categoryId)
+      .eq("display", true);
 
     if (prodErr) {
-      return NextResponse.json({ error: prodErr.message }, { status: 500 });
+      return NextResponse.json(
+        { error: prodErr.message },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json(products);
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    const formatted = (products ?? []).map((p: any) => ({
+      
+      id: p.id,
+      name: p.name,
+      description: p.description,
+      full_desc: p.full_desc,
+      display: p.display,
+      categories: p.product_categories.map(
+        (pc: any) => pc.categories
+      ),
+      
+    }));
+   
+
+    return NextResponse.json(formatted);
+  } catch (err) {
+    console.error("SERVER ERROR:", err);
+    return NextResponse.json(
+      { error: "Server error" },
+      { status: 500 }
+    );
   }
 }
