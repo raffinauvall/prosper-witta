@@ -1,16 +1,10 @@
 import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
-
-type Product = {
-  id: number;
-  name: string;
-  desc: string;
-  fullDesc: string;
-};
+import { Product } from "@/src/lib/types/types";
 
 type ProductSelectorProps = {
   products: Product[];
-  selected: number;
+  selected?: number | null;
   setSelected: (id: number) => void;
   themeColor: string; 
   loading?: boolean;
@@ -30,7 +24,7 @@ export default function ProductSidebar({
     if (!search) return products;
     return products.filter(p =>
       (p.name ?? "").toLowerCase().includes(search.toLowerCase()) ||
-      (p.desc ?? "").toLowerCase().includes(search.toLowerCase())
+      (p.description ?? "").toLowerCase().includes(search.toLowerCase())
     );
   }, [search, products]);
 
@@ -89,9 +83,6 @@ export default function ProductSidebar({
                     className={`font-semibold ${active ? `text-${themeColor}-600` : "text-gray-900"} group-hover:text-${themeColor}-600`}
                   >
                     {item.name}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {item.desc}
                   </p>
                 </button>
               );
