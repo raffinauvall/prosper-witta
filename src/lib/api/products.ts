@@ -13,7 +13,6 @@ export async function fetchProducts(category: string): Promise<Product[]> {
   }
 }
 
-// GET ALL PRODUCTS (admin)
 export async function fetchAdminProducts(): Promise<Product[]> {
   try {
     const res = await fetch("/api/products");

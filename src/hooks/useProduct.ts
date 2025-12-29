@@ -1,20 +1,39 @@
-// src/hooks/useProducts.ts
-import { useEffect } from "react";
-import { useProductStore } from "@/src/store/productStore";
+// src/hooks/useProduct.ts
+import { useEffect, useState } from "react";
+import { Product } from "../lib/types/types";
+import { fetchProducts } from "../lib/api/products";
 
 export const useProducts = (category: string) => {
-  const { products, selected, setSelected, loadProducts, pollAccess, loading, error, accessMap } =
-    useProductStore();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [selected, setSelected] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadProducts(category);
+    if (!category) return;
+
+    const load = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const data = await fetchProducts(category);
+        setProducts(data);
+
+        if (data.length > 0) {
+          setSelected(data[0]);
+        } else {
+          setSelected(null);
+        }
+      } catch (err) {
+        setError("Failed to load products");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
   }, [category]);
-
-  useEffect(() => {
-    if (!selected?.id) return;
-    const interval = setInterval(() => pollAccess(selected.id), 5000);
-    return () => clearInterval(interval);
-  }, [selected?.id]);
 
   return {
     products,
@@ -22,6 +41,5 @@ export const useProducts = (category: string) => {
     setSelected,
     loading,
     error,
-    accessMap,
   };
 };
