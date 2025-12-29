@@ -3,20 +3,17 @@
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
-import { useProductStore } from "@/src/store/productStore";
 import { useProducts } from "@/src/hooks/useProduct";
 import ProductHeader from "@/src/components/products/ProductHeader";
 import ProductSidebar from "@/src/components/products/ProductSidebar";
 import ProductDetail from "@/src/components/products/ProductDetail";
-import ProductIngredient from "@/src/components/products/ProductIngredient";
-import RequestAccessModal from "@/src/components/products/RequestAccessModal";
-import ApprovedNotification from "@/src/components/ui/ApprovedNotification";
+import ProductMsds from "./ProductMsds";
+import ProductTds from "./ProductTds";
+import RequestSampleForm from "./RequestSample";
 import DetailSkeleton from "@/src/components/products/DetailSkeleton";
-import { useSubmitAccess } from "@/src/hooks/useSubmitAccess";
-
-import { useAccessModal } from "@/src/hooks/useAccessModal";
-import { usePollingAccess } from "@/src/hooks/usePollingAccess";
 import { CATEGORY_INFO, CategoryKey } from "@/src/lib/category-info";
+import { useState } from "react";
+import RequestAccessModal from "./modals/RequestAccessModal";
 
 interface ProductContainerProps {
   category: CategoryKey;
@@ -26,6 +23,13 @@ export default function ProductContainer({ category }: ProductContainerProps) {
   const router = useRouter();
   const info = CATEGORY_INFO[category];
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [docType, setDocType] = useState<"msds" | "tds">("msds");
+
+  const handleRequest = (type: "msds" | "tds") => {
+    setDocType(type);
+    setModalOpen(true);
+  };
   if (!info) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12">
@@ -34,7 +38,7 @@ export default function ProductContainer({ category }: ProductContainerProps) {
         </p>
         <button
           onClick={() => router.back()}
-          className="mt-4 underline text-blue-600 hover:text-blue-800"
+          className="mt-4 underline text-blue-600"
         >
           Back
         </button>
@@ -42,18 +46,18 @@ export default function ProductContainer({ category }: ProductContainerProps) {
     );
   }
 
-  const { products, selected, setSelected, loading, accessMap, showNotif, error } = useProductStore();
-  const { openModal, setOpenModal, companyName, setCompanyName, purpose, setPurpose, reset } = useAccessModal();
+  const {
+    products,
+    selected,
+    setSelected,
+    loading,
+    error,
+  } = useProducts(category);
 
-  usePollingAccess(selected?.id);
-  useProducts(category);
-
-  const { submit } = useSubmitAccess();
-  const handleSubmit = () => {
-    submit(companyName, purpose, () => {
-      reset();
-      setOpenModal(false);
-    });
+  // 🔑 wrapper penting
+  const handleSelectProduct = (id: number) => {
+    const product = products.find(p => p.id === id) || null;
+    setSelected(product);
   };
 
   return (
@@ -68,55 +72,68 @@ export default function ProductContainer({ category }: ProductContainerProps) {
             title={info.title}
             desc={info.desc}
           />
+
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-sm text-white p-4 px-6 rounded-4xl bg-blue-900 hover:font-bold mb-6"
+            className="flex items-center gap-2 text-sm text-white p-4 px-6 rounded-full bg-blue-900 hover:font-bold mb-6"
           >
             <ArrowLeft size={18} /> Back
           </button>
         </div>
-        {error && <p className="text-red-600 font-medium my-4">⚠ {error}</p>}
+
+        {error && (
+          <p className="text-red-600 font-medium my-4">⚠ {error}</p>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* SIDEBAR */}
           <div className="lg:col-span-3">
             <ProductSidebar
               products={products}
               selected={selected?.id}
-              setSelected={setSelected}
+              setSelected={handleSelectProduct}
               themeColor={info.theme}
               loading={loading}
             />
           </div>
 
+          {/* DETAIL */}
           <div className="lg:col-span-6">
-            {loading ? <DetailSkeleton /> : selected && <ProductDetail selected={selected} />}
-          </div>
+            {loading && <DetailSkeleton />}
 
-          <div className="lg:col-span-3 space-y-4">
-            {selected && !loading && (
-              <ProductIngredient
-                ingredients={selected.ingredients}
-                themeColor={info.theme}
-                hasAccess={accessMap[selected.id] ?? false}
-                ingredients_desc={info.ingredient_desc}
-                setShowModal={setOpenModal}
-              />
+            {!loading && selected && (
+              <>
+                <ProductDetail selected={selected} />
+
+                <div className="md:flex gap-4 mt-6">
+                  <ProductMsds
+                    productId={selected.id}
+                    onRequest={handleRequest}
+                  />
+                  <ProductTds
+                    productId={selected.id}
+                    onRequest={handleRequest}
+                  />
+                </div>
+              </>
             )}
-
-            <ApprovedNotification show={showNotif} onClose={() => { }} />
+          </div>
+          {selected && (
+            <RequestAccessModal
+              open={modalOpen}
+              onClose={() => setModalOpen(false)}
+              productId={selected.id}
+              type={docType}
+            />
+          )}
+          {/* ACTION */}
+          <div className="lg:col-span-3 space-y-4">
+            {selected && (
+              <RequestSampleForm productId={selected.id} />
+            )}
           </div>
         </div>
       </div>
-
-      <RequestAccessModal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        onSubmit={handleSubmit}
-        company={companyName}
-        setCompany={setCompanyName}
-        purpose={purpose}
-        setPurpose={setPurpose}
-      />
     </main>
   );
 }
