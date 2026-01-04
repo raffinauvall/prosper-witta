@@ -62,6 +62,11 @@ export default function RequestAccessModal({
 
     try {
       const deviceToken = getDeviceToken(); // 🔥 PENTING
+      if (!deviceToken) {
+        setError("Device token not available. Please refresh the page.");
+        setLoading(false);
+        return;
+      }
 
       await requestAccess({
         productId,
