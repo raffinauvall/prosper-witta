@@ -1,18 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-export function useDeviceToken() {
-  const [deviceToken, setDeviceToken] = useState<string | null>(null);
+const COOKIE_NAME = "device_token";
 
-  useEffect(() => {
-    let token = localStorage.getItem("device_token");
-    if (!token) {
-      token = crypto.randomUUID();
-      localStorage.setItem("device_token", token);
+export function getDeviceToken(): string | null {
+  if (typeof document === "undefined") return null;
+
+  const match = document.cookie.match(
+    new RegExp(`(?:^|; )${COOKIE_NAME}=([^;]*)`)
+  );
+
+  if (match) return match[1];
+
+  try {
+    const stored = localStorage.getItem(COOKIE_NAME);
+    if (stored) {
+      document.cookie = `${COOKIE_NAME}=${stored}; path=/; max-age=31536000; SameSite=Lax`;
+      return stored;
     }
-    setDeviceToken(token);
-  }, []);
+  } catch {}
 
-  return deviceToken;
+  const token = uuidv4();
+
+  document.cookie = `${COOKIE_NAME}=${token}; path=/; max-age=31536000; SameSite=Lax`;
+
+  try {
+    localStorage.setItem(COOKIE_NAME, token);
+  } catch {}
+
+  return token;
 }
