@@ -4,10 +4,11 @@ import { X } from "lucide-react";
 
 interface Props {
   open: boolean;
+  productId: number;
   onClose: () => void;
 }
 
-export default function RequestSampleModal({ open, onClose }: Props) {
+export default function RequestSampleModal({ open, onClose, productId}: Props) {
   if (!open) return null;
 
   return (
