@@ -86,3 +86,12 @@ export type ProductTdsProps = {
   onRequest: (type: "tds") => void;
   onView: () => void;
 };
+
+export type RequestSample = {
+  full_name: string;
+  company_name?: string;
+  email: string;
+  phone: string;
+  shipping_address?: string;
+  purpose?: string;
+};
