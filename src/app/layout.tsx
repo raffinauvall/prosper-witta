@@ -1,6 +1,7 @@
 import "../../styles/globals.css";
-import "../../styles/font.css"
+import "../../styles/font.css";
 import React from "react";
+import { LanguageProvider } from "@/src/context/LanguageContext";
 
 export default function RootLayout({
   children,
@@ -10,7 +11,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-maison leading-normal">
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );
