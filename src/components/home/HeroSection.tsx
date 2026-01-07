@@ -1,4 +1,9 @@
+"use client"
+import { useLanguage } from "@/src/context/LanguageContext";
+
 export default function HeroSection() {
+
+  const { t } = useLanguage();
   return (
     <section className="relative w-full min-h-screen overflow-hidden">
 
@@ -18,14 +23,13 @@ export default function HeroSection() {
         {/* Text Section */}
         <div className="flex-1 flex flex-col justify-center max-w-6xl px-6 md:px-16 pt-32 mx-auto md:mx-0">
           <h1 className="text-[32px] md:text-[60px] xl:text-[80px] font-bold font-maison leading-[1.05] text-center md:text-left">
-            Trusted Chemical Solutions 
+            {t("home.hero.title1")}
             <span className="hidden md:block"></span>
-            for a Better Industry.
+            {t("home.hero.title2")}
           </h1>
 
-          <p className="text-gray-300 max-w-xl mt-6 text-sm md:text-base text-center md:text-left mx-auto md:mx-0">
-            Delivering certified, high-quality industrial chemicals with reliable 
-            supply, strict safety standards, and long-term industry partnership.
+          <p className="text-gray-300 max-w-xl mt-6 text-md md:text-base text-center md:text-left mx-auto md:mx-0">
+            {t("home.hero.description")}
           </p>
         </div>
 
