@@ -1,4 +1,10 @@
+"use client";
+
+import { useLanguage } from "@/src/context/LanguageContext";
+
 export default function FeatureSection() {
+  const { t } = useLanguage();
+
   return (
     <>
       {/* Fitur */}
@@ -11,17 +17,17 @@ export default function FeatureSection() {
           <div className="absolute top-6 right-6 h-12 w-[2px] bg-[#CFA54B]" />
 
           <span className="uppercase text-xs tracking-widest text-[#CFA54B]">
-            Aspirasi
+            {t("about.feature.vision.badge")}
           </span>
 
           <h3 className="mt-3 text-2xl font-semibold text-gray-900">
-            Our Vision
+            {t("about.feature.vision.title")}
           </h3>
 
           <div className="w-12 h-[2px] bg-[#CFA54B] mt-4 mb-6"></div>
 
           <p className="text-gray-700 leading-relaxed text-base">
-            Untuk memantapkan diri sebagai perusahaan spesialis yang diakui secara global dalam industri Pembersihan, Pakan & Hewan, serta Pertambangan melalui penyediaan produk inovatif, layanan yang andal, dan solusi berkelanjutan yang mendukung kemajuan industri di seluruh dunia.
+            {t("about.feature.vision.desc")}
           </p>
         </div>
 
@@ -32,18 +38,17 @@ export default function FeatureSection() {
           <div className="absolute top-6 right-6 h-12 w-[2px] bg-[#CFA54B]" />
 
           <span className="uppercase text-xs tracking-widest text-[#CFA54B]">
-            Strategi
+            {t("about.feature.mission.badge")}
           </span>
 
           <h3 className="mt-3 text-2xl font-semibold text-gray-900">
-            Our Mission
+            {t("about.feature.mission.title")}
           </h3>
 
           <div className="w-12 h-[2px] bg-[#CFA54B] mt-4 mb-6"></div>
 
           <p className="text-gray-700 leading-relaxed text-base">
-            Untuk menempatkan pelanggan kami sebagai pusat dari segala hal yang kami lakukan dengan menyediakan
-            kualitas yang konsisten, pasokan yang andal, layanan yang luar biasa, dan inovasi berkelanjutan yang memastikan keberhasilan operasional jangka panjang dan kemitraan yang terpercaya.
+            {t("about.feature.mission.desc")}
           </p>
         </div>
 
