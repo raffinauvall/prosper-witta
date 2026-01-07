@@ -3,11 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLanguage } from "@/src/context/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
-  // transparan hanya di /, /products, /about
   const allowTransparent =
     pathname === "/" || pathname === "/products" || pathname === "/about";
 
@@ -47,7 +49,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex items-center gap-2">
           <div className="w-14 h-14 flex items-center justify-center">
-            <img src="/logo.png" width={100} height={100} alt="" />
+            <img src="/logo.png" width={100} height={100} alt="Logo" />
           </div>
 
           <span
@@ -66,9 +68,9 @@ export default function Navbar() {
           }`}
         >
           {[
-            { label: "Home", href: "/" },
-            { label: "About", href: "/about" },
-            { label: "Product", href: "/products" },
+            { label: t("nav.home"), href: "/" },
+            { label: t("nav.about"), href: "/about" },
+            { label: t("nav.product"), href: "/products" },
           ].map((item) => {
             const isActive = pathname === item.href;
 
@@ -79,18 +81,19 @@ export default function Navbar() {
                 {/* Hover underline */}
                 <span
                   className={`absolute left-0 -bottom-1 h-[2px] w-full origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${underlineColor}`}
-                ></span>
+                />
 
                 {/* Active underline */}
                 {isActive && (
                   <span
                     className={`absolute left-0 -bottom-1 h-[2px] w-full ${underlineColor}`}
-                  ></span>
+                  />
                 )}
               </li>
             );
           })}
 
+          {/* Contact Button */}
           <li>
             <Link
               href="/contact"
@@ -101,8 +104,13 @@ export default function Navbar() {
                   : "border border-white text-white hover:bg-white hover:text-black"
               }`}
             >
-              Contact us!
+              {t("nav.contact")}
             </Link>
+          </li>
+
+          {/* Language Switcher */}
+          <li>
+            <LanguageSwitcher />
           </li>
         </ul>
 
@@ -132,26 +140,31 @@ export default function Navbar() {
         }`}
       >
         <div className="flex justify-between items-center px-6 py-6 border-b border-white/10">
-          <span className="text-lg font-bold">Menu</span>
+          <span className="text-lg font-bold">{t("menu")}</span>
           <button onClick={() => setOpen(false)} className="text-2xl">
             ✕
           </button>
         </div>
 
+        {/* Language Switcher Mobile */}
+        <div className="px-6 mt-6">
+          <LanguageSwitcher />
+        </div>
+
         <ul className="flex flex-col gap-6 px-6 py-10 text-lg">
           <li>
             <Link onClick={() => setOpen(false)} href="/">
-              Home
+              {t("nav.home")}
             </Link>
           </li>
           <li>
             <Link onClick={() => setOpen(false)} href="/about">
-              About
+              {t("nav.about")}
             </Link>
           </li>
           <li>
             <Link onClick={() => setOpen(false)} href="/products">
-              Product
+              {t("nav.product")}
             </Link>
           </li>
         </ul>
@@ -162,7 +175,7 @@ export default function Navbar() {
             href="/contact"
             className="block bg-yellow-500 text-center text-white py-3 rounded-lg font-semibold hover:bg-yellow-400 transition"
           >
-            Contact us!
+            {t("nav.contact")}
           </Link>
         </div>
       </div>
