@@ -1,4 +1,4 @@
-import { News } from "../types/types";
+import { News } from "../types";
 export type NewsDetail = News & {
   content: string;
 };

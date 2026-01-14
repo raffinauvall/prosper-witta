@@ -1,7 +1,6 @@
-// lib/api.ts
+
 import { Product } from "@/lib/types";
 
-// GET BY CATEGORY
 export async function fetchProducts(category: string): Promise<Product[]> {
   try {
     const res = await fetch(`/api/products/by-category?category=${category}`);
