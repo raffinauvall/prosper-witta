@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import CategoryModal from "./modals/CategoryModal";
-import { Product } from "@/src/lib/types/types";
+import { Product } from "@/lib/types";
 
 interface Props {
   product: Product;
