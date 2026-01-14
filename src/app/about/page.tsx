@@ -1,11 +1,11 @@
 "use client";
 
-import Navbar from "@/src/components/Navbar";
-import Footer from "@/src/components/Footer";
-import FeatureSection from "@/src/components/about/FeatureSection";
-import AboutHero from "@/src/components/about/AboutHero";
-import CompanyProfile from "@/src/components/about/CompanyProfile";
-import CoreValues from "@/src/components/about/CoreValues";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import FeatureSection from "@/components/about/FeatureSection";
+import AboutHero from "@/components/about/AboutHero";
+import CompanyProfile from "@/components/about/CompanyProfile";
+import CoreValues from "@/components/about/CoreValues";
 
 export default function AboutPage() {
   return (
