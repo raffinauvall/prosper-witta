@@ -1,5 +1,5 @@
 // lib/api.ts
-import { Product } from "../types/types";
+import { Product } from "@/lib/types";
 
 // GET BY CATEGORY
 export async function fetchProducts(category: string): Promise<Product[]> {
@@ -15,7 +15,7 @@ export async function fetchProducts(category: string): Promise<Product[]> {
 
 export async function fetchAdminProducts(): Promise<Product[]> {
   try {
-    const res = await fetch("/api/products");
+    const res = await fetch("/api/admin/products");
     if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
     return await res.json();
   } catch (err) {
@@ -27,7 +27,7 @@ export async function fetchAdminProducts(): Promise<Product[]> {
 // CREATE PRODUCT
 export async function createProduct(product: Product) {
   try {
-    const res = await fetch("/api/products", {
+    const res = await fetch("/api/admin/products", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(product),
