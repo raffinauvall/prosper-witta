@@ -1,8 +1,7 @@
 "use client";
-
-import Footer from "@/src/components/Footer";
-import ProductHero from "@/src/components/products/ProductHero";
-import ProductCategories from "@/src/components/products/ProductCategories";
+import Footer from "@/components/Footer";
+import ProductHero from "@/components/products/ProductHero";
+import ProductCategories from "@/components/products/ProductCategories";
 
 export default function ProductPage() {
   return (

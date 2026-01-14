@@ -1,7 +1,7 @@
 "use client";
 
-import { requestAccess } from "@/src/lib/api/request-access";
-import { getDeviceToken } from "@/src/lib/deviceToken";
+import { requestAccess } from "@/lib/api/documents/request-access";
+import { getDeviceToken } from "@/lib/deviceToken";
 import { useState } from "react";
 
 type Props = {

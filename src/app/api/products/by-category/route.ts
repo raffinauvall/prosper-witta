@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/src/lib/supabase";
+import { supabaseClient } from "@/lib/supabaseClient";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -13,7 +13,7 @@ export async function GET(req: Request) {
   }
 
   try {
-    const { data: categoryData, error: catErr } = await supabase
+    const { data: categoryData, error: catErr } = await supabaseClient
       .from("categories")
       .select("id")
       .eq("name", category)
@@ -26,15 +26,14 @@ export async function GET(req: Request) {
       );
     }
 
-    const categoryId = categoryData.id; // ✅ WAJIB ADA
+    const categoryId = categoryData.id; 
 
-    const { data: products, error: prodErr } = await supabase
+    const { data: products, error: prodErr } = await supabaseClient
       .from("products")
       .select(`
         id,
         name,
         description,
-        full_desc,
         display,
         product_categories!inner (
           category_id,
@@ -59,7 +58,6 @@ export async function GET(req: Request) {
       id: p.id,
       name: p.name,
       description: p.description,
-      full_desc: p.full_desc,
       display: p.display,
       categories: p.product_categories.map(
         (pc: any) => pc.categories

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
-import { Product } from "@/src/lib/types/types";
+import { Product } from "@/lib/types";
 
 type ProductSelectorProps = {
   products: Product[];
@@ -23,8 +23,7 @@ export default function ProductSidebar({
   const filteredProducts = useMemo(() => {
     if (!search) return products;
     return products.filter(p =>
-      (p.name ?? "").toLowerCase().includes(search.toLowerCase()) ||
-      (p.description ?? "").toLowerCase().includes(search.toLowerCase())
+      (p.name ?? "").toLowerCase().includes(search.toLowerCase())
     );
   }, [search, products]);
 

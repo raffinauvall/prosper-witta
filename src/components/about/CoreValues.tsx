@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Users, FlaskRound, Leaf } from "lucide-react";
-import { useLanguage } from "@/src/context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function CoreValues() {
   const { t } = useLanguage();

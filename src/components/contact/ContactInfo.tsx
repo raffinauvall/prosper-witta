@@ -2,7 +2,7 @@
 
 import { Mail, Phone, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
-import { useLanguage } from "@/src/context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ContactInfo() {
   const { t } = useLanguage();

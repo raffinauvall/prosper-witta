@@ -1,7 +1,7 @@
 "use client";
 
-import Navbar from "@/src/components/Navbar";
-import { useLanguage } from "@/src/context/LanguageContext";
+import Navbar from "@/components/Navbar";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ProductHero() {
   const { t } = useLanguage();

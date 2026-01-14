@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/src/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function GET(req: Request) {
   try {
@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     }
 
     // 1️⃣ ambil request
-    const { data: request, error: reqError } = await supabase
+    const { data: request, error: reqError } = await supabaseAdmin
       .from("document_access_requests")
       .select("*")
       .eq("token", token)
@@ -29,24 +29,23 @@ export async function GET(req: Request) {
     }
 
     // 2️⃣ update request → approved
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabaseAdmin
       .from("document_access_requests")
       .update({ status: "approved" })
       .eq("id", request.id);
 
     if (updateError) throw updateError;
 
-    // 3️⃣ buat access token
     const accessToken = crypto.randomUUID();
-    const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24); // 24 jam
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24); 
 
-    const { error: insertError } = await supabase
+    const { error: insertError } = await supabaseAdmin
       .from("document_access_tokens")
       .insert({
         id: accessToken,
-        document_id: request.document_id, // INTEGER
+        document_id: request.document_id, 
         device_token: request.device_token,
-        type: request.type, // 'msds' | 'tds'
+        type: request.type,
         expires_at: expiresAt.toISOString(),
       });
 

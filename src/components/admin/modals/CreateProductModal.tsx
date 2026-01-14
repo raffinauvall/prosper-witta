@@ -1,22 +1,28 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Category } from "@/src/lib/types/types";
-
+import { Category } from "@/lib/types";
+import FileUploadField from "../FileUploadField";
 
 export default function CreateProductModal({ onClose, onCreated }: any) {
   const [name, setName] = useState("");
-  const [image, setImage] = useState("");
-  const [description, setDescription] = useState("");
-  const [fullDesc, setFullDesc] = useState("");
+
+  const [description, setDescription] = useState({
+    id: "",
+    en: "",
+  });
+
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [ingredientInput, setIngredientInput] = useState("");
+
+  const [msdsFile, setMsdsFile] = useState<File | null>(null);
+  const [tdsFile, setTdsFile] = useState<File | null>(null);
+  const [display, setDisplay] = useState(true);
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // fetch categories
   useEffect(() => {
     async function fetchCategories() {
       const res = await fetch("/api/products/category");
@@ -26,39 +32,44 @@ export default function CreateProductModal({ onClose, onCreated }: any) {
     fetchCategories();
   }, []);
 
-  // toggle badge
   const toggleCategory = (id: number) => {
     setSelectedCategories((prev) =>
       prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
     );
   };
 
-  // push ingredient to array
   const addIngredient = () => {
     if (!ingredientInput.trim()) return;
     setIngredients((prev) => [...prev, ingredientInput.trim()]);
     setIngredientInput("");
   };
 
-  // delete ingredient
   const removeIngredient = (idx: number) => {
     setIngredients((prev) => prev.filter((_, i) => i !== idx));
   };
 
+  // 🚀 SUBMIT
   const handleCreate = async () => {
+    if (!name || !description.id) {
+      alert("Product name dan Description wajib diisi!");
+      return;
+    }
+
     setLoading(true);
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", JSON.stringify(description));
+    formData.append("ingredients", JSON.stringify(ingredients));
+    formData.append("categories", JSON.stringify(selectedCategories));
+    formData.append("display", String(display));
+
+    if (msdsFile) formData.append("msds", msdsFile);
+    if (tdsFile) formData.append("tds", tdsFile);
 
     const res = await fetch("/api/products", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        image,
-        description,
-        full_desc: fullDesc,
-        ingredients,
-        categories: selectedCategories,
-      }),
+      body: formData,
     });
 
     setLoading(false);
@@ -77,6 +88,8 @@ export default function CreateProductModal({ onClose, onCreated }: any) {
         <h2 className="text-2xl font-bold mb-4">Create Product</h2>
 
         <div className="space-y-4">
+
+          {/* PRODUCT NAME */}
           <input
             className="border p-3 rounded-lg w-full"
             placeholder="Product name"
@@ -84,31 +97,57 @@ export default function CreateProductModal({ onClose, onCreated }: any) {
             onChange={(e) => setName(e.target.value)}
           />
 
-          <input
-            className="border p-3 rounded-lg w-full"
-            placeholder="Image URL"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
-
+          {/* DESCRIPTION ID */}
           <textarea
             className="border p-3 rounded-lg w-full"
-            placeholder="Short Description"
-            rows={2}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            rows={3}
+            placeholder="Description (Indonesia)"
+            value={description.id}
+            onChange={(e) =>
+              setDescription((prev) => ({ ...prev, id: e.target.value }))
+            }
           />
 
+          {/* DESCRIPTION EN */}
           <textarea
             className="border p-3 rounded-lg w-full"
-            placeholder="Full Description"
-            rows={4}
-            value={fullDesc}
-            onChange={(e) => setFullDesc(e.target.value)}
+            rows={3}
+            placeholder="Description (English)"
+            value={description.en}
+            onChange={(e) =>
+              setDescription((prev) => ({ ...prev, en: e.target.value }))
+            }
           />
 
+          {/* FILE UPLOAD */}
+          <div className="flex flex-wrap gap-3">
+            <FileUploadField
+              label="MSDS Document"
+              file={msdsFile}
+              onChange={setMsdsFile}
+            />
 
-          {/* CATEGORY BADGE PICKER */}
+            <FileUploadField
+              label="TDS Document"
+              file={tdsFile}
+              onChange={setTdsFile}
+            />
+          </div>
+
+
+          {/* DISPLAY */}
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={display}
+              onChange={(e) => setDisplay(e.target.checked)}
+            />
+            Display Product
+          </label>
+
+          
+
+          {/* CATEGORY */}
           <div>
             <label className="font-medium">Categories</label>
             <div className="flex gap-2 flex-wrap mt-2">
@@ -120,7 +159,8 @@ export default function CreateProductModal({ onClose, onCreated }: any) {
                   className={`px-3 py-1 rounded text-sm border
                     ${selectedCategories.includes(cat.id)
                       ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-gray-700"}
+                      : "bg-gray-200 text-gray-700"
+                    }
                   `}
                 >
                   {cat.name}
@@ -132,10 +172,7 @@ export default function CreateProductModal({ onClose, onCreated }: any) {
 
         {/* ACTIONS */}
         <div className="flex justify-end gap-3 mt-6">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg border"
-          >
+          <button onClick={onClose} className="px-4 py-2 rounded-lg border">
             Cancel
           </button>
 

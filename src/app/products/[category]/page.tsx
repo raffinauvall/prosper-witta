@@ -1,5 +1,5 @@
-import ProductContainer from "@/src/components/products/ProductContainer";
-import { CATEGORY_INFO, CategoryKey } from "@/src/lib/category-info";
+import ProductContainer from "@/components/products/ProductContainer";
+import { CATEGORY_INFO, CategoryKey } from "@/lib/category-info";
 import { use } from "react";
 
 interface PageProps {

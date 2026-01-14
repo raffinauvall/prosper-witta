@@ -15,10 +15,8 @@ interface Props {
 export default function ProductRow({ product, onDelete , onUpdate}: Props) {
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Flatten categories
   const flattenedCategories = product.product_categories.map((pc: any) => pc.categories);
 
-  // Ambil 2 kategori pertama
   const visible = flattenedCategories.slice(0, 2);
   const extra = flattenedCategories.length - visible.length;
 

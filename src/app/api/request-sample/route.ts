@@ -1,6 +1,6 @@
-import { supabaseAdmin } from "@/src/lib/supabaseAdmin";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { NextResponse } from "next/server";
-import { supabaseClient } from "@/src/lib/supabaseClient";
+import { supabaseClient } from "@/lib/supabaseClient";
 
 export async function POST(req: Request) {
     try {

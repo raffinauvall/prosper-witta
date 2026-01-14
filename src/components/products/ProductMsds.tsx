@@ -1,4 +1,4 @@
-import { ProductMsdsProps, AccessStatus } from "../../lib/types/types"
+import { ProductMsdsProps } from "@/lib/types";
 
 export default function ProductMsds({
   productId,

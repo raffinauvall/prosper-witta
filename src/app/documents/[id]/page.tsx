@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, use } from "react";
 import { useSearchParams } from "next/navigation";
-import { getDeviceToken } from "@/src/lib/deviceToken";
+import { getDeviceToken } from "@/lib/deviceToken";
 
 export default function DocumentPage({
   params,

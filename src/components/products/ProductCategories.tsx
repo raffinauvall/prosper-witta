@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import ProductCard from "./ProductCard";
-import { useLanguage } from "@/src/context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ProductCategories() {
   const { t } = useLanguage();

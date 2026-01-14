@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/src/lib/supabase";
+import { supabaseClient } from "@/lib/supabaseClient";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
@@ -17,11 +17,11 @@ export async function POST(req: Request) {
 
     const token = crypto.randomUUID();
 
-    const { error } = await supabase
+    const { error } = await supabaseClient
       .from("document_access_requests")
       .insert({
-        product_id: body.productId,   // ✅ FIX DI SINI
-        type: body.type,              // 'msds' | 'tds'
+        product_id: body.productId,   
+        type: body.type,            
         device_token: body.deviceToken,
         name: body.name,
         email: body.email,

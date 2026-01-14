@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/src/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -9,7 +9,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Invalid token" }, { status: 400 });
   }
 
-  await supabase
+  await supabaseAdmin
     .from("document_access_requests")
     .update({
       status: "rejected",

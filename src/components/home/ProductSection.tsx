@@ -1,5 +1,5 @@
 "use client"
-import { useLanguage } from '@/src/context/LanguageContext'
+import { useLanguage } from '@/context/LanguageContext'
 import Link from 'next/link'
 
 export default function ProductSection() {
@@ -15,11 +15,11 @@ export default function ProductSection() {
 
       <div className="relative z-10 max-w-5xl">
         <h2 className="text-[40px] md:text-[64px] font-bold font-maison text-white leading-tight">
-          {t("product_title_1")} <br /> {t("product_title_2")}
+          {t("home.product.title1")} <br /> {t("home.product.title2")}
         </h2>
 
         <p className="mt-4 text-white/90 max-w-2xl text-base md:text-lg">
-          {t("product_subtitle")}
+          {t("home.product.subtitle")}
         </p>
 
         <div className="mt-10">

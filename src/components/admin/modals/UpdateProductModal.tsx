@@ -1,26 +1,65 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Category, Product } from "@/src/lib/types/types";
+import { useEffect, useState } from "react";
+import { Category } from "@/lib/types";
+import FileUploadField from "../FileUploadField";
+import { getProductDocumentStatus } from "@/lib/api/documents/documents";
+type Props = {
+  product: any;
+  onClose: () => void;
+  onUpdated: () => void;
+};
 
-export default function UpdateProductModal({ product, onClose, onUpdated }: any) {
-  // extract category ids dari product
+export default function UpdateProductModal({
+  product,
+  onClose,
+  onUpdated,
+}: Props) {
   const initialCategoryIds = product.product_categories
     ? product.product_categories.map((pc: any) => pc.categories.id)
     : [];
 
-  const [name, setName] = useState(product.name);
-  const [image, setImage] = useState(product.image || "");
-  const [description, setDescription] = useState(product.description || "");
-  const [fullDesc, setFullDesc] = useState(product.full_desc || "");
-  const [ingredients, setIngredients] = useState<string[]>(product.ingredients || []);
-  const [ingredientInput, setIngredientInput] = useState("");
-
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<number[]>(initialCategoryIds);
   const [loading, setLoading] = useState(false);
 
-  // Load semua category
+  const [msdsFile, setMsdsFile] = useState<File | null>(null);
+  const [tdsFile, setTdsFile] = useState<File | null>(null);
+
+
+  const [removeMsds, setRemoveMsds] = useState(false);
+  const [removeTds, setRemoveTds] = useState(false);
+
+  const [docStatus, setDocStatus] = useState({
+    msds: false,
+    tds: false
+  });
+
+  const [form, setForm] = useState({
+    name: "",
+    description: {
+      id: "",
+      en: "",
+    },
+    categories: [] as number[],
+    display: true,
+  });
+
+  /* ================= Sync product -> form ================= */
+  useEffect(() => {
+    if (!product) return;
+
+    setForm({
+      name: product.name || "",
+      description: {
+        id: product.description?.id || "",
+        en: product.description?.en || "",
+      },
+      categories: initialCategoryIds,
+      display: product.display ?? true,
+    });
+  }, [product]);
+
+  /* ================= Load categories ================= */
   useEffect(() => {
     async function fetchCategories() {
       const res = await fetch("/api/products/category");
@@ -29,49 +68,69 @@ export default function UpdateProductModal({ product, onClose, onUpdated }: any)
     }
     fetchCategories();
   }, []);
+  /* ================= Load document status ================= */
+  useEffect(() => {
+    if (!product?.id) return;
 
-  // toggle category badge
+    getProductDocumentStatus(product.id)
+      .then(setDocStatus)
+      .catch(() => {
+        setDocStatus({ msds: false, tds: false });
+      });
+  }, [product?.id]);
+
+  useEffect(() => {
+    setRemoveMsds(false);
+    setRemoveTds(false);
+    setMsdsFile(null);
+    setTdsFile(null);
+  }, [product]);
+
+
+  /* ================= Handlers ================= */
+
   const toggleCategory = (id: number) => {
-    setSelectedCategories((prev) =>
-      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
-    );
-  };
-
-  const addIngredient = () => {
-    if (!ingredientInput.trim()) return;
-    setIngredients((prev) => [...prev, ingredientInput.trim()]);
-    setIngredientInput("");
-  };
-
-  const removeIngredient = (idx: number) => {
-    setIngredients((prev) => prev.filter((_, i) => i !== idx));
+    setForm((prev) => ({
+      ...prev,
+      categories: prev.categories.includes(id)
+        ? prev.categories.filter((c) => c !== id)
+        : [...prev.categories, id],
+    }));
   };
 
   const handleUpdate = async () => {
+    if (!form.name || !form.description.id) {
+      alert("Product name dan Description (ID) wajib diisi!");
+      return;
+    }
+
     setLoading(true);
+
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("description", JSON.stringify(form.description));
+    formData.append("categories", JSON.stringify(form.categories));
+    formData.append("display", String(form.display));
+
+    if (msdsFile) formData.append("msds", msdsFile);
+    if (tdsFile) formData.append("tds", tdsFile);
 
     const res = await fetch(`/api/products/${product.id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        image,
-        description,
-        full_desc: fullDesc,
-        ingredients,
-        categories: selectedCategories,
-      }),
+      body: formData,
     });
 
     setLoading(false);
 
     if (res.ok) {
-      onUpdated(); // panggil loadProducts di parent
+      onUpdated();
       onClose();
     } else {
       alert("Failed to update product");
     }
   };
+
+  /* ================= UI ================= */
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -79,53 +138,115 @@ export default function UpdateProductModal({ product, onClose, onUpdated }: any)
         <h2 className="text-2xl font-bold mb-4">Update Product</h2>
 
         <div className="space-y-4">
+          {/* PRODUCT NAME */}
           <input
             className="border p-3 rounded-lg w-full"
             placeholder="Product name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={form.name}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, name: e.target.value }))
+            }
           />
 
-          <input
-            className="border p-3 rounded-lg w-full"
-            placeholder="Image URL"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
+          {/* DESCRIPTION ID */}
+          <div>
+            <label className="text-sm font-medium">
+              Description (Bahasa Indonesia)
+            </label>
+            <textarea
+              className="border p-3 rounded-lg w-full mt-1"
+              rows={3}
+              value={form.description.id}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  description: {
+                    ...prev.description,
+                    id: e.target.value,
+                  },
+                }))
+              }
+            />
+          </div>
 
-          <textarea
-            className="border p-3 rounded-lg w-full"
-            placeholder="Short Description"
-            rows={2}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+          {/* DESCRIPTION EN */}
+          <div>
+            <label className="text-sm font-medium">
+              Description (English)
+            </label>
+            <textarea
+              className="border p-3 rounded-lg w-full mt-1"
+              rows={3}
+              value={form.description.en}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  description: {
+                    ...prev.description,
+                    en: e.target.value,
+                  },
+                }))
+              }
+            />
+          </div>
 
-          <textarea
-            className="border p-3 rounded-lg w-full"
-            placeholder="Full Description"
-            rows={4}
-            value={fullDesc}
-            onChange={(e) => setFullDesc(e.target.value)}
-          />
+          {/* DISPLAY TOGGLE */}
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={form.display}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  display: e.target.checked,
+                }))
+              }
+            />
+            <span className="text-sm font-medium">
+              Display product on website
+            </span>
+          </div>
 
-        
+          {/* FILE UPLOAD */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <FileUploadField
+              label="MSDS"
+              file={msdsFile}
+              hasExisting={docStatus.msds && !removeMsds}
+              onChange={(file) => {
+                setMsdsFile(file);
+                setRemoveMsds(false);
+              }}
+              onRemoveExisting={() => setRemoveMsds(true)}
+            />
+
+            <FileUploadField
+              label="TDS"
+              file={tdsFile}
+              hasExisting={docStatus.tds && !removeTds}
+              onChange={(file) => {
+                setTdsFile(file);
+                setRemoveTds(false);
+              }}
+              onRemoveExisting={() => setRemoveTds(true)}
+            />
+
+          </div>
+
 
           {/* CATEGORY PICKER */}
           <div>
             <label className="font-medium">Categories</label>
-
             <div className="flex gap-2 flex-wrap mt-2">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   type="button"
                   onClick={() => toggleCategory(cat.id)}
-                  className={`px-3 py-1 rounded text-sm border ${
-                    selectedCategories.includes(cat.id)
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-gray-700"
-                  }`}
+                  className={`px-3 py-1 rounded text-sm border ${form.categories.includes(cat.id)
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 text-gray-700"
+                    }`}
                 >
                   {cat.name}
                 </button>
@@ -136,7 +257,10 @@ export default function UpdateProductModal({ product, onClose, onUpdated }: any)
 
         {/* ACTIONS */}
         <div className="flex justify-end gap-3 mt-6">
-          <button onClick={onClose} className="px-4 py-2 rounded-lg border">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded-lg border"
+          >
             Cancel
           </button>
 

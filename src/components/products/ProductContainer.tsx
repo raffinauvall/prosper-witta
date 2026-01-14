@@ -4,22 +4,22 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
-import { useProducts } from "@/src/hooks/useProduct";
-import ProductHeader from "@/src/components/products/ProductHeader";
-import ProductSidebar from "@/src/components/products/ProductSidebar";
-import ProductDetail from "@/src/components/products/ProductDetail";
+import { useProducts } from "@/hooks/useProduct";
+import ProductHeader from "@/components/products/ProductHeader";
+import ProductSidebar from "@/components/products/ProductSidebar";
+import ProductDetail from "@/components/products/ProductDetail";
 import ProductMsds from "./ProductMsds";
 import ProductTds from "./ProductTds";
-import DetailSkeleton from "@/src/components/products/DetailSkeleton";
-import { CATEGORY_INFO, CategoryKey } from "@/src/lib/category-info";
+import DetailSkeleton from "@/components/products/DetailSkeleton";
+import { CATEGORY_INFO, CategoryKey } from "@/lib/category-info";
 
 import RequestAccessModal from "./modals/RequestAccessModal";
 import RequestSampleWidget from "./RequestSample";
 import RequestSampleModal from "./modals/RequestSampleModal";
 
-import { fetchAccessStatus } from "@/src/lib/api/document-access";
-import type { DocumentAccessStatus } from "@/src/lib/types/types";
-import { getDeviceToken } from "@/src/lib/deviceToken";
+import { fetchAccessStatus } from "@/lib/api/documents/document-access";
+import type { DocumentAccessStatus } from "@/lib/types";
+import { getDeviceToken } from "@/lib/deviceToken";
 
 interface ProductContainerProps {
   category: CategoryKey;

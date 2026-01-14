@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { login } from "@/src/lib/api/auth";
+import { login } from "@/lib/api/auth";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -23,7 +23,7 @@ export default function LoginPage() {
         password,
       });
 
-      router.push("/admin"); // redirect setelah login
+       window.location.href = "/admin";
 
     } catch (err: any) {
       alert(err.message || "Login gagal");

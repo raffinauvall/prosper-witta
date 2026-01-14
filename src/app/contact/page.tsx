@@ -1,10 +1,10 @@
 "use client";
 
-import Navbar from "@/src/components/Navbar";
-import Footer from "@/src/components/Footer";
-import ContactHeader from "@/src/components/contact/ContactHeader";
-import ContactInfo from "@/src/components/contact/ContactInfo";
-import ContactForm from "@/src/components/contact/ContactForm";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import ContactHeader from "@/components/contact/ContactHeader";
+import ContactInfo from "@/components/contact/ContactInfo";
+import ContactForm from "@/components/contact/ContactForm";
 
 export default function ContactUs() {
   return (
