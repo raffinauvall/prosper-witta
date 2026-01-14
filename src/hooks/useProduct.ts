@@ -1,6 +1,5 @@
-// src/hooks/useProduct.ts
 import { useEffect, useState } from "react";
-import { Product } from "../lib/types/types";
+import { Product } from "@/lib/types";
 import { fetchProducts } from "../lib/api/products";
 
 export const useProducts = (category: string) => {
