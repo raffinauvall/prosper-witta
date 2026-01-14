@@ -1,4 +1,4 @@
-import { AccessStatus } from "./types/types";
+import { AccessStatus } from "./types";
 
 export const mapAccessStatus = (value?: string): AccessStatus => {
   switch (value) {
