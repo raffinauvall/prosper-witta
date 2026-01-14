@@ -1,7 +1,7 @@
 "use client";
 
 import ProductRow from "./ProductRow";
-import { Product } from "@/src/lib/types/types";
+import { Product } from "@/lib/types";
 
 interface Props {
   products: Product[];
