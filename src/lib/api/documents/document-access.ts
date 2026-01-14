@@ -1,4 +1,4 @@
-import { getDeviceToken } from "../deviceToken";
+import { getDeviceToken } from "../../deviceToken";
 
 export async function fetchAccessStatus(
   productId: number,
