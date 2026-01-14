@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { verifyAdmin } from "@/lib/authServer";
 import ProductsClient from "@/components/admin/ProductsClient";
-import DashboardMain from "@/components/admin/DashboardMain";
 
 export default async function ProductsPage() {
   try {
@@ -11,8 +10,8 @@ export default async function ProductsPage() {
   }
 
   return (
-    <main className="p-4 bg-gray-50 min-h-screen">
-      <DashboardMain />
+    <main className="p-10 bg-gray-50 min-h-screen">
+      <ProductsClient />
     </main>
   );
 }
