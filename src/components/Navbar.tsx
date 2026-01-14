@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLanguage } from "@/src/context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
@@ -71,6 +71,7 @@ export default function Navbar() {
             { label: t("nav.home"), href: "/" },
             { label: t("nav.about"), href: "/about" },
             { label: t("nav.product"), href: "/products" },
+            { label: t("nav.news"), href: "/news" },
           ].map((item) => {
             const isActive = pathname === item.href;
 
@@ -165,6 +166,11 @@ export default function Navbar() {
           <li>
             <Link onClick={() => setOpen(false)} href="/products">
               {t("nav.product")}
+            </Link>
+          </li>
+          <li>
+            <Link onClick={() => setOpen(false)} href="/news">
+              {t("nav.news")}
             </Link>
           </li>
         </ul>
