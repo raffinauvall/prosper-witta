@@ -1,9 +1,9 @@
-import Navbar from "@/src/components/Navbar";
-import HeroSection from "@/src/components/home/HeroSection";
-import AboutSection from "@/src/components/home/AboutSection"
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/home/HeroSection";
+import AboutSection from "@/components/home/AboutSection"
 import PrincipleCarousel from "../components/home/PrincipleCarousel";
-import ProductSection from "@/src/components/home/ProductSection"
-import Footer from "@/src/components/Footer"
+import ProductSection from "@/components/home/ProductSection"
+import Footer from "@/components/Footer"
 export default function Home() {
   return (
     <>
