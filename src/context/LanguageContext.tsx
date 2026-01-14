@@ -23,6 +23,7 @@ const dictionary: Record<Lang, Dictionary> = {
             about: "Tentang",
             product: "Produk",
             contact: "Kontak Kami",
+            news: "Berita"
         },
 
         home: {
@@ -186,6 +187,7 @@ const dictionary: Record<Lang, Dictionary> = {
             about: "About",
             product: "Product",
             contact: "Contact Us",
+            news: "News"
         },
 
         home: {
