@@ -8,48 +8,41 @@ const supabase = createClient(
 );
 
 export async function GET(req: Request) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const productIdParam = searchParams.get("productId");
-    const type = searchParams.get("type"); // msds | tds
-    const deviceToken = searchParams.get("deviceToken");
+  const { searchParams } = new URL(req.url);
+  const accessId = searchParams.get("accessId");
 
-    if (!productIdParam || !type || !deviceToken) {
-      return NextResponse.json({ error: "Missing params" }, { status: 400 });
-    }
-
-    const productId = Number(productIdParam);
-    if (isNaN(productId)) return NextResponse.json({ error: "Invalid productId" }, { status: 400 });
-
-    const { data: accessData } = await supabase
-      .from("document_access_requests")
-      .select("*")
-      .eq("product_id", productId)
-      .eq("type", type)
-      .eq("device_token", deviceToken)
-      .eq("status", "approved")
-      .limit(1)
-      .maybeSingle();
-
-    if (!accessData) return NextResponse.json({ error: "Access not approved" }, { status: 403 });
-
-    const filePath = `${type}/product-${productId}.pdf`;
-    const { data: pdfFile, error: downloadError } = await supabase
-      .storage
-      .from("documents")
-      .download(filePath);
-
-    if (downloadError || !pdfFile) return NextResponse.json({ error: "File not found in storage" }, { status: 404 });
-
-    const arrayBuffer = await pdfFile.arrayBuffer();
-
-    return new Response(arrayBuffer, {
-      headers: {
-        "Content-Type": "application/pdf",
-        "Cache-Control": "no-store",
-      },
-    });
-  } catch (err) {
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  const deviceToken = req.headers.get("x-device-token");
+  if (!accessId || !deviceToken) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  // 1. Validasi access record
+  const { data: access } = await supabase
+    .from("document_access_requests")
+    .select("file_path, status")
+    .eq("id", accessId)
+    .eq("device_token", deviceToken)
+    .single();
+
+  if (!access || access.status !== "approved") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  // 2. Download file BERDASARKAN ACCESS
+  const { data: pdfFile, error } = await supabase
+    .storage
+    .from("documents")
+    .download(access.file_path);
+
+  if (error || !pdfFile) {
+    return NextResponse.json({ error: "File not found" }, { status: 404 });
+  }
+
+  return new Response(await pdfFile.arrayBuffer(), {
+    headers: {
+      "Content-Type": "application/pdf",
+      "Cache-Control": "no-store",
+    },
+  });
 }
+
