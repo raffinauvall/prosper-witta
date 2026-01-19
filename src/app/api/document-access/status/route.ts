@@ -1,34 +1,32 @@
 import { NextResponse } from "next/server";
-import { supabaseClient } from "@/lib/supabaseClient";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-
-  const productId = searchParams.get("productId");
+  const productId = Number(searchParams.get("productId"));
   const type = searchParams.get("type");
   const deviceToken = req.headers.get("x-device-token");
 
   if (!productId || !type || !deviceToken) {
-    console.log("❌ Missing params", { productId, type, deviceToken });
-    return NextResponse.json({ error: "Missing params" }, { status: 400 });
+    return NextResponse.json({ status: "none", accessId: null });
   }
 
-  const { data, error } = await supabaseClient
+  const { data, error } = await supabaseAdmin
     .from("document_access_requests")
-    .select("status")
-    .eq("product_id", Number(productId))
-    .eq("device_token", deviceToken)
+    .select("id,status")
+    .eq("product_id", productId)
     .eq("type", type)
+    .eq("device_token", deviceToken)
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
 
-  if (error) {
-    console.error("STATUS ERROR:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  if (!data) {
+    return NextResponse.json({ status: "none", accessId: null });
   }
 
   return NextResponse.json({
-    status: data?.status ?? "none",
+    status: data.status,
+    accessId: data.status === "approved" ? data.id : null, // <-- ambil id disini
   });
 }
