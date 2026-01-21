@@ -1,47 +1,48 @@
 "use client";
 
-import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function LanguageSwitcher() {
   const { lang, setLang } = useLanguage();
-  const [open, setOpen] = useState(false);
 
   return (
-    <div className="relative">
-      {/* Button */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-3 py-1 rounded-md border border-current text-sm font-semibold hover:opacity-80 transition"
+    <div className="flex items-center gap-3 text-sm font-semibold">
+      <LangButton
+        active={lang === "id"}
+        onClick={() => setLang("id")}
       >
-        {lang.toUpperCase()}
-        <span className="text-xs">▼</span>
-      </button>
+        ID
+      </LangButton>
 
-      {/* Dropdown */}
-      {open && (
-        <div className="absolute right-0 mt-2 w-24 overflow-hidden rounded-md bg-white text-black shadow-lg">
-          <button
-            onClick={() => {
-              setLang("id");
-              setOpen(false);
-            }}
-            className="w-full px-3 py-2 text-left hover:bg-gray-100"
-          >
-            ID
-          </button>
+      <span className="opacity-40">|</span>
 
-          <button
-            onClick={() => {
-              setLang("en");
-              setOpen(false);
-            }}
-            className="w-full px-3 py-2 text-left hover:bg-gray-100"
-          >
-            EN
-          </button>
-        </div>
-      )}
+      <LangButton
+        active={lang === "en"}
+        onClick={() => setLang("en")}
+      >
+        EN
+      </LangButton>
     </div>
+  );
+}
+
+function LangButton({
+  active,
+  children,
+  onClick,
+}: {
+  active: boolean;
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`transition hover:opacity-80 ${
+        active ? "underline underline-offset-4" : "opacity-60"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
