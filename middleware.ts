@@ -1,3 +1,4 @@
+// src/middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
@@ -9,9 +10,12 @@ export function middleware(req: NextRequest) {
   const isAdminRoute = pathname.startsWith("/admin");
   const isLoginPage = pathname === "/login";
 
-  // proteksi admin page
+  // --- Proteksi route admin ---
   if (isAdminRoute) {
-    if (!token) return NextResponse.redirect(new URL("/login", req.url));
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+
     try {
       jwt.verify(token, process.env.JWT_SECRET!);
     } catch {
@@ -21,8 +25,8 @@ export function middleware(req: NextRequest) {
     }
   }
 
-  // proteksi halaman login, tapi jangan redirect login POST request
-  if (isLoginPage && token && req.method === "GET") {
+  // --- Proteksi halaman login ---
+  if (isLoginPage && token) {
     try {
       jwt.verify(token, process.env.JWT_SECRET!);
       return NextResponse.redirect(new URL("/admin", req.url));
@@ -32,10 +36,9 @@ export function middleware(req: NextRequest) {
       return res;
     }
   }
-
-  return NextResponse.next();
 }
 
-export const config = {
-  matcher: ["/admin/:path*", "/login"],
-};
+  // matcher untuk route yang dilindungi
+  export const config = {
+    matcher: ["/admin/:path*", "/login"],
+  };
