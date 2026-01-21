@@ -1,18 +1,13 @@
-// src/app/admin/layout.tsx
 import "server-only";
 import { redirect } from "next/navigation";
 import AdminLayout from "./AdminLayout";
 import { verifyAdmin } from "@/lib/authServer";
 
 export default async function AdminRootLayout({ children }: { children: React.ReactNode }) {
-  let adminName = "Admin";
-
   try {
-    const payload = await verifyAdmin(); // baca cookie server-side
-    adminName = payload.username;
+    const payload = await verifyAdmin(); // SSR, baca cookie dari Next.js
+    return <AdminLayout adminName={payload.username}>{children}</AdminLayout>;
   } catch {
-    redirect("/login"); // kalau token invalid, SSR redirect
+    redirect("/login"); // token invalid? redirect SSR
   }
-
-  return <AdminLayout adminName={adminName}>{children}</AdminLayout>;
 }

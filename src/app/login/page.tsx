@@ -15,23 +15,26 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   async function handleLogin() {
+    setLoading(true);
     try {
-      setLoading(true);
-
-      await login({
-        username,
-        password,
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
       });
 
-      router.replace("/admin");
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.message || "Login gagal");
+        return;
+      }
 
-    } catch (err: any) {
-      alert(err.message || "Login gagal");
+      // Login berhasil → API redirect SSR ke /admin
+      window.location.href = "/admin";
     } finally {
       setLoading(false);
     }
   }
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f5f7fa] p-4">
       <motion.div
@@ -95,9 +98,8 @@ export default function LoginPage() {
           whileTap={{ scale: 0.97 }}
           disabled={loading}
           onClick={handleLogin}
-          className={`${
-            loading ? "bg-blue-400" : "bg-blue-600"
-          } text-white w-full py-3 rounded-xl font-semibold shadow-md text-center`}
+          className={`${loading ? "bg-blue-400" : "bg-blue-600"
+            } text-white w-full py-3 rounded-xl font-semibold shadow-md text-center`}
         >
           {loading ? "Signing In..." : "Sign In"}
         </motion.button>

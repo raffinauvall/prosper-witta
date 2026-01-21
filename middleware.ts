@@ -9,33 +9,34 @@ export function middleware(req: NextRequest) {
   const isAdminRoute = pathname.startsWith("/admin");
   const isLoginPage = pathname === "/login";
 
-  // --- Proteksi route admin ---
+  // --- proteksi route admin ---
   if (isAdminRoute) {
     if (!token) return NextResponse.redirect(new URL("/login", req.url));
 
     try {
       jwt.verify(token, process.env.JWT_SECRET!);
     } catch {
-      // token invalid → redirect login tanpa hapus cookie (biar SSR/next bisa set ulang)
-      return NextResponse.redirect(new URL("/login", req.url));
+      const res = NextResponse.redirect(new URL("/login", req.url));
+      res.cookies.delete({ name: "session_token", path: "/" });
+      return res;
     }
   }
 
-  // --- Proteksi halaman login ---
+  // --- proteksi login page ---
   if (isLoginPage && token) {
     try {
       jwt.verify(token, process.env.JWT_SECRET!);
       return NextResponse.redirect(new URL("/admin", req.url));
     } catch {
-      // invalid token → biarkan bisa login
-      return NextResponse.next();
+      const res = NextResponse.next();
+      res.cookies.delete({ name: "session_token", path: "/" });
+      return res;
     }
   }
 
   return NextResponse.next();
 }
 
-// matcher untuk route yang dilindungi
 export const config = {
   matcher: ["/admin/:path*", "/login"],
 };
