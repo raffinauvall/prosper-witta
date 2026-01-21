@@ -1,14 +1,14 @@
-import { NextResponse } from "next/server";
 import { verifyAdmin } from "@/lib/authServer";
+import { success, failure } from "@/lib/api-response";
 
 export async function GET() {
   try {
     const admin = await verifyAdmin();
 
-    return NextResponse.json({
-      name: admin.username
+    return success({
+      name: admin.username,
     });
   } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return failure("Unauthorized", 401);
   }
 }

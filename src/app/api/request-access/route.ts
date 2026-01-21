@@ -1,27 +1,21 @@
-import { NextResponse } from "next/server";
 import { supabaseClient } from "@/lib/supabaseClient";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY!);
+import { NextResponse } from "next/server";
+import { sendRequestAccessEmail } from "@/lib/email";
+import { success, failure } from "@/lib/api-response";
 
 export async function POST(req: Request) {
   try {
-      const body = await req.json();
+    const body = await req.json();
 
-    if (!body.deviceToken) {
-      return NextResponse.json(
-        { error: "Missing deviceToken" },
-        { status: 400 }
-      );
-    }
+    if (!body.deviceToken) return failure("Missing deviceToken", 400);
 
     const token = crypto.randomUUID();
 
-    const { error } = await supabaseClient
+    const { error: dbError } = await supabaseClient
       .from("document_access_requests")
       .insert({
-        product_id: body.productId,   
-        type: body.type,            
+        product_id: body.productId,
+        type: body.type,
         device_token: body.deviceToken,
         name: body.name,
         email: body.email,
@@ -31,40 +25,24 @@ export async function POST(req: Request) {
         token,
       });
 
-    if (error) {
-      console.error("DB ERROR:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    if (dbError) return failure(dbError.message, 500);
 
     const approveUrl = `${process.env.BASE_URL}/api/request-access/approve?token=${token}`;
     const rejectUrl = `${process.env.BASE_URL}/api/request-access/reject?token=${token}`;
 
-    await resend.emails.send({
-      from: "Chemtech <onboarding@resend.dev>",
-      to: ["raffinauvaltaqy@gmail.com"],
-      subject: `Access Request – Product ${body.productId}`,
-      html: `
-        <h3>New Document Access Request</h3>
-        <p><b>Name:</b> ${body.name}</p>
-        <p><b>Email:</b> ${body.email}</p>
-        <p><b>Purpose:</b> ${body.purpose || "-"}</p>
-
-        <a href="${approveUrl}" style="padding:10px 16px;background:#16a34a;color:white;border-radius:6px;text-decoration:none;">
-          Approve
-        </a>
-
-        <a href="${rejectUrl}" style="padding:10px 16px;background:#dc2626;color:white;border-radius:6px;text-decoration:none;margin-left:8px;">
-          Reject
-        </a>
-      `,
+    await sendRequestAccessEmail({
+      productId: body.productId,
+      name: body.name,
+      email: body.email,
+      company: body.company,
+      purpose: body.purpose,
+      approveUrl,
+      rejectUrl,
     });
 
-    return NextResponse.json({ success: true });
+    return success({ message: "Request submitted successfully" });
   } catch (err) {
     console.error("REQUEST ACCESS ERROR:", err);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return failure("Internal Server Error", 500);
   }
 }

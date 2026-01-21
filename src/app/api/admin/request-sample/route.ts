@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { verifyAdmin } from "@/lib/authServer";
+import { success, failure } from "@/lib/api-response";
+
 export async function GET(req: Request) {
   try {
     await verifyAdmin();
@@ -10,38 +11,39 @@ export async function GET(req: Request) {
     const limit = Number(url.searchParams.get("limit") || 20);
     const offset = (page - 1) * limit;
 
-    const { data, error, count } = await supabaseAdmin
+    const { data, error: sbError, count } = await supabaseAdmin
       .from("request_sample")
       .select(
         `
-        id,
-        full_name,
-        company_name,
-        email,
-        phone,
-        shipping_address,
-        purpose,
-        requested_at,
-        products(name)
-      `,
-        { count: "exact" } 
+          id,
+          full_name,
+          company_name,
+          email,
+          phone,
+          shipping_address,
+          purpose,
+          requested_at,
+          products(name)
+        `,
+        { count: "exact" }
       )
       .order("requested_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
-    if (error) {
-      console.error("Supabase error:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (sbError) {
+      console.error("SUPABASE ERROR:", sbError);
+      return failure(sbError.message);
     }
 
-    return NextResponse.json({
-      data,
-      page,
-      limit,
-      total: count,
+    return success(data, {
+      meta: {
+        page,
+        limit,
+        total: count,
+      },
     });
   } catch (err) {
     console.error("ADMIN API ERROR:", err);
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return failure("Unauthorized", 401);
   }
 }

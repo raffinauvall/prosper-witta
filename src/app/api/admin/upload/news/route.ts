@@ -1,28 +1,39 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { NextResponse } from "next/server";
+import { verifyAdmin } from "@/lib/authServer";
+import { success, failure } from "@/lib/api-response";
 
 export async function POST(req: Request) {
-  const formData = await req.formData();
-  const file = formData.get("file") as File;
+  try {
+    await verifyAdmin();
 
-  if (!file) {
-    return NextResponse.json({ message: "No file" }, { status: 400 });
+    const formData = await req.formData();
+    const file = formData.get("file") as File | null;
+
+    if (!file) {
+      return failure("No file", 400);
+    }
+
+    const ext = file.name.split(".").pop();
+    const fileName = `news/${crypto.randomUUID()}.${ext}`;
+
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from("news-assets")
+      .upload(fileName, file, { upsert: true });
+
+    if (uploadError) {
+      console.error("UPLOAD ERROR:", uploadError);
+      return failure(uploadError.message);
+    }
+
+    const { data } = supabaseAdmin.storage
+      .from("news-assets")
+      .getPublicUrl(fileName);
+
+    return success({
+      url: data.publicUrl,
+    });
+  } catch (err) {
+    console.error("ADMIN API ERROR:", err);
+    return failure("Unauthorized", 401);
   }
-
-  const ext = file.name.split(".").pop();
-  const fileName = `news/${crypto.randomUUID()}.${ext}`;
-
-  const { error } = await supabaseAdmin.storage
-    .from("news-assets")
-    .upload(fileName, file, { upsert: true });
-
-  if (error) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
-  }
-
-  const { data } = supabaseAdmin.storage
-    .from("news-assets")
-    .getPublicUrl(fileName);
-
-  return NextResponse.json({ url: data.publicUrl });
 }

@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { verifyAdmin } from "@/lib/authServer";
+import { success, failure } from "@/lib/api-response";
 
 export async function GET(req: Request) {
   try {
@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     const limit = Number(url.searchParams.get("limit") || 20);
     const offset = (page - 1) * limit;
 
-    const { data, error, count } = await supabaseAdmin
+    const { data, error: sbError, count } = await supabaseAdmin
       .from("contact_inquiries")
       .select(
         `
@@ -26,25 +26,20 @@ export async function GET(req: Request) {
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
-    if (error) {
-      console.error("Supabase error:", error);
-      return NextResponse.json(
-        { message: "Gagal mengambil data contact" },
-        { status: 500 }
-      );
+    if (sbError) {
+      console.error("SUPABASE ERROR:", sbError);
+      return failure("Gagal mengambil data contact");
     }
 
-    return NextResponse.json({
-      data,
-      page,
-      limit,
-      total: count,
+    return success(data, {
+      meta: {
+        page,
+        limit,
+        total: count,
+      },
     });
   } catch (err) {
     console.error("ADMIN API ERROR:", err);
-    return NextResponse.json(
-      { message: "Unauthorized" },
-      { status: 401 }
-    );
+    return failure("Unauthorized", 401);
   }
 }

@@ -1,17 +1,18 @@
 import { supabase } from "@/lib/supabase";
-import { NextResponse } from "next/server";
-
-
+import { success, failure } from "@/lib/api-response";
 
 export async function GET() {
-  const { data, error } = await supabase.from("categories").select("*");
+  try {
+    const { data, error } = await supabase.from("categories").select("*");
 
-  if (error) {
-    console.error("Supabase GET error:", error.message);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) {
+      console.error("Supabase GET error:", error.message);
+      return failure(error.message, 500);
+    }
+
+    return success(data);
+  } catch (err) {
+    console.error("SERVER ERROR:", err);
+    return failure("Server error", 500);
   }
-
-  return NextResponse.json(data, { status: 200 });
 }
-
-

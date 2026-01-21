@@ -1,15 +1,16 @@
-import { NextResponse } from "next/server";
+import { success } from "@/lib/api-response";
+import { cookies } from "next/headers";
 
 export async function POST() {
-  const res = NextResponse.json({ message: "Logged out" });
+  const cookieStore = await cookies(); 
 
-  res.cookies.set("session_token", "", {
+  cookieStore.set("session_token", "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    path: "/",      // ❌ path harus sama dengan cookie login
-    maxAge: 0,      // ❌ maxAge 0 supaya cookie hilang
+    path: "/",
+    maxAge: 0,
   });
 
-  return res;
+  return success({ message: "Logged out" });
 }

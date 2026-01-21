@@ -1,7 +1,7 @@
 export const runtime = "nodejs";
 
-import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { successWithCookies, failure } from "@/lib/api-response";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     const password = String(body.password || "").trim();
 
     if (!username || !password) {
-      return NextResponse.json({ message: "Invalid credentials" }, { status: 400 });
+      return failure("Invalid credentials", 400);
     }
 
     const { data: admin, error } = await supabaseAdmin
@@ -23,12 +23,12 @@ export async function POST(req: Request) {
       .single();
 
     if (error || !admin) {
-      return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
+      return failure("Invalid credentials", 401);
     }
 
     const valid = await bcrypt.compare(password, admin.password);
     if (!valid) {
-      return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
+      return failure("Invalid credentials", 401);
     }
 
     const token = jwt.sign(
@@ -40,19 +40,25 @@ export async function POST(req: Request) {
       { expiresIn: "1d" }
     );
 
-    const res = NextResponse.json({ message: "OK" });
-
-    res.cookies.set("session_token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24,
-    });
-
-    return res;
+    return successWithCookies(
+      {
+        user: {
+          id: admin.id,
+          username: admin.username,
+        },
+      },
+      (res) => {
+        res.cookies.set("session_token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          path: "/",
+          maxAge: 60 * 60 * 24,
+        });
+      }
+    );
   } catch (err) {
     console.error("LOGIN ERROR:", err);
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+    return failure("Server error", 500);
   }
 }
