@@ -1,4 +1,3 @@
-// src/app/api/auth/route.ts
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { successWithCookies, failure } from "@/lib/api-response";
 import jwt from "jsonwebtoken";
@@ -38,10 +37,10 @@ export async function POST(req: Request) {
           name: "session_token",
           value: token,
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: process.env.NODE_ENV === "production", // harus HTTPS di production
           sameSite: "lax",
           path: "/",
-          maxAge: 60 * 60 * 24, 
+          maxAge: 60 * 60 * 24,
         });
       }
     );
