@@ -10,21 +10,26 @@ export interface ProductDocument {
   created_at?: string;
 }
 
+export type DocumentAccessItem = {
+  status: "none" | "pending" | "approved" | "rejected";
+  accessId: string | null;
+};
+
+
 export interface ProductMsdsProps {
-  productId: number;
-  status: AccessStatus;
-  onRequest: (type: "msds") => void;
+  status: DocumentAccessItem;
+  onRequest: () => void;
   onView: () => void;
 }
 
 export interface ProductTdsProps {
-  productId: number;
-  status: AccessStatus;
-  onRequest: (type: "tds") => void;
+  status: DocumentAccessItem;
+  onRequest: () => void;
   onView: () => void;
 }
 
-export type AccessStatus = "none" | "pending" | "approved" | "rejected";
+
+export type AccessStatus = "none" | "pending" | "approved" | "rejected" | "unavailable";
 
 export interface DocumentWithProduct extends ProductDocument {
   product: Pick<Product, "id" | "name">;
@@ -70,9 +75,10 @@ export interface DocumentAccessToken {
 }
 
 export interface DocumentAccessStatus {
-  msds: "none" | "pending" | "approved" | "rejected";
-  tds: "none" | "pending" | "approved" | "rejected";
+  msds: DocumentAccessItem;
+  tds: DocumentAccessItem;
 }
+
 
 export interface DocumentStatus {
   msds: boolean;
