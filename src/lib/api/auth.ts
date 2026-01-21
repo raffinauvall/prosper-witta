@@ -29,20 +29,7 @@ export async function login(payload: LoginPayload) {
   return data;
 }
 
-export async function logout() {
-  const res = await fetch("/api/auth/logout", {
-    method: "POST",
-    credentials: "include",
-  });
 
-  if (!res.ok) {
-    throw new Error("Logout gagal");
-  }
-
-  return true;
-}
-
-// Optional: get user info from JWT (server decoded)
 export async function getUser() {
   const res = await fetch("/api/auth/me");
 

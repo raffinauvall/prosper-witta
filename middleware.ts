@@ -7,11 +7,11 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const isAdminRoute = pathname.startsWith("/admin");
+  const isLoginPage = pathname === "/login";
 
-  // Proteksi route admin
+  // proteksi admin page
   if (isAdminRoute) {
     if (!token) return NextResponse.redirect(new URL("/login", req.url));
-
     try {
       jwt.verify(token, process.env.JWT_SECRET!);
     } catch {
@@ -21,9 +21,21 @@ export function middleware(req: NextRequest) {
     }
   }
 
+  // proteksi halaman login, tapi jangan redirect login POST request
+  if (isLoginPage && token && req.method === "GET") {
+    try {
+      jwt.verify(token, process.env.JWT_SECRET!);
+      return NextResponse.redirect(new URL("/admin", req.url));
+    } catch {
+      const res = NextResponse.next();
+      res.cookies.delete({ name: "session_token", path: "/" });
+      return res;
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/login"],
 };
