@@ -31,7 +31,8 @@ export async function POST(req: Request) {
       { expiresIn: "1d" }
     );
 
-    const res = NextResponse.redirect("/admin"); // redirect setelah login
+  
+    const res = NextResponse.redirect(new URL("/admin", req.url));
     res.cookies.set({
       name: "session_token",
       value: token,
