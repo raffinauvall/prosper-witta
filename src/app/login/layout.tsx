@@ -1,11 +1,23 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+"use client";
 
-export default async function LoginLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies(); 
-  const token = cookieStore.get("session_token")?.value;
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-  if (token) redirect("/admin");
+export default function LoginLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const cookies = document.cookie.split("; ").reduce((acc, cur) => {
+      const [k, v] = cur.split("=");
+      acc[k] = v;
+      return acc;
+    }, {} as Record<string, string>);
+
+    const token = cookies["session_token"];
+    if (token) {
+      router.replace("/admin"); // aman, client-side redirect
+    }
+  }, [router]);
 
   return <>{children}</>;
 }
