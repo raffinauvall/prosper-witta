@@ -1,20 +1,17 @@
-export const runtime = "nodejs";
-
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { successWithCookies, failure } from "@/lib/api-response";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
+export const runtime = "nodejs";
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-
     const username = String(body.username || "").trim().toLowerCase();
     const password = String(body.password || "").trim();
 
-    if (!username || !password) {
-      return failure("Invalid credentials", 400);
-    }
+    if (!username || !password) return failure("Invalid credentials", 400);
 
     const { data: admin, error } = await supabaseAdmin
       .from("admin")
@@ -22,33 +19,23 @@ export async function POST(req: Request) {
       .eq("username", username)
       .single();
 
-    if (error || !admin) {
-      return failure("Invalid credentials", 401);
-    }
+    if (error || !admin) return failure("Invalid credentials", 401);
 
     const valid = await bcrypt.compare(password, admin.password);
-    if (!valid) {
-      return failure("Invalid credentials", 401);
-    }
+    if (!valid) return failure("Invalid credentials", 401);
 
     const token = jwt.sign(
-      {
-        sub: admin.id,
-        username: admin.username,
-      },
+      { sub: admin.id, username: admin.username },
       process.env.JWT_SECRET!,
       { expiresIn: "1d" }
     );
 
     return successWithCookies(
-      {
-        user: {
-          id: admin.id,
-          username: admin.username,
-        },
-      },
+      { user: { id: admin.id, username: admin.username } },
       (res) => {
-        res.cookies.set("session_token", token, {
+        res.cookies.set({
+          name: "session_token",
+          value: token,
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",

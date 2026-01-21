@@ -3,50 +3,44 @@ import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 
 export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-
-  // baca cookie dengan aman
   const token = req.cookies.get("session_token")?.value;
+  const { pathname } = req.nextUrl;
 
   const isAdminRoute = pathname.startsWith("/admin");
   const isLoginPage = pathname === "/login";
 
-  // Fungsi helper untuk redirect
-  const redirectTo = (url: string) => NextResponse.redirect(new URL(url, req.url));
-
-  // === CASE 1: akses halaman admin ===
+  // --- Proteksi route admin ---
   if (isAdminRoute) {
     if (!token) {
-      // kalau sudah di /login jangan redirect lagi
-      if (pathname !== "/login") return redirectTo("/login");
-      return NextResponse.next();
+      return NextResponse.redirect(new URL("/login", req.url));
     }
 
     try {
       jwt.verify(token, process.env.JWT_SECRET!);
     } catch {
-      // token invalid, redirect ke /login tapi jangan loop
-      if (pathname !== "/login") return redirectTo("/login");
-      return NextResponse.next();
+      const res = NextResponse.redirect(new URL("/login", req.url));
+      // delete cookie sesuai signature baru Next.js
+      res.cookies.delete({ name: "session_token", path: "/" });
+      return res;
     }
   }
 
-  // === CASE 2: akses halaman login tapi sudah login ===
+  // --- Proteksi halaman login ---
   if (isLoginPage && token) {
     try {
       jwt.verify(token, process.env.JWT_SECRET!);
-      // token valid, redirect ke /admin
-      return redirectTo("/admin");
+      return NextResponse.redirect(new URL("/admin", req.url));
     } catch {
-      // token invalid, biarkan tetap di login page
-      return NextResponse.next();
+      const res = NextResponse.next();
+      res.cookies.delete({ name: "session_token", path: "/" });
+      return res;
     }
   }
 
-  // === CASE 3: semua route lain ===
   return NextResponse.next();
 }
 
+// Path yang dimatch
 export const config = {
   matcher: ["/admin/:path*", "/login"],
 };
