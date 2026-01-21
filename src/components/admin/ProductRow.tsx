@@ -12,10 +12,11 @@ interface Props {
 }
 
 
-export default function ProductRow({ product, onDelete , onUpdate}: Props) {
+export default function ProductRow({ product, onDelete, onUpdate }: Props) {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const flattenedCategories = product.product_categories.map((pc: any) => pc.categories);
+  const flattenedCategories = (product.product_categories ?? []).map((pc: any) => pc.categories ?? []);
+
 
   const visible = flattenedCategories.slice(0, 2);
   const extra = flattenedCategories.length - visible.length;
@@ -33,12 +34,13 @@ export default function ProductRow({ product, onDelete , onUpdate}: Props) {
           <div className="flex gap-1 overflow-x-auto no-scrollbar whitespace-nowrap">
             {visible.map((c) => (
               <span
-                key={c.id} // key unik dari category.id
+                key={c.id} 
                 className="px-2 py-1 text-xs bg-gray-200 rounded capitalize"
               >
-                {getCategoryName(c)}
+                {c.name?.replace(/-/g, " ") ?? "Unknown"}
               </span>
             ))}
+
 
             {extra > 0 && (
               <button
@@ -54,10 +56,13 @@ export default function ProductRow({ product, onDelete , onUpdate}: Props) {
         <td className="p-4 whitespace-nowrap">
           <div className="flex gap-3 items-center">
             <button
-            onClick={() => onUpdate(product)}>Edit</button>
-             
+              onClick={() => onUpdate(product)}>Edit</button>
+
             <button
-              onClick={() => onDelete(product.id)}
+              onClick={() => {
+                console.log("Deleting product id:", product.id);
+                onDelete(product.id);
+              }}
               className="text-red-600"
             >
               Delete
