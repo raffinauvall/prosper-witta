@@ -1,17 +1,17 @@
 import "server-only";
-import { redirect } from "next/navigation";
 import AdminLayout from "./AdminLayout";
 import { verifyAdmin } from "@/lib/authServer";
 
-export default async function AdminRootLayout({ children }: { children: React.ReactNode }) {
-  let adminName = "Admin";
+export default async function AdminRootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const payload = await verifyAdmin(); // BIAR THROW
 
-  try {
-    const payload = await verifyAdmin(); 
-    adminName = payload.username;
-  } catch {
-    redirect("/login"); 
-  }
-
-  return <AdminLayout adminName={adminName}>{children}</AdminLayout>;
+  return (
+    <AdminLayout adminName={payload.username}>
+      {children}
+    </AdminLayout>
+  );
 }

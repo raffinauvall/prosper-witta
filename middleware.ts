@@ -4,8 +4,13 @@ import jwt from "jsonwebtoken";
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("session_token")?.value;
+  const { pathname } = req.nextUrl;
 
-  if (req.nextUrl.pathname.startsWith("/admin")) {
+  const isAdminRoute = pathname.startsWith("/admin");
+  const isLoginPage = pathname === "/login";
+
+  // ===== ADMIN PROTECTION =====
+  if (isAdminRoute) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
@@ -13,7 +18,21 @@ export function middleware(req: NextRequest) {
     try {
       jwt.verify(token, process.env.JWT_SECRET!);
     } catch {
-      return NextResponse.redirect(new URL("/login", req.url));
+      const res = NextResponse.redirect(new URL("/login", req.url));
+      res.cookies.delete("session_token"); // PENTING
+      return res;
+    }
+  }
+
+  // ===== LOGIN PAGE =====
+  if (isLoginPage && token) {
+    try {
+      jwt.verify(token, process.env.JWT_SECRET!);
+      return NextResponse.redirect(new URL("/admin", req.url));
+    } catch {
+      const res = NextResponse.next();
+      res.cookies.delete("session_token");
+      return res;
     }
   }
 
@@ -21,5 +40,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/login"],
 };
