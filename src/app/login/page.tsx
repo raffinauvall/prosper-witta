@@ -23,7 +23,7 @@ export default function LoginPage() {
         password,
       });
 
-       window.location.href = "/admin";
+      router.replace("/admin");
 
     } catch (err: any) {
       alert(err.message || "Login gagal");
