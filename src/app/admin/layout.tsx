@@ -4,18 +4,14 @@ import { redirect } from "next/navigation";
 import AdminLayout from "./AdminLayout";
 import { verifyAdmin } from "@/lib/authServer";
 
-export default async function AdminRootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function AdminRootLayout({ children }: { children: React.ReactNode }) {
   let adminName = "Admin";
 
   try {
-    const payload = await verifyAdmin(); // ✅ async
-    adminName = payload.username; // bisa diganti jadi email atau username
+    const payload = await verifyAdmin(); // baca cookie server-side
+    adminName = payload.username;
   } catch {
-    redirect("/login"); // kalau ga ada token / invalid token, langsung redirect
+    redirect("/login"); // kalau token invalid, SSR redirect
   }
 
   return <AdminLayout adminName={adminName}>{children}</AdminLayout>;
