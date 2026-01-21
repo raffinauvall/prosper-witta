@@ -1,12 +1,32 @@
 "use client";
 
-export default function SearchBar({ products, setFilteredProducts }: any) {
+import { Product } from "@/lib/types";
+
+interface Props {
+  products: Product[] | undefined | null; // bisa undefined/null
+  setFilteredProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+}
+
+export default function SearchBar({ products, setFilteredProducts }: Props) {
   const handleSearch = (value: string) => {
-    setFilteredProducts(
-      products.filter((p: any) =>
-        p.name.toLowerCase().includes(value.toLowerCase())
-      )
+    if (!products || products.length === 0) {
+      setFilteredProducts([]);
+      return;
+    }
+
+    const searchValue = value.toLowerCase().trim();
+
+    if (searchValue === "") {
+      // reset ke semua product kalau input kosong
+      setFilteredProducts(products);
+      return;
+    }
+
+    const filtered = products.filter((p) =>
+      p.name.toLowerCase().includes(searchValue)
     );
+
+    setFilteredProducts(filtered);
   };
 
   return (
