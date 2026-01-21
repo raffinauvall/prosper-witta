@@ -18,7 +18,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login({ username, password }); 
-      router.push("/admin"); 
+      window.location.href = "/admin";
     } catch (err: any) {
       alert(err.message || "Login gagal");
     } finally {
