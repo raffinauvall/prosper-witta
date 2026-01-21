@@ -6,8 +6,10 @@ import { News } from "@/lib/types";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function NewsPage() {
+  const { t } = useLanguage();
   const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,10 +28,10 @@ export default function NewsPage() {
       <section className=" bg-white">
         <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col gap-1">
           <h1 className="text-2xl font-semibold tracking-tight">
-            Company News
+            {t("news.title")}
           </h1>
           <p className="text-sm text-gray-500">
-            Latest updates and announcements from our company
+            {t("news.subtitle")}
           </p>
         </div>
       </section>
