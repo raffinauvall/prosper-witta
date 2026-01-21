@@ -5,10 +5,11 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } } // <- ubah jadi object langsung
+  context: { params: Promise<{ id: string }> } // <- pakai Promise supaya aman di production
 ) {
   try {
-    const productId = Number(params.id);
+    const { id } = await context.params;
+    const productId = Number(id);
 
     if (!productId || isNaN(productId)) {
       return NextResponse.json({ message: "Invalid product id" }, { status: 400 });
@@ -73,10 +74,11 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } } // <- ubah juga di DELETE
+  context: { params: Promise<{ id: string }> } // <- pakai Promise juga
 ) {
   try {
-    const productId = Number(params.id);
+    const { id } = await context.params;
+    const productId = Number(id);
 
     if (!productId || isNaN(productId)) {
       return NextResponse.json({ message: "Invalid product id" }, { status: 400 });

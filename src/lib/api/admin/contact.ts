@@ -1,6 +1,6 @@
-import { Contact } from "@/lib/types/contact";
+import { Contact } from "@/lib/types";
 
-export async function getContact(): Promise<Contact[]> {
+export async function getContact(): Promise<{ data: Contact[]; message?: string }> {
   const res = await fetch("/api/admin/contact", {
     credentials: "include",
     cache: "no-store",
@@ -11,5 +11,6 @@ export async function getContact(): Promise<Contact[]> {
     throw new Error(err.message || "Failed to fetch Contact Inquiries");
   }
 
-  return res.json();
+  const data = await res.json();
+  return { data }; // bungkus di object
 }

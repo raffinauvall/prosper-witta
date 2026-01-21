@@ -1,12 +1,13 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { success, failure } from "@/lib/api-response";
 
-type Params = { params: { id: string } };
-
-export async function GET(_req: NextRequest, { params }: Params) {
+export async function GET(
+  _req: NextRequest,
+  context: { params: Promise<{ id: string }> } // <- pakai Promise supaya type-safe
+) {
   try {
-    const productId = params.id;
+    const { id: productId } = await context.params; // wajib await karena Promise
 
     const { data: msds } = await supabaseAdmin.storage
       .from("documents")
