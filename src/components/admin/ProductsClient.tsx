@@ -7,7 +7,7 @@ import SearchBar from "./SearchBar";
 import CreateProductModal from "./modals/CreateProductModal";
 import DeleteConfirmModal from "./modals/DeleteConfirmModal";
 import UpdateProductModal from "./modals/UpdateProductModal";
-import { fetchAdminProducts, deleteProduct } from "@/lib/api/products";
+import { fetchAdminProducts, deleteProduct } from "@/lib/api/products/products";
 import { Product } from "@/lib/types";
 
 export default function ProductsClient() {
@@ -43,7 +43,11 @@ export default function ProductsClient() {
   };
 
   const handleDeleteConfirm = async () => {
-    if (deleteId === null) return;
+    console.log("DELETE ID =", deleteId);
+    if (deleteId === null) {
+    console.error("deleteId is null");
+    return;
+  }
     try {
       await deleteProduct(deleteId);
       alert("Product deleted");
