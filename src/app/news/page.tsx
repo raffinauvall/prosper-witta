@@ -18,7 +18,7 @@ export default function NewsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 pt-[110px]">
+    <div className="min-h-screen flex flex-col bg-gray-50 pt-[80px]">
       {/* NAVBAR */}
       <Navbar />
 
@@ -58,7 +58,7 @@ export default function NewsPage() {
                 <a
                   key={item.id}
                   href={`/news/${item.slug}`}
-                  className="group rounded-2xl overflow-hidden border bg-white hover:shadow-xl transition-all duration-300"
+                  className="group rounded-2xl overflow-hidden shadow bg-white hover:shadow-xl transition-all duration-300"
                 >
                   {/* THUMBNAIL */}
                   {item.thumbnail_url ? (
@@ -87,14 +87,13 @@ export default function NewsPage() {
 
                     <div className="flex items-center justify-between pt-2 text-xs text-gray-400">
                       <span>
-                        {new Date(item.published_at).toLocaleDateString(
-                          "id-ID",
-                          {
+                        {item.published_at
+                          ? new Date(item.published_at).toLocaleDateString("id-ID", {
                             day: "numeric",
                             month: "long",
                             year: "numeric",
-                          }
-                        )}
+                          })
+                          : "Tanggal belum tersedia"}
                       </span>
 
                       <span className="text-blue-600 font-medium group-hover:underline">
