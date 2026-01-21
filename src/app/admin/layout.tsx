@@ -4,10 +4,14 @@ import AdminLayout from "./AdminLayout";
 import { verifyAdmin } from "@/lib/authServer";
 
 export default async function AdminRootLayout({ children }: { children: React.ReactNode }) {
+  let adminName = "Admin";
+
   try {
-    const payload = await verifyAdmin(); // SSR, baca cookie dari Next.js
-    return <AdminLayout adminName={payload.username}>{children}</AdminLayout>;
+    const payload = await verifyAdmin(); 
+    adminName = payload.username;
   } catch {
-    redirect("/login"); // token invalid? redirect SSR
+    redirect("/login"); 
   }
+
+  return <AdminLayout adminName={adminName}>{children}</AdminLayout>;
 }

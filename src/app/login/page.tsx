@@ -17,24 +17,15 @@ export default function LoginPage() {
   async function handleLogin() {
     setLoading(true);
     try {
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        alert(data.message || "Login gagal");
-        return;
-      }
-
-      // Login berhasil → API redirect SSR ke /admin
-      window.location.href = "/admin";
+      await login({ username, password }); 
+      router.push("/admin"); 
+    } catch (err: any) {
+      alert(err.message || "Login gagal");
     } finally {
       setLoading(false);
     }
   }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f5f7fa] p-4">
       <motion.div

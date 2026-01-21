@@ -1,8 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { failure } from "@/lib/api-response";
+import { successWithCookies, failure } from "@/lib/api-response";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
@@ -31,19 +30,20 @@ export async function POST(req: Request) {
       { expiresIn: "1d" }
     );
 
-  
-    const res = NextResponse.redirect(new URL("/admin", req.url));
-    res.cookies.set({
-      name: "session_token",
-      value: token,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24, // 1 hari
-    });
-
-    return res;
+    return successWithCookies(
+      { user: { id: admin.id, username: admin.username } },
+      (res) => {
+        res.cookies.set({
+          name: "session_token",
+          value: token,
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          path: "/",
+          maxAge: 60 * 60 * 24,
+        });
+      }
+    );
   } catch (err) {
     console.error("LOGIN ERROR:", err);
     return failure("Server error", 500);

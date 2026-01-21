@@ -9,10 +9,11 @@ export function middleware(req: NextRequest) {
   const isAdminRoute = pathname.startsWith("/admin");
   const isLoginPage = pathname === "/login";
 
-  // --- proteksi route admin ---
+  // Proteksi admin
   if (isAdminRoute) {
-    if (!token) return NextResponse.redirect(new URL("/login", req.url));
-
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
     try {
       jwt.verify(token, process.env.JWT_SECRET!);
     } catch {
@@ -22,7 +23,7 @@ export function middleware(req: NextRequest) {
     }
   }
 
-  // --- proteksi login page ---
+  // Proteksi login page: kalau sudah login redirect ke /admin
   if (isLoginPage && token) {
     try {
       jwt.verify(token, process.env.JWT_SECRET!);
