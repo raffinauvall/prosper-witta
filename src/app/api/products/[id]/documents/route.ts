@@ -1,9 +1,10 @@
+import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { success, failure } from "@/lib/api-response";
 
 type Params = { params: { id: string } };
 
-export async function GET(_req: Request, { params }: Params) {
+export async function GET(_req: NextRequest, { params }: Params) {
   try {
     const productId = params.id;
 
