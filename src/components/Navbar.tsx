@@ -22,168 +22,142 @@ export default function Navbar() {
       return;
     }
 
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, [allowTransparent]);
 
-  // ===== UNDERLINE COLOR =====
+  const textColor =
+    scrolled || !allowTransparent ? "text-black" : "text-white";
+
   const underlineColor =
     scrolled || !allowTransparent ? "bg-[#d4af37]" : "bg-white";
 
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 w-full z-50 px-6 md:px-10 py-5 flex items-center justify-between transition-all duration-300
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300
         ${
           scrolled
-            ? "bg-white shadow-md text-black"
+            ? "bg-white/80 backdrop-blur-md shadow-sm"
             : allowTransparent
-            ? "bg-transparent text-white"
-            : "bg-white shadow-md text-black"
+            ? "bg-transparent"
+            : "bg-white shadow-sm"
         }`}
       >
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="w-14 h-14 flex items-center justify-center">
-            <img src="/logo.png" width={100} height={100} alt="Logo" />
+        <div className="relative px-6 md:px-10 py-4 flex items-center justify-between">
+
+          {/* LOGO */}
+          <div className="flex items-center gap-3">
+            <img
+              src="/logo.png"
+              alt="Logo"
+              className="w-14 h-auto object-contain"
+            />
+
+            <span
+              className={`text-lg font-bold leading-tight ${textColor}`}
+            >
+              Prosper <br /> Witta Sejahtera
+            </span>
           </div>
 
-          <span
-            className={`font-semibold text-lg font-maison leading-tight transition ${
-              scrolled || !allowTransparent ? "text-black" : "text-white"
-            }`}
+          {/* CENTER NAV */}
+          <ul
+            className={`hidden md:flex items-center gap-12
+            text-[18px] font-medium tracking-tight
+            absolute left-1/2 -translate-x-1/2 ${textColor}`}
           >
-            Prosper <br /> Witta Sejahtera
-          </span>
-        </div>
+            {[
+              { label: t("nav.home"), href: "/" },
+              { label: t("nav.about"), href: "/about" },
+              { label: t("nav.product"), href: "/products" },
+              { label: t("nav.news"), href: "/news" },
+              { label: t("nav.contact"), href: "/contact" },
+            ].map((item) => {
+              const active = pathname === item.href;
 
-        {/* Desktop menu */}
-        <ul
-          className={`hidden md:flex items-center gap-10 text-sm transition ${
-            scrolled || !allowTransparent ? "text-black" : "text-white"
-          }`}
-        >
-          {[
-            { label: t("nav.home"), href: "/" },
-            { label: t("nav.about"), href: "/about" },
-            { label: t("nav.product"), href: "/products" },
-            { label: t("nav.news"), href: "/news" },
-          ].map((item) => {
-            const isActive = pathname === item.href;
+              return (
+                <li key={item.href} className="relative group">
+                  <Link
+                    href={item.href}
+                    className="opacity-80 hover:opacity-100 transition"
+                  >
+                    {item.label}
+                  </Link>
 
-            return (
-              <li key={item.href} className="relative group text-[20px]">
-                <Link href={item.href}>{item.label}</Link>
-
-                {/* Hover underline */}
-                <span
-                  className={`absolute left-0 -bottom-1 h-[2px] w-full origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${underlineColor}`}
-                />
-
-                {/* Active underline */}
-                {isActive && (
                   <span
-                    className={`absolute left-0 -bottom-1 h-[2px] w-full ${underlineColor}`}
+                    className={`absolute left-0 -bottom-1 h-[1.5px] w-full transition-transform duration-300
+                    ${
+                      active
+                        ? "scale-x-100"
+                        : "scale-x-0 group-hover:scale-x-100"
+                    } ${underlineColor}`}
                   />
-                )}
-              </li>
-            );
-          })}
+                </li>
+              );
+            })}
+          </ul>
 
-          {/* Contact Button */}
-          <li>
-            <Link
-              href="/contact"
-              className={`hidden md:inline-block px-5 py-2 rounded-lg font-semibold transition text-[16px]
-              ${
-                scrolled || !allowTransparent
-                  ? "bg-yellow-500 text-white hover:bg-yellow-400"
-                  : "border border-white text-white hover:bg-white hover:text-black"
-              }`}
-            >
-              {t("nav.contact")}
-            </Link>
-          </li>
-
-          {/* Language Switcher */}
-          <li>
+          {/* RIGHT */}
+          <div
+            className={`hidden md:flex items-center gap-4
+            ${textColor} opacity-80 hover:opacity-100 transition`}
+          >
             <LanguageSwitcher />
-          </li>
-        </ul>
+          </div>
 
-        {/* Hamburger */}
-        <button
-          onClick={() => setOpen(true)}
-          className={`md:hidden text-2xl ${
-            scrolled || !allowTransparent ? "text-black" : "text-white"
-          }`}
-        >
-          ☰
-        </button>
+          {/* HAMBURGER */}
+          <button
+            onClick={() => setOpen(true)}
+            className={`md:hidden text-2xl ${textColor}`}
+          >
+            ☰
+          </button>
+        </div>
       </nav>
 
-      {/* Overlay */}
+      {/* OVERLAY */}
       <div
-        className={`fixed inset-0 bg-black/60 z-40 transition-opacity ${
+        className={`fixed inset-0 bg-black/50 z-40 transition-opacity ${
           open ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setOpen(false)}
       />
 
-      {/* Slide menu */}
+      {/* MOBILE MENU */}
       <div
-        className={`fixed top-0 right-0 h-full w-[80%] max-w-sm bg-black text-white z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-[80%] max-w-sm bg-black text-white z-50
+        transform transition-transform duration-300 ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex justify-between items-center px-6 py-6 border-b border-white/10">
-          <span className="text-lg font-bold">{t("menu")}</span>
-          <button onClick={() => setOpen(false)} className="text-2xl">
+          <span className="text-lg font-semibold">{t("menu")}</span>
+          <button onClick={() => setOpen(false)} className="text-xl">
             ✕
           </button>
         </div>
 
-        {/* Language Switcher Mobile */}
-        <div className="px-6 mt-6">
+        <div className="px-6 mt-6 opacity-90">
           <LanguageSwitcher />
         </div>
 
-        <ul className="flex flex-col gap-6 px-6 py-10 text-lg">
-          <li>
-            <Link onClick={() => setOpen(false)} href="/">
-              {t("nav.home")}
-            </Link>
-          </li>
-          <li>
-            <Link onClick={() => setOpen(false)} href="/about">
-              {t("nav.about")}
-            </Link>
-          </li>
-          <li>
-            <Link onClick={() => setOpen(false)} href="/products">
-              {t("nav.product")}
-            </Link>
-          </li>
-          <li>
-            <Link onClick={() => setOpen(false)} href="/news">
-              {t("nav.news")}
-            </Link>
-          </li>
+        <ul className="flex flex-col gap-7 px-6 py-10 text-xl">
+          {[
+            { label: t("nav.home"), href: "/" },
+            { label: t("nav.about"), href: "/about" },
+            { label: t("nav.product"), href: "/products" },
+            { label: t("nav.news"), href: "/news" },
+            { label: t("nav.contact"), href: "/contact" },
+          ].map((item) => (
+            <li key={item.href}>
+              <Link onClick={() => setOpen(false)} href={item.href}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
         </ul>
-
-        <div className="px-6 mt-10">
-          <Link
-            onClick={() => setOpen(false)}
-            href="/contact"
-            className="block bg-yellow-500 text-center text-white py-3 rounded-lg font-semibold hover:bg-yellow-400 transition"
-          >
-            {t("nav.contact")}
-          </Link>
-        </div>
       </div>
     </>
   );
