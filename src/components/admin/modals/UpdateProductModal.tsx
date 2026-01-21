@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Category } from "@/lib/types";
 import FileUploadField from "../FileUploadField";
 import { getProductDocumentStatus } from "@/lib/api/documents/documents";
+
 type Props = {
   product: any;
   onClose: () => void;
@@ -15,23 +16,26 @@ export default function UpdateProductModal({
   onClose,
   onUpdated,
 }: Props) {
-  const initialCategoryIds = product.product_categories
-    ? product.product_categories.map((pc: any) => pc.categories.id)
+  /* ==================== INITIAL CATEGORY IDS ==================== */
+  const initialCategoryIds = Array.isArray(product?.product_categories)
+    ? product.product_categories
+        .map((pc: any) => pc.categories?.id)
+        .filter(Boolean)
     : [];
 
+  /* ==================== STATE ==================== */
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [msdsFile, setMsdsFile] = useState<File | null>(null);
   const [tdsFile, setTdsFile] = useState<File | null>(null);
 
-
   const [removeMsds, setRemoveMsds] = useState(false);
   const [removeTds, setRemoveTds] = useState(false);
 
   const [docStatus, setDocStatus] = useState({
     msds: false,
-    tds: false
+    tds: false,
   });
 
   const [form, setForm] = useState({
@@ -44,7 +48,7 @@ export default function UpdateProductModal({
     display: true,
   });
 
-  /* ================= Sync product -> form ================= */
+  /* ==================== SYNC PRODUCT -> FORM ==================== */
   useEffect(() => {
     if (!product) return;
 
@@ -57,38 +61,44 @@ export default function UpdateProductModal({
       categories: initialCategoryIds,
       display: product.display ?? true,
     });
-  }, [product]);
 
-  /* ================= Load categories ================= */
-  useEffect(() => {
-    async function fetchCategories() {
-      const res = await fetch("/api/products/category");
-      const data = await res.json();
-      setCategories(data);
-    }
-    fetchCategories();
-  }, []);
-  /* ================= Load document status ================= */
-  useEffect(() => {
-    if (!product?.id) return;
-
-    getProductDocumentStatus(product.id)
-      .then(setDocStatus)
-      .catch(() => {
-        setDocStatus({ msds: false, tds: false });
-      });
-  }, [product?.id]);
-
-  useEffect(() => {
     setRemoveMsds(false);
     setRemoveTds(false);
     setMsdsFile(null);
     setTdsFile(null);
   }, [product]);
 
+  /* ==================== LOAD CATEGORIES ==================== */
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await fetch("/api/products/category");
+        const json = await res.json();
+        // jika API pakai { data: [...] } atau langsung array
+        const cats: Category[] = Array.isArray(json?.data)
+          ? json.data
+          : Array.isArray(json)
+          ? json
+          : [];
+        setCategories(cats);
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+        setCategories([]);
+      }
+    }
+    fetchCategories();
+  }, []);
 
-  /* ================= Handlers ================= */
+  /* ==================== LOAD DOCUMENT STATUS ==================== */
+  useEffect(() => {
+    if (!product?.id) return;
 
+    getProductDocumentStatus(product.id)
+      .then(setDocStatus)
+      .catch(() => setDocStatus({ msds: false, tds: false }));
+  }, [product?.id]);
+
+  /* ==================== HANDLERS ==================== */
   const toggleCategory = (id: number) => {
     setForm((prev) => ({
       ...prev,
@@ -115,23 +125,28 @@ export default function UpdateProductModal({
     if (msdsFile) formData.append("msds", msdsFile);
     if (tdsFile) formData.append("tds", tdsFile);
 
-    const res = await fetch(`/api/products/${product.id}`, {
-      method: "PUT",
-      body: formData,
-    });
+    try {
+      const res = await fetch(`/api/admin/products/${product.id}`, {
+        method: "PUT",
+        body: formData,
+      });
 
-    setLoading(false);
-
-    if (res.ok) {
-      onUpdated();
-      onClose();
-    } else {
-      alert("Failed to update product");
+      if (res.ok) {
+        onUpdated();
+        onClose();
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        alert("Failed to update product: " + (errJson?.message || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Update failed:", err);
+      alert("Failed to update product due to network error");
+    } finally {
+      setLoading(false);
     }
   };
 
-  /* ================= UI ================= */
-
+  /* ==================== UI ==================== */
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white w-full max-w-2xl p-6 rounded-xl shadow-lg overflow-y-auto max-h-[90vh]">
@@ -150,9 +165,7 @@ export default function UpdateProductModal({
 
           {/* DESCRIPTION ID */}
           <div>
-            <label className="text-sm font-medium">
-              Description (Bahasa Indonesia)
-            </label>
+            <label className="text-sm font-medium">Description (Bahasa Indonesia)</label>
             <textarea
               className="border p-3 rounded-lg w-full mt-1"
               rows={3}
@@ -160,10 +173,7 @@ export default function UpdateProductModal({
               onChange={(e) =>
                 setForm((prev) => ({
                   ...prev,
-                  description: {
-                    ...prev.description,
-                    id: e.target.value,
-                  },
+                  description: { ...prev.description, id: e.target.value },
                 }))
               }
             />
@@ -171,9 +181,7 @@ export default function UpdateProductModal({
 
           {/* DESCRIPTION EN */}
           <div>
-            <label className="text-sm font-medium">
-              Description (English)
-            </label>
+            <label className="text-sm font-medium">Description (English)</label>
             <textarea
               className="border p-3 rounded-lg w-full mt-1"
               rows={3}
@@ -181,10 +189,7 @@ export default function UpdateProductModal({
               onChange={(e) =>
                 setForm((prev) => ({
                   ...prev,
-                  description: {
-                    ...prev.description,
-                    en: e.target.value,
-                  },
+                  description: { ...prev.description, en: e.target.value },
                 }))
               }
             />
@@ -196,15 +201,10 @@ export default function UpdateProductModal({
               type="checkbox"
               checked={form.display}
               onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  display: e.target.checked,
-                }))
+                setForm((prev) => ({ ...prev, display: e.target.checked }))
               }
             />
-            <span className="text-sm font-medium">
-              Display product on website
-            </span>
+            <span className="text-sm font-medium">Display product on website</span>
           </div>
 
           {/* FILE UPLOAD */}
@@ -219,7 +219,6 @@ export default function UpdateProductModal({
               }}
               onRemoveExisting={() => setRemoveMsds(true)}
             />
-
             <FileUploadField
               label="TDS"
               file={tdsFile}
@@ -230,40 +229,36 @@ export default function UpdateProductModal({
               }}
               onRemoveExisting={() => setRemoveTds(true)}
             />
-
           </div>
-
 
           {/* CATEGORY PICKER */}
           <div>
             <label className="font-medium">Categories</label>
             <div className="flex gap-2 flex-wrap mt-2">
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => toggleCategory(cat.id)}
-                  className={`px-3 py-1 rounded text-sm border ${form.categories.includes(cat.id)
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-700"
+              {Array.isArray(categories) &&
+                categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => toggleCategory(cat.id)}
+                    className={`px-3 py-1 rounded text-sm border ${
+                      form.categories.includes(cat.id)
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-200 text-gray-700"
                     }`}
-                >
-                  {cat.name}
-                </button>
-              ))}
+                  >
+                    {cat.name}
+                  </button>
+                ))}
             </div>
           </div>
         </div>
 
         {/* ACTIONS */}
         <div className="flex justify-end gap-3 mt-6">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg border"
-          >
+          <button onClick={onClose} className="px-4 py-2 rounded-lg border">
             Cancel
           </button>
-
           <button
             onClick={handleUpdate}
             disabled={loading}
