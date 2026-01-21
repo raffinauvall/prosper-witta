@@ -136,7 +136,11 @@ const dictionary: Record<Lang, Dictionary> = {
                     title: "Pengolahan Logam",
                     desc: "Bahan kimia untuk proses logam, cairan mesin, dan perlakuan permukaan.",
                 },
+                
             },
+            search: "Cari Produk...",
+            msds: "Menyediakan informasi mengenai keselamatan, penanganan, penyimpanan, dan peraturan terkait produk ini.",
+            tds: "Menyediakan data kinerja teknis, panduan aplikasi, dan informasi penanganan untuk produk ini.",
         },
         contact: {
             badge: "Hubungi Kami",
@@ -179,172 +183,186 @@ const dictionary: Record<Lang, Dictionary> = {
             social_whatsapp: "WhatsApp",
         }
 
+
     },
 
     en: {
-        nav: {
-            home: "Home",
-            about: "About",
-            product: "Product",
-            contact: "Contact Us",
-            news: "News"
-        },
+  nav: {
+    home: "Home",
+    about: "About",
+    product: "Product",
+    contact: "Contact Us",
+    news: "News",
+  },
 
-        home: {
-            hero: {
-                title1: "Trusted Chemical Solutions",
-                title2: "for a Better Industry.",
-                description:
-                    "Delivering certified, high-quality industrial chemicals with reliable supply, strict safety standards, and long-term industry partnership.",
-            },
-            about: {
-                title1: "Supplying more than chemicals",
-                title2: "We Deliver Trust",
-                description: "PT Prosper Witta Sejahtera is a chemical trading company established in 2024. We serve industrial applications such as: Home & Personal Care, Institutional & Industrial Cleaner, Veterinary, Mining, Water Treatment, Metal Working."
-            },
-            principle: {
-                title: "Trusted by Our Partners",
-            },
-            product: {
-                title1: "Powering Industries with",
-                title2: "Reliable Chemical Solutions",
-                subtitle:
-                    "Advanced chemical supply backed by trust, consistency, and long-term partnership.",
-            },
-        },
-
-        about: {
-            hero: {
-                title: "Driving Industrial Progress Through -",
-                highlight: "Reliable Chemical Solutions.",
-                subtitle:
-                    "PT Prosper Witta Sejahtera is a chemical trading company committed to delivering innovative solutions for diverse industrial needs.",
-            },
-
-            company: {
-                title: "Company Overview",
-                desc1:
-                    "PT Prosper Witta Sejahtera was established in 2024 as a chemical trading company providing products and solutions across industrial sectors.",
-                desc2:
-                    "We serve industries such as Home & Personal Care, Institutional Cleaning, Veterinary, Mining, Water Treatment, and Metal Working.",
-            },
-
-            feature: {
-                vision: {
-                    badge: "Aspiration",
-                    title: "Our Vision",
-                    desc:
-                        "To establish ourselves as a globally recognized specialist company delivering innovative products, reliable services, and sustainable solutions.",
-                },
-                mission: {
-                    badge: "Strategy",
-                    title: "Our Mission",
-                    desc:
-                        "To place customers at the center of everything we do by delivering consistent quality, reliable supply, exceptional service, and continuous innovation.",
-                },
-            },
-
-            values: {
-                badge: "Our Principles",
-                title: "Company Values",
-                collaboration: {
-                    title: "Collaboration",
-                    desc:
-                        "Working closely with customers and partners to achieve shared goals.",
-                },
-                innovation: {
-                    title: "Innovation",
-                    desc:
-                        "Continuously seeking better and more effective solutions.",
-                },
-                sustainability: {
-                    title: "Sustainability",
-                    desc:
-                        "Supporting safe and environmentally responsible industrial practices.",
-                },
-            },
-        },
-        products: {
-            hero: {
-                title1: "Built on Quality",
-                title2: "Driven by Industrial Needs",
-                subtitle:
-                    "From industrial cleaning to mining, veterinary, and water treatment...",
-            },
-
-            categories: {
-                title: "Our Product Categories",
-                subtitle:
-                    "Specialized chemical solutions built to support different industrial sectors...",
-
-                home: {
-                    title: "Home & Personal Care",
-                    desc: "High-quality chemicals for daily hygiene...",
-                },
-                industrial: {
-                    title: "Institutional & Industrial Cleaner",
-                    desc: "Industrial-grade cleaning chemicals...",
-                },
-                veterinary: {
-                    title: "Veterinary",
-                    desc: "Chemical solutions supporting animal health...",
-                },
-                mining: {
-                    title: "Mining",
-                    desc: "Specialized chemicals for mineral processing...",
-                },
-                water: {
-                    title: "Water Treatment",
-                    desc: "Water purification & treatment solutions...",
-                },
-                metal: {
-                    title: "Metal Working",
-                    desc: "Chemicals for metal processing...",
-                },
-            },
-        },
-        contact: {
-            badge: "Contact Us",
-            title: "Contact",
-            highlight: "Us",
-            subtitle:
-                "We are ready to assist you anytime. Please contact us via the form or official contact information below.",
-            contactInfo: "Contact Information",
-            formTitle: "Send Message",
-
-            email: "Email",
-            phone: "Phone",
-            address: "Office Address",
-
-            name: "Name",
-            namePlaceholder: "Your full name",
-            emailPlaceholder: "Your email address",
-            message: "Message",
-            messagePlaceholder: "Write your message here...",
-            submit: "Send Message",
-        },
-        footer: {
-            company_desc_1: "Supplying More Than Chemicals — We Deliver Trust.",
-            company_desc_2:
-                "Partnering industries with reliable, consistent, and high-performance chemical solutions.",
-
-            quick_links: "Quick Links",
-            products: "Our Products",
-            contact: "Contact Us",
-
-            address: "Jakarta, Indonesia",
-            email: "admin@prosperwittasejahtera.com",
-            phone: "(021) 2188 5249",
-
-            copyright:
-                "© {year} PT Prosper Witta Sejahtera. All rights reserved.",
-
-            social_linkedin: "LinkedIn",
-            social_whatsapp: "WhatsApp",
-        }
-
-
+  home: {
+    hero: {
+      title1: "Trusted Chemical Solutions",
+      title2: "for a Better Industry.",
+      description:
+        "Delivering certified, high-quality industrial chemicals with reliable supply, strict safety standards, and long-term industry partnership.",
     },
+    about: {
+      title1: "Supplying More Than Chemicals",
+      title2: "We Deliver Trust",
+      description:
+        "PT Prosper Witta Sejahtera is a chemical trading company established in 2024. We serve industrial applications such as Home & Personal Care, Institutional & Industrial Cleaning, Veterinary, Mining, Water Treatment, and Metal Working.",
+    },
+    principle: {
+      title: "Trusted by Our Partners",
+    },
+    product: {
+      title1: "Powering Industries with",
+      title2: "Reliable Chemical Solutions",
+      subtitle:
+        "Advanced chemical supply backed by trust, consistency, and long-term partnership.",
+    },
+  },
+
+  about: {
+    hero: {
+      title: "Driving Industrial Progress Through",
+      highlight: "Reliable Chemical Solutions.",
+      subtitle:
+        "PT Prosper Witta Sejahtera is a chemical trading company committed to delivering innovative and dependable solutions for diverse industrial needs.",
+    },
+
+    company: {
+      title: "Company Overview",
+      desc1:
+        "PT Prosper Witta Sejahtera was established in 2024 as a chemical trading company focused on providing high-quality products and solutions across multiple industrial sectors.",
+      desc2:
+        "We serve industries including Home & Personal Care, Institutional & Industrial Cleaning, Veterinary, Mining, Water Treatment, and Metal Working.",
+    },
+
+    feature: {
+      vision: {
+        badge: "Aspiration",
+        title: "Our Vision",
+        desc:
+          "To establish ourselves as a globally recognized specialist company in the Cleaning, Feed & Veterinary, and Mining industries through innovative products, reliable services, and sustainable solutions.",
+      },
+      mission: {
+        badge: "Strategy",
+        title: "Our Mission",
+        desc:
+          "To place customers at the center of everything we do by delivering consistent quality, reliable supply, exceptional service, and continuous innovation.",
+      },
+    },
+
+    values: {
+      badge: "Our Principles",
+      title: "Company Values",
+      collaboration: {
+        title: "Collaboration",
+        desc:
+          "Working closely with customers and partners to achieve shared goals and long-term success.",
+      },
+      innovation: {
+        title: "Innovation",
+        desc:
+          "Continuously seeking new and better solutions to improve efficiency, performance, and value.",
+      },
+      sustainability: {
+        title: "Sustainability",
+        desc:
+          "Supporting safe, responsible, and environmentally sustainable industrial practices.",
+      },
+    },
+  },
+
+  products: {
+    hero: {
+      title1: "Built on Quality",
+      title2: "Driven by Industrial Needs",
+      subtitle:
+        "From industrial cleaning to mining, veterinary, water treatment, and metal processing, we provide chemical solutions designed for performance, safety, and long-term reliability.",
+    },
+
+    categories: {
+      title: "Our Product Categories",
+      subtitle:
+        "Specialized chemical solutions designed to support diverse industrial sectors with consistent quality and dependable performance.",
+
+      home: {
+        title: "Home & Personal Care",
+        desc:
+          "High-quality chemical ingredients for hygiene products, personal care formulations, and household applications.",
+      },
+      industrial: {
+        title: "Institutional & Industrial Cleaner",
+        desc:
+          "Industrial-grade cleaning chemicals for factories, facilities, equipment, and heavy-duty applications.",
+      },
+      veterinary: {
+        title: "Veterinary",
+        desc:
+          "Chemical solutions formulated to support animal health, hygiene, and biosecurity systems.",
+      },
+      mining: {
+        title: "Mining",
+        desc:
+          "Specialized chemicals for mineral processing, flotation, extraction, and mining performance optimization.",
+      },
+      water: {
+        title: "Water Treatment",
+        desc:
+          "Chemical solutions for water purification, treatment, and quality control in industrial and commercial applications.",
+      },
+      metal: {
+        title: "Metal Working",
+        desc:
+          "Chemicals designed for metal processing, machining fluids, surface treatment, and corrosion control.",
+      },
+    },
+      search: "Search Product...",
+      msds: "Provides safety, handling, storage, and regulatory information related to this product.",
+      tds: "Provides technical performance data, application guidance, and handling information for this product."
+  },
+
+  contact: {
+    badge: "Contact Us",
+    title: "Contact",
+    highlight: "Us",
+    subtitle:
+      "We are ready to assist you at any time. Please reach out to us through the form or the official contact information below for further inquiries.",
+    contactInfo: "Contact Information",
+    formTitle: "Send Message",
+
+    email: "Email",
+    phone: "Phone",
+    address: "Office Address",
+
+    name: "Name",
+    namePlaceholder: "Your full name",
+    emailPlaceholder: "Your email address",
+    message: "Message",
+    messagePlaceholder: "Write your message here...",
+    submit: "Send Message",
+  },
+
+  footer: {
+    company_desc_1:
+      "Supplying More Than Chemicals — We Deliver Trust.",
+    company_desc_2:
+      "Partnering industries with reliable, consistent, and high-performance chemical solutions.",
+
+    quick_links: "Quick Links",
+    products: "Our Products",
+    contact: "Contact Us",
+
+    address: "Jakarta, Indonesia",
+    email: "admin@prosperwittasejahtera.com",
+    phone: "(021) 2188 5249",
+
+    copyright:
+      "© {year} PT Prosper Witta Sejahtera. All rights reserved.",
+
+    social_linkedin: "LinkedIn",
+    social_whatsapp: "WhatsApp",
+  },
+},
+
 };
 
 /* ================= HELPER ================= */

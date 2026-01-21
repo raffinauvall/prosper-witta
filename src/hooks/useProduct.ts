@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Product } from "@/lib/types";
-import { fetchProducts } from "../lib/api/products";
+import { fetchProducts } from "../lib/api/products/products";
 
 export const useProducts = (category: string) => {
   const [products, setProducts] = useState<Product[]>([]);

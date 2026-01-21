@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
 import { Product } from "@/lib/types";
+import { useLanguage } from "@/context/LanguageContext";
 
 type ProductSelectorProps = {
   products: Product[];
@@ -19,7 +20,7 @@ export default function ProductSidebar({
 }: ProductSelectorProps) {
 
   const [search, setSearch] = useState("");
-
+  const { t } = useLanguage();
   const filteredProducts = useMemo(() => {
     if (!search) return products;
     return products.filter(p =>
@@ -58,7 +59,7 @@ export default function ProductSidebar({
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search products..."
+            placeholder={t("products.search")}
             className="w-full bg-transparent outline-none text-gray-800"
           />
         </div>

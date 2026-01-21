@@ -1,83 +1,128 @@
+import { useLanguage } from "@/context/LanguageContext";
 import { ProductTdsProps } from "@/lib/types";
 
 export default function ProductTds({
-  productId,
   status,
   onRequest,
   onView,
 }: ProductTdsProps) {
+  const { t } = useLanguage();
+  const currentStatus = status.status;
+
   return (
     <div className="max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-      <h2 className="mb-2 text-lg font-semibold text-gray-900">
-        Technical Data Sheet
+      {/* TITLE */}
+      <h2 className="mb-2 flex items-center gap-2 text-lg font-semibold leading-tight text-gray-900">
+        Technical Data
+        <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+          TDS
+        </span>
       </h2>
 
+      {/* DESCRIPTION */}
       <p className="mb-4 text-sm leading-relaxed text-gray-600">
-        Dokumen ini memberikan informasi teknis terkait kinerja produk,
-        aplikasi, serta panduan penanganan dan penyimpanan.
+        {t("products.tds")}
       </p>
 
-      {/* STATUS INFO */}
-      {status === "none" && (
-        <div className="mb-4 rounded-lg bg-gray-50 p-3 text-xs text-gray-500">
-          🔒 Access to the full document is restricted.
-        </div>
+      {/* STATUS */}
+      {currentStatus === "none" && (
+        <StatusBox text="🔒 Access to this document is restricted. Request access to continue." />
       )}
 
-      {status === "pending" && (
-        <div className="mb-4 rounded-lg bg-yellow-50 p-3 text-xs text-yellow-700">
-          ⏳ Your request is pending approval.
-        </div>
+      {currentStatus === "pending" && (
+        <StatusBox
+          text="⏳ Your access request is currently under review."
+          className="bg-yellow-50 text-yellow-700"
+        />
       )}
 
-      {status === "rejected" && (
-        <div className="mb-4 rounded-lg bg-red-50 p-3 text-xs text-red-700">
-          ❌ Your request was rejected.
-        </div>
+      {currentStatus === "rejected" && (
+        <StatusBox
+          text="❌ Your request was not approved. You may submit a new request."
+          className="bg-red-50 text-red-700"
+        />
       )}
 
-      {status === "approved" && (
-        <div className="mb-4 rounded-lg bg-green-50 p-3 text-xs text-green-700">
-          ✅ Access approved. You can view the document.
-        </div>
+      {currentStatus === "approved" && (
+        <StatusBox
+          text="✅ Access granted. You can now view the document."
+          className="bg-green-50 text-green-700"
+        />
       )}
 
       {/* ACTION */}
-      {status === "none" && (
-        <button
-          onClick={() => onRequest("tds")}
-          className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
-        >
+      {currentStatus === "none" && (
+        <PrimaryButton onClick={onRequest}>
           Request Access
-        </button>
+        </PrimaryButton>
       )}
 
-      {status === "pending" && (
-        <button
-          disabled
-          className="w-full cursor-not-allowed rounded-lg bg-gray-300 px-4 py-2 text-sm font-medium text-white"
-        >
-          Pending Approval
-        </button>
+      {currentStatus === "pending" && (
+        <DisabledButton>Pending Approval</DisabledButton>
       )}
 
-      {status === "approved" && (
-        <button
-          onClick={onView}
-          className="w-full rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700"
-        >
+      {currentStatus === "approved" && (
+        <PrimaryButton onClick={onView} color="green">
           View Document
-        </button>
+        </PrimaryButton>
       )}
 
-      {status === "rejected" && (
-        <button
-          onClick={() => onRequest("tds")}
-          className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white"
-        >
+      {currentStatus === "rejected" && (
+        <PrimaryButton onClick={onRequest}>
           Request Again
-        </button>
+        </PrimaryButton>
       )}
     </div>
+  );
+}
+
+/* ---------- UI ATOMS ---------- */
+
+function StatusBox({
+  text,
+  className = "bg-gray-50 text-gray-500",
+}: {
+  text: string;
+  className?: string;
+}) {
+  return (
+    <div className={`mb-4 rounded-lg p-3 text-xs ${className}`}>
+      {text}
+    </div>
+  );
+}
+
+function PrimaryButton({
+  children,
+  onClick,
+  color = "blue",
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  color?: "blue" | "green";
+}) {
+  const colors = {
+    blue: "bg-blue-600 hover:bg-blue-700",
+    green: "bg-green-600 hover:bg-green-700",
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full rounded-lg px-4 py-2 text-sm font-medium text-white transition ${colors[color]}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function DisabledButton({ children }: { children: React.ReactNode }) {
+  return (
+    <button
+      disabled
+      className="w-full cursor-not-allowed rounded-lg bg-gray-300 px-4 py-2 text-sm font-medium text-white"
+    >
+      {children}
+    </button>
   );
 }

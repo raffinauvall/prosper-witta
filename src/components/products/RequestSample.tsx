@@ -31,10 +31,12 @@ export default function RequestSampleWidget({ onRequestSample }: Props) {
 
       <button
         onClick={onRequestSample}
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
+        className="mt-1 w-full inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
       >
-        Request Sample →
+        Request Sample
+       
       </button>
+
     </div>
   );
 }

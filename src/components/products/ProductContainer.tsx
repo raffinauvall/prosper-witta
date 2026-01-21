@@ -17,9 +17,11 @@ import RequestAccessModal from "./modals/RequestAccessModal";
 import RequestSampleWidget from "./RequestSample";
 import RequestSampleModal from "./modals/RequestSampleModal";
 
-import { fetchAccessStatus } from "@/lib/api/documents/document-access";
+import { AccessStatusItem, fetchAccessStatus } from "@/lib/api/documents/document-access";
 import type { DocumentAccessStatus } from "@/lib/types";
 import { getDeviceToken } from "@/lib/deviceToken";
+import Footer from "../Footer";
+import Navbar from "../Navbar";
 
 interface ProductContainerProps {
   category: CategoryKey;
@@ -33,31 +35,39 @@ export default function ProductContainer({ category }: ProductContainerProps) {
   const [docType, setDocType] = useState<"msds" | "tds">("msds");
   const [sampleOpen, setSampleOpen] = useState(false);
 
-  const [accessStatus, setAccessStatus] =
-    useState<DocumentAccessStatus>({
-      msds: "none",
-      tds: "none",
-    });
-
+  const [accessStatus, setAccessStatus] = useState<{
+    msds: AccessStatusItem;
+    tds: AccessStatusItem;
+  }>({
+    msds: { status: "none", accessId: null },
+    tds: { status: "none", accessId: null },
+  });
 
 
   const { products, selected, setSelected, loading, error } =
     useProducts(category);
 
 
-const loadAccessStatus = async () => {
-  if (!selected) return;
+  const loadAccessStatus = async () => {
+    if (!selected) return;
 
-  const [msds, tds] = await Promise.all([
-    fetchAccessStatus(selected.id, "msds"),
-    fetchAccessStatus(selected.id, "tds"),
-  ]);
+    const [msdsStatus, tdsStatus] = await Promise.all([
+      fetchAccessStatus(selected.id, "msds"),
+      fetchAccessStatus(selected.id, "tds"),
+    ]);
 
-  setAccessStatus({
-    msds,
-    tds,
-  });
-};
+    setAccessStatus({
+      msds: {
+        status: msdsStatus.status,
+        accessId: msdsStatus.accessId || null,
+      },
+      tds: {
+        status: tdsStatus.status,
+        accessId: tdsStatus.accessId || null,
+      },
+    });
+  };
+
 
 
   console.log("ACCESS STATUS", accessStatus);
@@ -91,7 +101,9 @@ const loadAccessStatus = async () => {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 px-6 py-12">
+    <>
+    <Navbar />
+    <main className="min-h-screen bg-gray-50 px-6 py-12 pt-[90px]">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center">
           <ProductHeader
@@ -130,25 +142,37 @@ const loadAccessStatus = async () => {
               <>
                 <ProductDetail selected={selected} />
 
-                <div className="md:flex gap-4 mt-6">
+                <div className="mt-6 flex flex-col gap-4 md:flex-row">
                   <ProductMsds
-                    productId={selected.id}
                     status={accessStatus.msds}
-                    onRequest={handleRequest}
-                    onView={() =>
-                     router.push(`/documents/${selected.id}?type=msds`)
-                    }
+                    onRequest={() => handleRequest("msds")}
+                    onView={() => {
+                      const accessId = accessStatus.msds.accessId;
+                      if (!accessId) {
+                        console.warn("Access ID belum tersedia!");
+                        return;
+                      }
+                      console.log("Opening MSDS document with accessId:", accessId);
+                      router.push(`/documents?accessId=${accessId}&type=msds`);
+                    }}
                   />
 
                   <ProductTds
-                    productId={selected.id}
                     status={accessStatus.tds}
-                    onRequest={handleRequest}
-                    onView={() =>
-                      router.push(`/documents/${selected.id}?type=tds`)
-                    }
+                    onRequest={() => handleRequest("tds")}
+                    onView={() => {
+                      const accessId = accessStatus.tds.accessId;
+                      if (!accessId) {
+                        console.warn("Access ID belum tersedia!");
+                        return;
+                      }
+                      router.push(`/documents?accessId=${accessId}&type=tds`);
+                    }}
                   />
+
                 </div>
+
+
               </>
             )}
           </div>
@@ -180,5 +204,7 @@ const loadAccessStatus = async () => {
         </div>
       </div>
     </main>
+    <Footer />
+    </>
   );
 }

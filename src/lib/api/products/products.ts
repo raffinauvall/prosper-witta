@@ -23,6 +23,25 @@ export async function fetchAdminProducts(): Promise<Product[]> {
   }
 }
 
+export async function createProductForm(data: FormData) {
+  try {
+    const res = await fetch("/api/admin/products", {
+      method: "POST",
+      body: data,
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text);
+    }
+
+    return await res.json();
+  } catch (err) {
+    console.error("Create product (form) error:", err);
+    throw err;
+  }
+}
+
 // CREATE PRODUCT
 export async function createProduct(product: Product) {
   try {
@@ -41,7 +60,7 @@ export async function createProduct(product: Product) {
 
 export async function updateProduct(id: string, product: Product) {
   try {
-    const res = await fetch(`/api/products/${id}`, {
+    const res = await fetch(`/api/admin/products/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(product),
@@ -55,13 +74,15 @@ export async function updateProduct(id: string, product: Product) {
 }
 
 export async function deleteProduct(id: number) {
-  const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
+  const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
   if (!res.ok) {
     const text = await res.text();
+    console.error("Delete response text:", text);  
     throw new Error(`HTTP ${res.status}: ${text}`);
   }
   return res.json();
 }
+
 
 
 
