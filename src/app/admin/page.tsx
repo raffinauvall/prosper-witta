@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { verifyAdmin } from "@/lib/authServer";
 import ProductsClient from "@/components/admin/ProductsClient";
-import DashboardMain from "@/components/admin/DashboardMain";
+import DashboardMain from "@/components/admin/dashboard/DashboardMain";
 
 export default async function ProductsPage() {
   try {
