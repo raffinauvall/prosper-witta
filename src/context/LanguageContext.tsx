@@ -165,6 +165,8 @@ const dictionary: Record<Lang, Dictionary> = {
             message: "Pesan",
             messagePlaceholder: "Tulis pesan Anda di sini...",
             submit: "Kirim Pesan",
+            thankYouTitle: "Terimakasih!",
+            thankYouMessage: "Pesan anda sudah kami terima. Tim kami akan segera menghubungi anda"
         },
 
         footer: {
@@ -347,6 +349,8 @@ const dictionary: Record<Lang, Dictionary> = {
             message: "Message",
             messagePlaceholder: "Write your message here...",
             submit: "Send Message",
+            thankYouTitle: "Thank you!",
+            thankYouMessage: "We have received your message. Our team will contact you soon."
         },
 
         footer: {
