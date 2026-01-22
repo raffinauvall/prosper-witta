@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 
 const logos = [
   "/images/company/company1.png",
-  "/images/company/company2.jfif",
+  "/images/company/company2.jpg",
   "/images/company/company3.png",
   "/images/company/company4.jpg",
   "/images/company/company5.jpg",
