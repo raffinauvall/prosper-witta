@@ -7,7 +7,7 @@ export type NewsDetail = News & {
 
 export async function getNewsList(): Promise<News[]> {
   const res = await fetch(`${baseUrl}/api/news`, {
-    cache: "no-store", // atau revalidate
+    cache: "no-store", 
   });
 
   if (!res.ok) {

@@ -1,9 +1,11 @@
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
-import { getNewsDetail } from "@/lib/api/news";
-import { NewsDetail } from "@/lib/api/news";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { getNewsDetail } from "@/lib/api/news";
 
 type Props = {
   params: Promise<{
@@ -11,82 +13,109 @@ type Props = {
   }>;
 };
 
-export default async function NewsDetailPage({ params }: Props) {
-  const { slug } = await params;
+/* ======================
+   SEO METADATA
+====================== */
+export async function generateMetadata(
+  { params }: Props
+): Promise<Metadata> {
+  const { slug } = await params; // ⬅️ WAJIB
 
   if (!slug) {
-    throw new Error("Slug is missing");
+    return {
+      title: "News | PT Prosper Witta Sejahtera",
+    };
   }
 
-  const news: NewsDetail = await getNewsDetail(slug);
+  const news = await getNewsDetail(slug);
+
+  if (!news) {
+    return {
+      title: "News Not Found | PT Prosper Witta Sejahtera",
+    };
+  }
+
+  return {
+    title: `${news.title} | PT Prosper Witta Sejahtera`,
+    description: news.excerpt || news.title,
+    openGraph: {
+      title: news.title,
+      description: news.excerpt,
+      images: news.thumbnail_url
+        ? [{ url: news.thumbnail_url }]
+        : [],
+    },
+  };
+}
+
+/* ======================
+   PAGE CONTENT
+====================== */
+export default async function NewsDetailPage({ params }: Props) {
+  const { slug } = await params; // ⬅️ WAJIB
+
+  if (!slug) notFound();
+
+  const news = await getNewsDetail(slug);
+
+  if (!news) notFound();
 
   return (
     <>
-    <Navbar />
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      {/* Breadcrumb */}
-      <nav className="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
-        <ol className="list-none flex space-x-2">
-          <li>
-            <Link href="/" className="hover:underline">Home</Link>
-          </li>
-          <li>/</li>
-          <li>
-            <Link href="/news" className="hover:underline">News</Link>
-          </li>
-          <li>/</li>
-          <li className="text-gray-700 font-medium">{news.title}</li>
-        </ol>
-      </nav>
+      <Navbar />
 
-      {/* Title */}
-      <h1 className="text-4xl sm:text-5xl font-extrabold mb-3 leading-tight">
-        {news.title}
-      </h1>
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        {/* Breadcrumb */}
+        <nav className="text-sm text-gray-500 mb-4">
+          <Link href="/">Home</Link> /{" "}
+          <Link href="/news">News</Link> /{" "}
+          <span className="text-gray-700">{news.title}</span>
+        </nav>
 
-      {/* Date */}
-      {news.published_at && (
-        <p className="text-gray-500 text-sm mb-8">
-          {new Date(news.published_at).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}
-        </p>
-      )}
+        {/* Title */}
+        <h1 className="text-4xl font-extrabold mb-4">
+          {news.title}
+        </h1>
 
-      {/* Thumbnail */}
-      {news.thumbnail_url && (
-        <div className="relative -mx-4 sm:-mx-6 mb-10 h-[450px] overflow-hidden rounded-2xl shadow-lg transition-transform duration-500 hover:scale-105">
-          <Image
-            src={news.thumbnail_url}
-            alt={news.title}
-            fill
-            className="object-cover"
+        {/* Date */}
+        {news.published_at && (
+          <p className="text-gray-500 text-sm mb-8">
+            {new Date(news.published_at).toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
+        )}
+
+        {/* Thumbnail */}
+        {news.thumbnail_url && (
+          <div className="relative h-[420px] mb-10 rounded-2xl overflow-hidden">
+            <Image
+              src={news.thumbnail_url}
+              alt={news.title}
+              fill
+              className="object-cover"
+            />
+          </div>
+        )}
+
+        {/* Content */}
+        <article className="prose prose-lg max-w-none">
+          <div
+            dangerouslySetInnerHTML={{ __html: news.content }}
           />
-        </div>
+        </article>
 
-      )}
+        <Link
+          href="/news"
+          className="inline-block mt-12 text-sm text-gray-600 hover:text-gray-900"
+        >
+          ← Back to News
+        </Link>
+      </div>
 
-      {/* Content */}
-      <article className="prose prose-lg prose-neutral max-w-none mx-auto">
-        {/* Drop cap style untuk paragraf pertama */}
-        <div
-          className="first-letter:text-5xl first-letter:font-bold first-letter:text-gray-800 first-letter:mr-3 first-letter:float-left"
-          dangerouslySetInnerHTML={{ __html: news.content }}
-        />
-      </article>
-
-      {/* Back Button */}
-      <Link
-        href="/news"
-        className="mt-12 inline-block text-gray-600 hover:text-gray-900 transition-colors text-sm font-medium"
-      >
-        ← Back to News
-      </Link>
-      
-    </div>
-    <Footer />
+      <Footer />
     </>
   );
 }
