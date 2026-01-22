@@ -3,9 +3,11 @@ export type NewsDetail = News & {
   content: string;
 };
 
+  const baseUrl = process.env.BASE_URL;
+
 export async function getNewsList(): Promise<News[]> {
-  const res = await fetch("/api/news", {
-    cache: "no-store",
+  const res = await fetch(`${baseUrl}/api/news`, {
+    cache: "no-store", // atau revalidate
   });
 
   if (!res.ok) {
