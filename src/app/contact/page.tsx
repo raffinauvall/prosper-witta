@@ -1,10 +1,14 @@
-"use client";
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ContactHeader from "@/components/contact/ContactHeader";
 import ContactInfo from "@/components/contact/ContactInfo";
 import ContactForm from "@/components/contact/ContactForm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact | PT Prosper Witta Sejahtera",
+  description: "Home Page",
+};
 
 export default function ContactUs() {
   return (
