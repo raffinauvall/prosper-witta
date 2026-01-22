@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { sendContact } from "@/lib/api/contact";
+import ThankYouModal from "./modals/ThankYouModal";
 
 export default function ContactForm() {
   const { t } = useLanguage();
@@ -14,6 +15,7 @@ export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +25,8 @@ export default function ContactForm() {
 
     try {
       await sendContact({ name, email, message });
-      setSuccess(t("contact.success") || "Pesan berhasil dikirim");
+      setShowModal(true);
+
       setName("");
       setEmail("");
       setMessage("");
@@ -35,6 +38,7 @@ export default function ContactForm() {
   };
 
   return (
+    <>
     <motion.form
       onSubmit={handleSubmit}
       initial={{ opacity: 0, x: 35 }}
@@ -106,5 +110,10 @@ export default function ContactForm() {
         {loading ? t("contact.sending") || "Mengirim..." : t("contact.submit")}
       </button>
     </motion.form>
+     <ThankYouModal
+      open={showModal}
+      onClose={() => setShowModal(false)}
+    />
+    </>
   );
 }
