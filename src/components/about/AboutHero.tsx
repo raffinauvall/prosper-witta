@@ -9,7 +9,7 @@ export default function AboutHero() {
   return (
     <section
       className="relative px-6 md:px-20 py-32 bg-cover bg-center bg-no-repeat mb-20"
-      style={{ backgroundImage: "url('/about.jpg')" }}
+      style={{ backgroundImage: "url('/about.png')" }}
     >
       <div className="absolute inset-0 bg-black/50" />
 

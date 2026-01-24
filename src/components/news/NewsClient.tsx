@@ -63,7 +63,7 @@ export default function NewsClient({ news }: { news: News[] }) {
                   </span>
 
                   <span className="text-blue-600 font-medium group-hover:underline">
-                    {t("news.read")} →
+                    Read →
                   </span>
                 </div>
               </div>

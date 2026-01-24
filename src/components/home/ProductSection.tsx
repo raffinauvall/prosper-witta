@@ -8,7 +8,7 @@ export default function ProductSection() {
 
     <section
       className="relative py-24 px-6 md:px-16 bg-cover bg-center"
-      style={{ backgroundImage: "url('/productsec.jpg')" }}
+      style={{ backgroundImage: "url('/productsec.png')" }}
     >
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30"></div>

@@ -16,7 +16,7 @@ export default function CompanyProfile() {
         className="grid md:grid-cols-2 gap-12 items-center"
       >
         <img
-          src="productsec.jpg"
+          src="productsec.png"
           className="rounded-2xl shadow-lg object-cover w-full h-80"
           alt="factory"
         />

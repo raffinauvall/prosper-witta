@@ -10,7 +10,7 @@ export default function ProductHero() {
     <section className="relative flex flex-col">
       <div className="absolute inset-0">
         <img
-          src="/productsec.jpg"
+          src="/productsec.png"
           alt="Chemical Industry"
           className="w-full h-full object-cover"
         />
