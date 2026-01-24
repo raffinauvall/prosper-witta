@@ -203,7 +203,7 @@ const dictionary: Record<Lang, Dictionary> = {
 
         home: {
             hero: {
-                title1: "Trusted Chemical Solutions",
+                title1: "Trusted Chemical Solutions ",
                 title2: "for a Better Industry.",
                 description:
                     "Delivering certified, high-quality industrial chemicals with reliable supply, strict safety standards, and long-term industry partnership.",
