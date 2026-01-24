@@ -14,17 +14,35 @@ const logos = [
 ];
 
 const LOOP = [...logos, ...logos, ...logos];
-const ITEM_WIDTH = 328;
-const AUTO_DELAY = 2000;``
+const DESKTOP_ITEM_WIDTH = 328;
+const AUTO_DELAY = 2000;
 
 export default function PrincipleCarousel() {
   const { t } = useLanguage();
 
   const BASE_INDEX = logos.length;
+
   const [index, setIndex] = useState(BASE_INDEX);
   const [animate, setAnimate] = useState(true);
   const [paused, setPaused] = useState(false);
+  const [itemWidth, setItemWidth] = useState(DESKTOP_ITEM_WIDTH);
+
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // RESPONSIVE WIDTH
+  useEffect(() => {
+    const updateWidth = () => {
+      setItemWidth(
+        window.innerWidth < 768
+          ? window.innerWidth
+          : DESKTOP_ITEM_WIDTH
+      );
+    };
+
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
 
   const next = () => {
     setAnimate(true);
@@ -48,32 +66,29 @@ export default function PrincipleCarousel() {
     }
   };
 
-  // ===== AUTO SLIDE =====
-  useEffect(() => {
-    if (paused) return;
+useEffect(() => {
+  if (paused) return;
 
-    intervalRef.current = setInterval(() => {
-      next();
-    }, AUTO_DELAY);
+  intervalRef.current = setInterval(next, AUTO_DELAY);
 
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [paused]);
+  return () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  };
+}, [paused]);
 
   return (
     <section className="w-full py-10 bg-white overflow-hidden">
-      <h2 className="text-center text-5xl font-bold mb-14 text-black">
+      <h2 className="text-center text-4xl md:text-5xl font-bold mb-14 text-black">
         {t("home.principle.title")}
       </h2>
 
-      <div className="max-w-6xl mx-auto flex items-center gap-6 px-6 overflow-hidden">
+      <div className="max-w-6xl mx-auto flex items-center gap-6 md:px-6 overflow-hidden">
         {/* LEFT */}
         <button
           onClick={prev}
-          className="h-12 w-12 rounded-full text-white bg-[#F5B400] shadow flex items-center justify-center hover:bg-yellow-600 flex-shrink-0"
+          className="hidden md:flex h-12 w-12 rounded-full bg-[#F5B400] text-white shadow items-center justify-center hover:bg-yellow-600"
         >
           ‹
         </button>
@@ -86,24 +101,26 @@ export default function PrincipleCarousel() {
         >
           <div
             onTransitionEnd={handleTransitionEnd}
-            className="flex gap-10"
+            className="flex"
             style={{
-              transform: `translateX(-${index * ITEM_WIDTH}px)`,
+              transform: `translateX(-${index * itemWidth}px)`,
               transition: animate ? "transform 300ms ease-out" : "none",
             }}
           >
             {LOOP.map((logo, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-72 h-32 flex items-center justify-center"
+                style={{ width: itemWidth }}
+                className="flex-shrink-0 h-40 md:h-32 flex items-center justify-center"
               >
-                <Image
-                  src={logo}
-                  alt="Company Logo"
-                  width={260}
-                  height={120}
-                  className="object-contain pointer-events-none"
-                />
+                <div className="relative w-full h-full">
+                  <Image
+                    src={logo}
+                    alt="Company Logo"
+                    fill
+                    className="object-contain px-10 pointer-events-none"
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -112,7 +129,7 @@ export default function PrincipleCarousel() {
         {/* RIGHT */}
         <button
           onClick={next}
-          className="h-12 w-12 rounded-full bg-[#F5B400] shadow text-white flex items-center justify-center hover:bg-yellow-600 flex-shrink-0"
+          className="hidden md:flex h-12 w-12 rounded-full bg-[#F5B400] text-white shadow items-center justify-center hover:bg-yellow-600"
         >
           ›
         </button>
