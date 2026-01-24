@@ -45,7 +45,7 @@ const dictionary: Record<Lang, Dictionary> = {
             about: {
                 title1: "Menyuplai Lebih Dari Sekadar Bahan Kimia —",
                 title2: "Kami Mengirimkan Kepercayaan",
-                description: "PT Prosper Witta Sejahtera adalah perusahaan perdagangan kimia yang didirikan pada tahun 2024. Kami melayani aplikasi industri seperti: Perawatan Rumah & Pribadi, Pembersih Institusional & Industri, Kedokteran Hewan, Pertambangan, Pengolahan Air, dan Pengolahan Logam."
+                description: "PT Prosper Witta Sejahtera adalah perusahaan perdagangan kimia yang didirikan pada tahun 2024. Kami melayani aplikasi industri seperti: Perawatan Rumah & Pribadi, Pembersih Institusional & Industri, Veteriner, Pertambangan, Pengolahan Air, dan Pengolahan Logam."
             }
         },
 
@@ -141,6 +141,12 @@ const dictionary: Record<Lang, Dictionary> = {
             search: "Cari Produk...",
             msds: "Menyediakan informasi mengenai keselamatan, penanganan, penyimpanan, dan peraturan terkait produk ini.",
             tds: "Menyediakan data kinerja teknis, panduan aplikasi, dan informasi penanganan untuk produk ini.",
+
+            sample: {
+                title: "Minta Sampel Produk",
+                description: "Ajukan permintaan sample produk untuk keperluan evaluasi dan pengujian internal.",
+                badge: "Sample dikirim dalam kemasan 100ml"
+            }
         },
         news: {
             title: "Berita Perusaaan",
@@ -323,7 +329,12 @@ const dictionary: Record<Lang, Dictionary> = {
             },
             search: "Search Product...",
             msds: "Provides safety, handling, storage, and regulatory information related to this product.",
-            tds: "Provides technical performance data, application guidance, and handling information for this product."
+            tds: "Provides technical performance data, application guidance, and handling information for this product.",
+            sample: {
+                title: "Request Sample Product",
+                description: "Submit a product sample request for internal evaluation and testing purposes.",
+                badge: "Samples are sent in 100ml packaging."
+            }
         },
         news: {
             title: "Company News",

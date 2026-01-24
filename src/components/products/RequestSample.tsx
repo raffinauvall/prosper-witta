@@ -1,5 +1,6 @@
 "use client";
 
+import { useLanguage } from "@/context/LanguageContext";
 import { FlaskConical, Info } from "lucide-react";
 
 type Props = {
@@ -7,6 +8,7 @@ type Props = {
 };
 
 export default function RequestSampleWidget({ onRequestSample }: Props) {
+  const { t } = useLanguage();
   return (
     <div className="flex-col items-start gap-4 rounded-xl bg-white p-5 shadow-sm transition hover:shadow-md">
       {/* Icon */}
@@ -15,18 +17,17 @@ export default function RequestSampleWidget({ onRequestSample }: Props) {
           <FlaskConical size={20} />
         </div>
         <h3 className="text-sm font-semibold text-gray-900">
-          Request Product Sample
+          {t("products.sample.title")}
         </h3>
       </div>
 
       <p className="mb-3 text-sm text-gray-600">
-        Ajukan permintaan sample produk untuk keperluan evaluasi dan
-        pengujian internal.
+        {t("products.sample.description")}
       </p>
 
       <div className="mb-4 rounded-lg bg-gray-50 p-3 flex text-xs text-gray-500">
         <Info size={15} className="me-2" />
-        Sample dikirim dalam kemasan <b className="ms-1">100ml</b>
+        {t('products.sample.badge')}
       </div>
 
       <button
