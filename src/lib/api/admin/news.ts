@@ -15,6 +15,7 @@ export async function getNews(): Promise<News[]> {
   return res.json();
 }
 
+
 export async function createNews(
   form: NewsFormData
 ): Promise<News> {
@@ -31,11 +32,11 @@ export async function createNews(
   }
 
   const data = await res.json();
-  return data[0]; 
+  return data[0];
 }
 
 export async function updateNews(
-  id: number,
+  id: string,
   form: NewsFormData
 ): Promise<News> {
   const res = await fetch(API_URL, {
@@ -44,11 +45,15 @@ export async function updateNews(
     body: JSON.stringify({ id, ...form }),
   });
 
-  if (!res.ok) throw new Error("Failed to update news");
+  if (!res.ok) {
+    throw new Error("Failed to update news");
+  }
 
   return res.json();
 }
-export async function deleteNews(id: number): Promise<void> {
+
+
+export async function deleteNews(id: string): Promise<void> {
   const res = await fetch(`${API_URL}?id=${id}`, {
     method: "DELETE",
   });
@@ -57,6 +62,7 @@ export async function deleteNews(id: number): Promise<void> {
     throw new Error("Failed to delete news");
   }
 }
+
 
 export async function uploadNewsImage(file: File): Promise<string> {
   const formData = new FormData();
