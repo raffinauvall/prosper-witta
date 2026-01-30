@@ -3,5 +3,6 @@ export interface Contact {
     name: string;
     email: string;
     message: string;
+    subscribe: boolean;
     created_at: string;
 }
