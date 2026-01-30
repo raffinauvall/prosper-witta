@@ -119,12 +119,25 @@ export default function RequestAccessModal({
                 onChange={(e) => update("name", e.target.value)}
               />
 
-              <input
-                placeholder="Work Email *"
-                className="w-full rounded-xl border px-4 py-3 text-sm"
-                value={form.email}
-                onChange={(e) => update("email", e.target.value)}
-              />
+             <div className="space-y-1">
+ 
+
+  <div className="relative">
+    <input
+      type="email"
+      placeholder="name@company.com"
+      className="w-full rounded-xl border px-4 py-3 text-sm"
+      value={form.email}
+      onChange={(e) => update("email", e.target.value)}
+    />
+
+    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-gray-400">
+      approval notification via email
+    </span>
+  </div>
+</div>
+
+
             </div>
 
             <div className="mt-5 border-t pt-4 space-y-3">
