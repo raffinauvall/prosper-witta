@@ -146,6 +146,19 @@ const dictionary: Record<Lang, Dictionary> = {
                 title: "Minta Sampel Produk",
                 description: "Ajukan permintaan sample produk untuk keperluan evaluasi dan pengujian internal.",
                 badge: "Sample dikirim dalam kemasan 100ml"
+            },
+            status:{
+                pending: "⏳ Permintaan akses Anda saat ini sedang ditinjau.",
+                approved: "✅ Akses diberikan. Anda sekarang dapat melihat dokumen tersebut.",
+                rejected: "❌ Permintaan Anda tidak disetujui. Anda dapat mengirimkan permintaan baru.",
+                none: "🔒 Akses ke dokumen ini dibatasi. Ajukan permohonan akses untuk melanjutkan.",
+            },
+            button: {
+                pending: "Menunggu Persetujuan",
+                approved: "Lihat Dokumen",
+                rejected: "Minta Lagi",
+                none: "Minta Akses",
+                sample: "Minta Sampel"
             }
         },
         news: {
@@ -334,6 +347,19 @@ const dictionary: Record<Lang, Dictionary> = {
                 title: "Request Sample Product",
                 description: "Submit a product sample request for internal evaluation and testing purposes.",
                 badge: "Samples are sent in 100ml packaging."
+            },
+            status:{
+                pending: "⏳ Your access request is currently under review.",
+                approved: "✅ Access granted. You can now view the document.",
+                rejected: "❌ Your request was not approved. You may submit a new request.",
+                none: "🔒 Access to this document is restricted. Request access to continue",
+            },
+            button: {
+                pending: "Pending Approval",
+                approved: "View Document",
+                rejected: "Request Again",
+                none: "Request Access",
+                sample: "Request Sample"
             }
         },
         news: {

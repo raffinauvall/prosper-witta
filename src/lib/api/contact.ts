@@ -2,6 +2,7 @@ type ContactPayload = {
   name: string;
   email: string;
   message: string;
+  subscribe: boolean;
 };
 
 export async function sendContact(payload: ContactPayload) {

@@ -24,26 +24,26 @@ export default function ProductMsds({
 
       {/* STATUS */}
       {currentStatus === "none" && (
-        <StatusBox text="🔒 Access to this document is restricted. Request access to continue." />
+        <StatusBox text={t("products.status.none")}/>
       )}
 
       {currentStatus === "pending" && (
         <StatusBox
-          text="⏳ Your access request is currently under review."
+          text={t("products.status.pending")}
           className="bg-yellow-50 text-yellow-700"
         />
       )}
 
       {currentStatus === "rejected" && (
         <StatusBox
-          text="❌ Your request was not approved. You may submit a new request."
+          text={t("products.status.rejected")}
           className="bg-red-50 text-red-700"
         />
       )}
 
       {currentStatus === "approved" && (
         <StatusBox
-          text="✅ Access granted. You can now view the document."
+          text={t("products.status.approved")}
           className="bg-green-50 text-green-700"
         />
       )}
@@ -51,12 +51,12 @@ export default function ProductMsds({
       {/* ACTION */}
       {currentStatus === "none" && (
         <PrimaryButton onClick={onRequest}>
-          Request Access
+          {t("products.button.none")}
         </PrimaryButton>
       )}
 
       {currentStatus === "pending" && (
-        <DisabledButton>Pending Approval</DisabledButton>
+        <DisabledButton>{t("products.button.pending")}</DisabledButton>
       )}
 
       {currentStatus === "approved" && (
@@ -65,14 +65,14 @@ export default function ProductMsds({
           color="green"
           style={{ zIndex: 20, position: "relative", pointerEvents: "auto" }}
         >
-          View Document
+          {t("products.button.approved")}
         </PrimaryButton>
 
       )}
 
       {currentStatus === "rejected" && (
         <PrimaryButton onClick={onRequest}>
-          Request Again
+          {t("products.button.rejected")}
         </PrimaryButton>
       )}
     </div>

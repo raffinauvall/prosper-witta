@@ -8,6 +8,9 @@ export async function POST(req: Request) {
     const name = body.name?.trim();
     const email = body.email?.trim();
     const message = body.message?.trim();
+    const subscribe = Boolean(body.subscribe); // ✅ NEW
+
+    /* ================= VALIDATION ================= */
 
     if (!name || !email || !message) {
       return failure("All fields are required", 400);
@@ -18,23 +21,54 @@ export async function POST(req: Request) {
       return failure("Email tidak valid", 400);
     }
 
-    const { error } = await supabaseClient
+    /* ================= SAVE CONTACT ================= */
+
+    const { error: contactError } = await supabaseClient
       .from("contact_inquiries")
       .insert([
         {
           name,
           email,
           message,
+          subscribe, // ✅ simpan flag
         },
       ]);
 
-    if (error) {
-      console.error("Supabase error:", error);
+    if (contactError) {
+      console.error("Supabase contact error:", contactError);
       return failure("Gagal menyimpan pesan", 500);
     }
 
+    /* ================= SAVE SUBSCRIBER ================= */
+    // hanya kalau centang
+
+    if (subscribe) {
+      const { error: subError } = await supabaseClient
+        .from("newsletter_subscribers")
+        .upsert(
+          [
+            {
+              email,
+              name,
+            },
+          ],
+          { onConflict: "email" } // biar gak duplicate
+        );
+
+      if (subError) {
+        console.error("Subscriber error:", subError);
+        // gak usah fail request, cukup log aja
+      }
+    }
+
+   
+
     return success(
-      { message: "Terima kasih, pesan Anda telah terkirim" },
+      {
+        message: subscribe
+          ? "Terima kasih! Anda juga berlangganan newsletter."
+          : "Terima kasih, pesan Anda telah terkirim",
+      },
       { status: 201 }
     );
   } catch (err) {

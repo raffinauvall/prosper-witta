@@ -4,10 +4,9 @@ import { useEffect } from "react";
 import { Check } from "lucide-react";
 
 export default function RequestApprovedPage() {
-  // optional: auto close / redirect
   useEffect(() => {
     const timer = setTimeout(() => {
-      window.close(); // works kalau dibuka dari email
+      window.close(); 
     }, 6000);
 
     return () => clearTimeout(timer);
