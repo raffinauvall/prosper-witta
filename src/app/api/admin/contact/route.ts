@@ -19,6 +19,7 @@ export async function GET(req: Request) {
           name,
           email,
           message,
+          subscribe,
           created_at
         `,
         { count: "exact" }
