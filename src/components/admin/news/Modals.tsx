@@ -16,10 +16,8 @@ export default function Modal({
           <button onClick={onClose} className="text-gray-500 hover:text-black">✕</button>
         </div>
 
-        {/* BODY (SCROLL) */}
-        <div className="px-6 py-4 overflow-y-auto">
-          {children}
-        </div>
+        {/* BODY */}
+        <div className="px-6 py-4 overflow-y-auto">{children}</div>
       </div>
     </div>
   );
