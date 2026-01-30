@@ -15,7 +15,7 @@ export async function sendApprovedUserEmail({
   productUrl: string;
 }) {
   await resend.emails.send({
-    from: "PT Prosper Witta Sejahtera <noreply@prosperwittasejahtera.com>",
+    from: "PT Prosper Witta Sejahtera <info@prosperwittasejahtera.com>",
     to,
     subject: "Akses Dokumen Disetujui",
     html: `
