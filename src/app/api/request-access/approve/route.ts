@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { sendApprovedUserEmail } from "@/lib/notificationEmail";
 
 export async function GET(req: Request) {
   try {
@@ -7,59 +8,84 @@ export async function GET(req: Request) {
     const token = searchParams.get("token");
 
     if (!token) {
-      return NextResponse.json({ error: "Token missing" }, { status: 400 });
+      return NextResponse.redirect(`${process.env.BASE_URL}/request-error`);
     }
 
     // 1️⃣ ambil request
-    const { data: request, error: reqError } = await supabaseAdmin
+    const { data: request } = await supabaseAdmin
       .from("document_access_requests")
       .select("*")
       .eq("token", token)
       .single();
 
-    if (reqError || !request) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 404 });
-    }
-
-    if (request.status !== "pending") {
-      return NextResponse.json(
-        { error: "Request already processed" },
-        { status: 400 }
+    if (!request || request.status !== "pending") {
+      return NextResponse.redirect(
+        `${process.env.BASE_URL}/request-already-processed`
       );
     }
 
-    // 2️⃣ update request → approved
-    const { error: updateError } = await supabaseAdmin
+    // 2️⃣ ambil product
+    const { data: product } = await supabaseAdmin
+      .from("products")
+      .select("name")
+      .eq("id", request.product_id)
+      .single();
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    // 3️⃣ ambil category_id
+    const { data: productCategory } = await supabaseAdmin
+      .from("product_categories")
+      .select("category_id")
+      .eq("product_id", request.product_id)
+      .limit(1);
+
+    const categoryId = productCategory?.[0]?.category_id;
+    if (!categoryId) {
+      throw new Error("Category ID not found");
+    }
+
+    // 4️⃣ ambil category NAME (INI SUDAH SLUG)
+    const { data: category } = await supabaseAdmin
+      .from("categories")
+      .select("name")
+      .eq("id", categoryId)
+      .single();
+
+    if (!category?.name) {
+      throw new Error("Category name not found");
+    }
+
+    const categoryKey = category.name; // 🔥 LANGSUNG PAKAI
+
+    // 5️⃣ update status
+    await supabaseAdmin
       .from("document_access_requests")
       .update({ status: "approved" })
       .eq("id", request.id);
 
-    if (updateError) throw updateError;
+    // 6️⃣ build URL
+    const productUrl = `${process.env.BASE_URL}/products/${categoryKey}`;
 
-    const accessToken = crypto.randomUUID();
-    const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24); 
-
-    const { error: insertError } = await supabaseAdmin
-      .from("document_access_tokens")
-      .insert({
-        id: accessToken,
-        document_id: request.document_id, 
-        device_token: request.device_token,
-        type: request.type,
-        expires_at: expiresAt.toISOString(),
-      });
-
-    if (insertError) throw insertError;
-
-    return NextResponse.json({
-      success: true,
-      message: "Request approved",
+    // 7️⃣ kirim email ke user
+    await sendApprovedUserEmail({
+      to: request.email,
+      name: request.name,
+      productName: product.name,
+      type: request.type,
+      productUrl,
     });
-  } catch (err: any) {
+
+    // 8️⃣ redirect admin
+    return NextResponse.redirect(
+      `${process.env.BASE_URL}/request-approved`
+    );
+  } catch (err) {
     console.error("APPROVE ERROR:", err);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
+    return NextResponse.redirect(
+      `${process.env.BASE_URL}/request-error`
     );
   }
 }
