@@ -11,19 +11,13 @@ type Props = {
   onUpdated: () => void;
 };
 
-export default function UpdateProductModal({
-  product,
-  onClose,
-  onUpdated,
-}: Props) {
-  /* ==================== INITIAL CATEGORY IDS ==================== */
+export default function UpdateProductModal({ product, onClose, onUpdated }: Props) {
   const initialCategoryIds = Array.isArray(product?.product_categories)
     ? product.product_categories
         .map((pc: any) => pc.categories?.id)
         .filter(Boolean)
     : [];
 
-  /* ==================== STATE ==================== */
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -40,10 +34,7 @@ export default function UpdateProductModal({
 
   const [form, setForm] = useState({
     name: "",
-    description: {
-      id: "",
-      en: "",
-    },
+    description: { id: "", en: "" },
     categories: [] as number[],
     display: true,
   });
@@ -54,10 +45,7 @@ export default function UpdateProductModal({
 
     setForm({
       name: product.name || "",
-      description: {
-        id: product.description?.id || "",
-        en: product.description?.en || "",
-      },
+      description: { id: product.description?.id || "", en: product.description?.en || "" },
       categories: initialCategoryIds,
       display: product.display ?? true,
     });
@@ -74,12 +62,7 @@ export default function UpdateProductModal({
       try {
         const res = await fetch("/api/products/category");
         const json = await res.json();
-        // jika API pakai { data: [...] } atau langsung array
-        const cats: Category[] = Array.isArray(json?.data)
-          ? json.data
-          : Array.isArray(json)
-          ? json
-          : [];
+        const cats: Category[] = Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
         setCategories(cats);
       } catch (err) {
         console.error("Failed to fetch categories:", err);
@@ -94,7 +77,12 @@ export default function UpdateProductModal({
     if (!product?.id) return;
 
     getProductDocumentStatus(product.id)
-      .then(setDocStatus)
+      .then((res) => {
+        setDocStatus({
+          msds: Boolean(res?.msds),
+          tds: Boolean(res?.tds),
+        });
+      })
       .catch(() => setDocStatus({ msds: false, tds: false }));
   }, [product?.id]);
 
@@ -124,6 +112,8 @@ export default function UpdateProductModal({
 
     if (msdsFile) formData.append("msds", msdsFile);
     if (tdsFile) formData.append("tds", tdsFile);
+    if (removeMsds) formData.append("removeMsds", "true");
+    if (removeTds) formData.append("removeTds", "true");
 
     try {
       const res = await fetch(`/api/admin/products/${product.id}`, {
@@ -158,9 +148,7 @@ export default function UpdateProductModal({
             className="border p-3 rounded-lg w-full"
             placeholder="Product name"
             value={form.name}
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, name: e.target.value }))
-            }
+            onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
           />
 
           {/* DESCRIPTION ID */}
@@ -200,9 +188,7 @@ export default function UpdateProductModal({
             <input
               type="checkbox"
               checked={form.display}
-              onChange={(e) =>
-                setForm((prev) => ({ ...prev, display: e.target.checked }))
-              }
+              onChange={(e) => setForm((prev) => ({ ...prev, display: e.target.checked }))}
             />
             <span className="text-sm font-medium">Display product on website</span>
           </div>
@@ -235,21 +221,20 @@ export default function UpdateProductModal({
           <div>
             <label className="font-medium">Categories</label>
             <div className="flex gap-2 flex-wrap mt-2">
-              {Array.isArray(categories) &&
-                categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => toggleCategory(cat.id)}
-                    className={`px-3 py-1 rounded text-sm border ${
-                      form.categories.includes(cat.id)
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-200 text-gray-700"
-                    }`}
-                  >
-                    {cat.name}
-                  </button>
-                ))}
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => toggleCategory(cat.id)}
+                  className={`px-3 py-1 rounded text-sm border ${
+                    form.categories.includes(cat.id)
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
+                >
+                  {cat.name}
+                </button>
+              ))}
             </div>
           </div>
         </div>
