@@ -13,3 +13,16 @@ export async function getRequestAccess(): Promise<AccessRequest[]> {
   const data = await res.json();
   return data as AccessRequest[];
 }
+
+export async function deleteRequestAccess(id: string) {
+  const res = await fetch(`/api/admin/request-access/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text);
+  }
+
+  return true;
+}
