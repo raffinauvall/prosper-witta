@@ -14,7 +14,7 @@ type Props = {
 export default function FileUploadField({
   label,
   file,
-  hasExisting,
+  hasExisting = false,
   onChange,
   onRemoveExisting,
   accept = ".pdf",
@@ -25,41 +25,46 @@ export default function FileUploadField({
 
       {/* EXISTING FILE */}
       {hasExisting && !file && (
-        <div className="flex items-center justify-between border rounded-lg px-3 py-2 text-xs bg-gray-50">
-          <div className="flex items-center gap-2 truncate">
-            <FileText className="w-4 h-4 text-[#CFA54B]" />
+        <div className="flex items-center justify-between border rounded-lg px-3 py-2 text-xs bg-green-50">
+          <div className="flex items-center gap-2 truncate text-green-700 font-medium">
+            <FileText className="w-4 h-4 text-green-600" />
             <span className="truncate">File uploaded</span>
           </div>
 
           <button
-            onClick={onRemoveExisting}
-            className="hover:bg-gray-200 rounded p-1"
+            type="button"
+            onClick={() => onRemoveExisting?.()}
+            className="hover:bg-green-100 rounded p-1"
             title="Remove file"
           >
-            <X className="w-3 h-3" />
+            <X className="w-3 h-3 text-green-700" />
           </button>
         </div>
       )}
 
       {/* NEW FILE */}
       {file && (
-        <div className="flex items-center justify-between border rounded-lg px-3 py-2 text-xs bg-gray-50">
-          <span className="truncate">{file.name}</span>
+        <div className="flex items-center justify-between border rounded-lg px-3 py-2 text-xs bg-blue-50">
+          <span className="truncate text-blue-700 font-medium">
+            {file.name}
+          </span>
 
           <button
+            type="button"
             onClick={() => onChange(null)}
-            className="hover:bg-gray-200 rounded p-1"
+            className="hover:bg-blue-100 rounded p-1"
+            title="Remove selected file"
           >
-            <X className="w-3 h-3" />
+            <X className="w-3 h-3 text-blue-700" />
           </button>
         </div>
       )}
 
-      {/* UPLOAD */}
-      {!file && !hasExisting && (
+      {/* UPLOAD / REPLACE */}
+      {!file && (
         <label className="flex items-center justify-center gap-2 cursor-pointer border border-dashed rounded-lg px-3 py-2 text-gray-500 hover:border-[#CFA54B] hover:text-[#CFA54B] transition text-xs">
           <Upload className="w-4 h-4" />
-          <span>Upload PDF</span>
+          <span>{hasExisting ? "Replace PDF" : "Upload PDF"}</span>
 
           <input
             type="file"
