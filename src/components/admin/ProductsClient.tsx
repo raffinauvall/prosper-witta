@@ -64,7 +64,7 @@ export default function ProductsClient() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Admin Products</h1>
+        <h1 className="text-3xl font-bold">Products</h1>
         <button
           onClick={() => setModalCreateOpen(true)}
           className="bg-black text-white px-4 py-2 rounded-lg"
@@ -78,12 +78,13 @@ export default function ProductsClient() {
         <CategoryFilter products={products} setFilteredProducts={setFilteredProducts} />
       </div>
 
-      <ProductTable 
-        products={filteredProducts} 
-        onDelete={handleDeleteClick} 
-        onUpdate={setEditProduct}
-      />
-
+       <div className="max-h-[400px] overflow-y-auto  rounded-lg">
+    <ProductTable 
+      products={filteredProducts} 
+      onDelete={handleDeleteClick} 
+      onUpdate={setEditProduct}
+    />
+  </div>
       {modalCreateOpen && (
         <CreateProductModal
           onClose={() => setModalCreateOpen(false)}
