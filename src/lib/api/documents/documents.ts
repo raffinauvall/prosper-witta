@@ -11,5 +11,12 @@ export async function getProductDocumentStatus(
     throw new Error("Failed to fetch document status");
   }
 
-  return res.json();
+  const json = await res.json();
+
+  const data = json?.data ?? json;
+
+  return {
+    msds: Boolean(data?.msds),
+    tds: Boolean(data?.tds),
+  };
 }
