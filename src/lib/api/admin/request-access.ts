@@ -2,27 +2,35 @@ import { AccessRequest } from "@/lib/types";
 
 export async function getRequestAccess(): Promise<AccessRequest[]> {
   const res = await fetch("/api/admin/request-access", {
-    credentials: "include", 
+    credentials: "include",
   });
 
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || "Failed to fetch request access");
+    throw new Error("Failed to fetch");
   }
 
-  const data = await res.json();
-  return data as AccessRequest[];
+  const json = await res.json();
+
+  return json.data.map((item: any) => ({
+    id: item.id,
+    name: item.name,         
+    company: item.company,   
+    email: item.email,
+    purpose: item.purpose,
+    status: item.status,
+    type: item.type,
+    products: item.products,
+    created_at: item.created_at,
+  }));
 }
 
-export async function deleteRequestAccess(id: string) {
-  const res = await fetch(`/api/admin/request-access/${id}`, {
+export async function deleteRequestAccess(id?: string) {
+  if (!id || id === "undefined") {
+    throw new Error("Invalid id");
+  }
+
+  return fetch(`/api/admin/request-access/${id}`, {
     method: "DELETE",
   });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text);
-  }
-
-  return true;
 }
+

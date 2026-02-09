@@ -5,6 +5,7 @@ import { getRequestAccess, deleteRequestAccess } from "@/lib/api/admin/request-a
 import { AccessRequest } from "@/lib/types";
 import { normalizeArray } from "utils/helper";
 import StatusBadge from "./StatusBadge";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function RequestAccessTable() {
   const [data, setData] = useState<AccessRequest[]>([]);
@@ -28,18 +29,19 @@ export default function RequestAccessTable() {
   }, []);
 
   const handleDelete = async (id: string) => {
-    const ok = confirm("Yakin mau hapus request ini?");
-    if (!ok) return;
+  const ok = confirm("Yakin mau hapus request ini?");
+  if (!ok) return;
 
-    try {
-      await deleteRequestAccess(id);
+  try {
+    await deleteRequestAccess(id);
 
-      // remove dari state (tanpa reload)
-      setData((prev) => prev.filter((item) => item.id !== id));
-    } catch (err: any) {
-      alert(err?.message || "Delete gagal");
-    }
-  };
+    setData((prev) => prev.filter((item) => item.id !== id));
+
+    toast.success("Delete berhasil!"); // 🔥 toast feedback
+  } catch (err: any) {
+    toast.error(err?.message || "Delete gagal");
+  }
+};
 
   if (loading)
     return <div className="p-6 text-center text-gray-500">Loading request access...</div>;
