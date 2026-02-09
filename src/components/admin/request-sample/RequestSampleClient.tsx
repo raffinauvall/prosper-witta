@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getRequestSample } from "@/lib/api/admin/request-sample";
+import { deleteRequestSample, getRequestSample } from "@/lib/api/admin/request-sample";
 import { RequestSampleRow } from "@/lib/types";
+import toast from "react-hot-toast";
 
 export default function RequestSampleClient() {
   const [data, setData] = useState<RequestSampleRow[]>([]);
@@ -31,6 +32,20 @@ export default function RequestSampleClient() {
   }, [page]);
 
   const totalPages = Math.ceil(total / limit);
+    const handleDelete = async (id: string) => {
+  const ok = confirm("Yakin mau hapus request ini?");
+  if (!ok) return;
+
+  try {
+    await deleteRequestSample(id);
+
+    setData((prev) => prev.filter((item) => item.id !== id));
+
+    toast.success("Delete berhasil!"); // 🔥 toast feedback
+  } catch (err: any) {
+    toast.error(err?.message || "Delete gagal");
+  }
+};
 
   return (
     <div>
@@ -46,6 +61,7 @@ export default function RequestSampleClient() {
               <Th>Phone</Th>
               <Th>Product</Th>
               <Th>Date</Th>
+              <Th>Action</Th>
             </tr>
           </thead>
 
@@ -71,6 +87,14 @@ export default function RequestSampleClient() {
                   <Td>{item.phone}</Td>
                   <Td>{item.products?.name}</Td>
                   <Td>{new Date(item.requested_at).toLocaleDateString()}</Td>
+                                <Td>
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="px-3 py-1 text-xs font-medium text-white bg-red-500 rounded hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              </Td>
                 </tr>
               ))
             )}

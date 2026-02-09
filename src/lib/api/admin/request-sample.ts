@@ -16,3 +16,15 @@ export async function getRequestSample(page = 1, limit = 10) {
   return res.json();
 }
 
+export async function deleteRequestSample(id?: string) {
+  if (!id || id === "undefined") {
+    throw new Error("Invalid id");
+  }
+
+  return fetch(`/api/admin/request-sample/${id}`, {
+    method: "DELETE",
+  });
+}
+
+
+
