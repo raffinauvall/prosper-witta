@@ -8,7 +8,7 @@ export default function FeatureSection() {
   return (
     <>
       {/* Fitur */}
-      <div className="grid md:grid-cols-2 px-6 gap-10 mt-16">
+      <div className="grid md:grid-cols-2 px-1 gap-10 mt-16">
 
         {/* VISION */}
         <div className="relative border border-gray-300 rounded-2xl p-8 md:p-10 bg-white shadow-sm hover:shadow-lg transition">

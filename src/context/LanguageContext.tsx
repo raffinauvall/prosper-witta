@@ -152,6 +152,7 @@ const dictionary: Record<Lang, Dictionary> = {
                 approved: "✅ Akses diberikan. Anda sekarang dapat melihat dokumen tersebut.",
                 rejected: "❌ Permintaan Anda tidak disetujui. Anda dapat mengirimkan permintaan baru.",
                 none: "🔒 Akses ke dokumen ini dibatasi. Ajukan permohonan akses untuk melanjutkan.",
+                unavailable: "Dokumen belum ada"
             },
             button: {
                 pending: "Menunggu Persetujuan",
@@ -353,6 +354,7 @@ const dictionary: Record<Lang, Dictionary> = {
                 approved: "✅ Access granted. You can now view the document.",
                 rejected: "❌ Your request was not approved. You may submit a new request.",
                 none: "🔒 Access to this document is restricted. Request access to continue",
+                unavailable: "Documents don't exist yet"
             },
             button: {
                 pending: "Pending Approval",

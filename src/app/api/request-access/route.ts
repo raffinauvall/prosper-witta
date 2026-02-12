@@ -11,7 +11,6 @@ export async function POST(req: Request) {
 
     const token = crypto.randomUUID();
 
-    // 1️⃣ Simpan request
     const { error: dbError } = await supabaseClient
       .from("document_access_requests")
       .insert({
@@ -28,7 +27,6 @@ export async function POST(req: Request) {
 
     if (dbError) return failure(dbError.message, 500);
 
-    // 2️⃣ Ambil nama product
     const { data: product, error: productError } = await supabaseClient
       .from("products")
       .select("name")
@@ -38,15 +36,12 @@ export async function POST(req: Request) {
     if (productError || !product) {
       return failure("Product not found", 404);
     }
-
-    // 3️⃣ Build URL
     const approveUrl = `${process.env.BASE_URL}/api/request-access/approve?token=${token}`;
     const rejectUrl = `${process.env.BASE_URL}/api/request-access/reject?token=${token}`;
 
-    // 4️⃣ Kirim email (PAKE PRODUCT NAME)
     await sendRequestAccessEmail({
       productId: body.productId,
-      productName: product.name, // 🔥 INI YANG BARU
+      productName: product.name,
       name: body.name,
       email: body.email,
       company: body.company,

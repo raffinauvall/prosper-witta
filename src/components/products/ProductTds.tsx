@@ -4,11 +4,28 @@ import { ProductTdsProps } from "@/lib/types";
 export default function ProductTds({
   status,
   onRequest,
+  hasDocument,
   onView,
 }: ProductTdsProps) {
   const { t } = useLanguage();
   const currentStatus = status.status;
+  if (!hasDocument) {
+    return (
+      <div className="max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+        <h2 className="mb-2 flex items-center gap-2 text-lg font-semibold leading-tight text-gray-900">
+          Material Safety Data
+          <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+            MSDS
+          </span>
+        </h2>
 
+        <StatusBox
+          text={t("products.status.unavailable")} // tambahin di i18n
+          className="bg-gray-50 text-gray-500"
+        />
+      </div>
+    );
+  }
   return (
     <div className="max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
       {/* TITLE */}

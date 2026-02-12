@@ -18,12 +18,14 @@ export type DocumentAccessItem = {
 
 export interface ProductMsdsProps {
   status: DocumentAccessItem;
+  hasDocument: boolean; 
   onRequest: () => void;
   onView: () => void;
 }
 
 export interface ProductTdsProps {
   status: DocumentAccessItem;
+  hasDocument: boolean; 
   onRequest: () => void;
   onView: () => void;
 }
