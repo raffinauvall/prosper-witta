@@ -69,7 +69,9 @@ export default function AdminNewsPage() {
                 content: n.content || "",
                 thumbnail_url: n.thumbnail_url || "",
                 is_published: n.is_published ?? false,
-                published_at: n.published_at || "",
+                published_at: n.published_at
+                  ? new Date(n.published_at).toISOString().slice(0, 16)
+                  : undefined,
               });
               setModal("edit");
             }}
@@ -89,7 +91,12 @@ export default function AdminNewsPage() {
             setForm={setForm}
             submitText="Create"
             onSubmit={async () => {
-              await createNews(form);
+              await createNews({
+                ...form,
+                published_at: form.published_at
+                  ? new Date(form.published_at).toISOString()
+                  : undefined,
+              });
               setModal(null);
               load();
             }}
@@ -105,7 +112,13 @@ export default function AdminNewsPage() {
             setForm={setForm}
             submitText="Update"
             onSubmit={async () => {
-              await updateNews(selected.id, form);
+              await updateNews(selected.id, {
+                ...form,
+                // 🔥 SUBMIT DATE
+                published_at: form.published_at
+                  ? new Date(form.published_at).toISOString()
+                  : undefined,
+              });
               setModal(null);
               setSelected(null);
               load();

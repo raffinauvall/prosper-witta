@@ -77,6 +77,7 @@ export async function uploadNewsImage(file: File): Promise<string> {
     throw new Error("Upload failed");
   }
 
-  const data = await res.json();
-  return data.url as string;
+  const json = await res.json();
+  return json.data.url as string;
 }
+

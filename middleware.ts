@@ -9,12 +9,10 @@ export function middleware(req: NextRequest) {
   const isAdminRoute = pathname.startsWith("/admin");
   const isLoginPage = pathname === "/login";
 
-  // 🔒 Proteksi admin
   if (isAdminRoute && !token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // 🔁 Kalau sudah login, jangan balik ke login
   if (isLoginPage && token) {
     return NextResponse.redirect(new URL("/admin", req.url));
   }
@@ -24,4 +22,5 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: ["/admin/:path*", "/login"],
+  marcher: ["/admin/:path", "/login"]
 };
