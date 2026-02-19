@@ -23,7 +23,7 @@ export async function sendRequestAccessEmail({
   purpose,
   approveUrl,
   rejectUrl,
-  to = ["raffinauvaltaqy@gmail.com"],
+  to = ["prosperweb123@gmail.com"],
 }: RequestAccessEmailProps) {
   return resend.emails.send({
     from: "PT Prosper Witta Sejahtera <info@prosperwittasejahtera.com>",
@@ -43,7 +43,7 @@ export async function sendRequestAccessEmail({
       box-shadow:0 10px 30px rgba(0,0,0,0.06);
       overflow:hidden;
     ">
-      
+
       <!-- Header -->
       <div style="
         padding:24px 28px;
