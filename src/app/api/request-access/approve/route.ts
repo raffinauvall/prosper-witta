@@ -11,7 +11,6 @@ export async function GET(req: Request) {
       return NextResponse.redirect(`${process.env.BASE_URL}/request-error`);
     }
 
-    // 1️⃣ ambil request
     const { data: request } = await supabaseAdmin
       .from("document_access_requests")
       .select("*")
@@ -24,7 +23,6 @@ export async function GET(req: Request) {
       );
     }
 
-    // 2️⃣ ambil product
     const { data: product } = await supabaseAdmin
       .from("products")
       .select("name")
@@ -35,7 +33,6 @@ export async function GET(req: Request) {
       throw new Error("Product not found");
     }
 
-    // 3️⃣ ambil category_id
     const { data: productCategory } = await supabaseAdmin
       .from("product_categories")
       .select("category_id")
@@ -47,7 +44,6 @@ export async function GET(req: Request) {
       throw new Error("Category ID not found");
     }
 
-    // 4️⃣ ambil category NAME (INI SUDAH SLUG)
     const { data: category } = await supabaseAdmin
       .from("categories")
       .select("name")
@@ -58,18 +54,16 @@ export async function GET(req: Request) {
       throw new Error("Category name not found");
     }
 
-    const categoryKey = category.name; // 🔥 LANGSUNG PAKAI
+    const categoryKey = category.name;
 
-    // 5️⃣ update status
+
     await supabaseAdmin
       .from("document_access_requests")
       .update({ status: "approved" })
       .eq("id", request.id);
 
-    // 6️⃣ build URL
     const productUrl = `${process.env.BASE_URL}/products/${categoryKey}`;
 
-    // 7️⃣ kirim email ke user
     await sendApprovedUserEmail({
       to: request.email,
       name: request.name,
@@ -78,7 +72,6 @@ export async function GET(req: Request) {
       productUrl,
     });
 
-    // 8️⃣ redirect admin
     return NextResponse.redirect(
       `${process.env.BASE_URL}/request-approved`
     );

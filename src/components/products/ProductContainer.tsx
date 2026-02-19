@@ -48,17 +48,14 @@ export default function ProductContainer({ category }: ProductContainerProps) {
 
   const { products, selected, setSelected, loading, error } = useProducts(category);
 
-  // 🔹 Load document availability & accessStatus
   useEffect(() => {
     if (!selected) return;
 
     const loadData = async () => {
       try {
-        // 1️⃣ Fetch availability
         const avail = await getProductDocumentAvailability(selected.id);
         setAvailability(avail);
 
-        // 2️⃣ Fetch access status
         const [msdsStatus, tdsStatus] = await Promise.all([
           fetchAccessStatus(selected.id, "msds"),
           fetchAccessStatus(selected.id, "tds"),
@@ -81,7 +78,6 @@ export default function ProductContainer({ category }: ProductContainerProps) {
     loadData();
   }, [selected]);
 
-  // 🔹 Refresh access status on window focus
   useEffect(() => {
     const onFocus = () => {
       if (!selected) return;

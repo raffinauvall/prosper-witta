@@ -114,7 +114,6 @@ export default function AdminNewsPage() {
             onSubmit={async () => {
               await updateNews(selected.id, {
                 ...form,
-                // 🔥 SUBMIT DATE
                 published_at: form.published_at
                   ? new Date(form.published_at).toISOString()
                   : undefined,

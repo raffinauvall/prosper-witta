@@ -1,7 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { deleteRequestSample, getRequestSample } from "@/lib/api/admin/request-sample";
+import { useEffect, useState, useCallback } from "react";
+import {
+  deleteRequestSample,
+  getRequestSample,
+} from "@/lib/api/admin/request-sample";
 import { RequestSampleRow } from "@/lib/types";
 import toast from "react-hot-toast";
 
@@ -10,42 +13,51 @@ export default function RequestSampleClient() {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+
   const limit = 10;
 
-  const loadData = async (page: number) => {
+  const loadData = useCallback(async (currentPage: number) => {
     setLoading(true);
     try {
-      const res = await getRequestSample(page, limit);
+      const res = await getRequestSample(currentPage, limit);
       setData(res.data);
       setTotal(res.total);
-      setPage(res.page);
     } catch (err) {
       console.error(err);
-      alert("Failed to load request samples");
+      toast.error("Failed to load request samples");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadData(page);
-  }, [page]);
+  }, [page, loadData]);
 
-  const totalPages = Math.ceil(total / limit);
-    const handleDelete = async (id: string) => {
-  const ok = confirm("Yakin mau hapus request ini?");
-  if (!ok) return;
+  const totalPages =
+  total && total > 0
+    ? Math.ceil(total / limit)
+    : 1;
 
-  try {
-    await deleteRequestSample(id);
 
-    setData((prev) => prev.filter((item) => item.id !== id));
+  const handleDelete = async (id: string) => {
+    const ok = confirm("Yakin mau hapus request ini?");
+    if (!ok) return;
 
-    toast.success("Delete berhasil!"); // 🔥 toast feedback
-  } catch (err: any) {
-    toast.error(err?.message || "Delete gagal");
-  }
-};
+    try {
+      await deleteRequestSample(id);
+
+      if (data.length === 1 && page > 1) {
+        setPage((p) => p - 1);
+      } else {
+        loadData(page);
+      }
+
+      toast.success("Delete berhasil!");
+    } catch (err: any) {
+      toast.error(err?.message || "Delete gagal");
+    }
+  };
 
   return (
     <div>
@@ -68,13 +80,13 @@ export default function RequestSampleClient() {
           <tbody>
             {loading ? (
               <tr>
-                <Td colSpan={6} className="text-center py-4">
+                <Td colSpan={7} className="text-center py-4">
                   Loading...
                 </Td>
               </tr>
             ) : data.length === 0 ? (
               <tr>
-                <Td colSpan={6} className="text-center py-4">
+                <Td colSpan={7} className="text-center py-4">
                   No data found
                 </Td>
               </tr>
@@ -85,16 +97,18 @@ export default function RequestSampleClient() {
                   <Td>{item.company_name}</Td>
                   <Td>{item.email}</Td>
                   <Td>{item.phone}</Td>
-                  <Td>{item.products?.name}</Td>
-                  <Td>{new Date(item.requested_at).toLocaleDateString()}</Td>
-                                <Td>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="px-3 py-1 text-xs font-medium text-white bg-red-500 rounded hover:bg-red-600"
-                >
-                  Delete
-                </button>
-              </Td>
+                  <Td>{item.products?.name ?? "-"}</Td>
+                  <Td>
+                    {new Date(item.requested_at).toLocaleDateString()}
+                  </Td>
+                  <Td>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="px-3 py-1 text-xs font-medium text-white bg-red-500 rounded hover:bg-red-600"
+                    >
+                      Delete
+                    </button>
+                  </Td>
                 </tr>
               ))
             )}
@@ -111,9 +125,11 @@ export default function RequestSampleClient() {
         >
           Prev
         </button>
+
         <span>
           Page {page} of {totalPages}
         </span>
+
         <button
           disabled={page >= totalPages || loading}
           onClick={() => setPage((p) => p + 1)}
@@ -126,16 +142,31 @@ export default function RequestSampleClient() {
   );
 }
 
-
-function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function Th({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <th className={`p-3 text-left font-medium text-gray-600 ${className}`.trim()}>
+    <th
+      className={`p-3 text-left font-medium text-gray-600 ${className}`.trim()}
+    >
       {children}
     </th>
   );
 }
 
-function Td({ children, colSpan, className = "" }: { children: React.ReactNode; colSpan?: number; className?: string }) {
+function Td({
+  children,
+  colSpan,
+  className = "",
+}: {
+  children: React.ReactNode;
+  colSpan?: number;
+  className?: string;
+}) {
   return (
     <td colSpan={colSpan} className={`p-3 ${className}`.trim()}>
       {children}

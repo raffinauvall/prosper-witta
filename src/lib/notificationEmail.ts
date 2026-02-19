@@ -33,7 +33,7 @@ export async function sendApprovedUserEmail({
         untuk produk <strong>${productName}</strong> telah <strong>disetujui</strong>.
       </p>
 
-      <p>Silakan kembali ke website kami untuk mengakses dokumen tersebut.</p>
+      <p>Silakan kembali ke website kami, diharapkan menggunakan device yang sama saat mengakses dokumen tersebut.</p>
 
       <!-- 🔘 TOMBOL DI SINI -->
       <div style="margin-top:24px; text-align:center;">

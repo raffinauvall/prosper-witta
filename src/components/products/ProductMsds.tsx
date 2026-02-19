@@ -11,7 +11,7 @@ export default function ProductMsds({
   const currentStatus = status.status;
   if (!hasDocument) {
     return (
-      <div className="max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+      <div className="w-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
         <h2 className="mb-2 flex items-center gap-2 text-lg font-semibold leading-tight text-gray-900">
           Material Safety Data
           <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
