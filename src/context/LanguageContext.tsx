@@ -45,7 +45,7 @@ const dictionary: Record<Lang, Dictionary> = {
             about: {
                 title1: "Menyuplai Lebih Dari Sekadar Bahan Kimia —",
                 title2: "Kami Mengirimkan Kepercayaan",
-                description: "PT Prosper Witta Sejahtera adalah perusahaan perdagangan kimia yang didirikan pada tahun 2024. Kami melayani aplikasi industri seperti: Perawatan Rumah & Pribadi, Pembersih Institusional & Industri, Veteriner, Pertambangan, Pengolahan Air, dan Pengolahan Logam."
+                description: "PT Prosper Witta Sejahtera adalah perusahaan perdagangan kimia yang didirikan pada tahun 2024. Kami melayani aplikasi industri seperti: Home & Personal Care, Institutional & Industrial Cleaning, Veterinary, Mining, Water Treatment, dan Metal Working"
             }
         },
 
@@ -425,7 +425,7 @@ function getNestedValue(obj: any, path: string) {
 /* ================= PROVIDER ================= */
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [lang, setLang] = useState<Lang>("id");
+    const [lang, setLang] = useState<Lang>("en");
 
     useEffect(() => {
         const saved = localStorage.getItem("lang") as Lang | null;
