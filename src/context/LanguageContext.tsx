@@ -29,7 +29,7 @@ const dictionary: Record<Lang, Dictionary> = {
         home: {
             hero: {
                 title1: "Solusi Kimia Terpercaya ",
-                title2: "untuk Industri yang Lebih Baik.",
+                title2: "untuk Berbagai Inovasi Industri.",
                 description:
                     "Menyediakan bahan kimia industri bersertifikasi dan berkualitas tinggi dengan pasokan yang andal, standar keselamatan ketat, serta kemitraan industri jangka panjang.",
             },
@@ -224,7 +224,7 @@ const dictionary: Record<Lang, Dictionary> = {
         home: {
             hero: {
                 title1: "Trusted Chemical Solutions ",
-                title2: "for a Better Industry.",
+                title2: "For Various Industrial Innovations.",
                 description:
                     "Delivering certified, high-quality industrial chemicals with reliable supply, strict safety standards, and long-term industry partnership.",
             },
