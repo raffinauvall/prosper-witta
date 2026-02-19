@@ -45,7 +45,7 @@ const dictionary: Record<Lang, Dictionary> = {
             about: {
                 title1: "Menyuplai Lebih Dari Sekadar Bahan Kimia —",
                 title2: "Kami Mengirimkan Kepercayaan",
-                description: "PT Prosper Witta Sejahtera adalah perusahaan perdagangan kimia yang didirikan pada tahun 2024. Kami melayani aplikasi industri seperti: Home & Personal Care, Institutional & Industrial Cleaning, Veterinary, Mining, Water Treatment, dan Metal Working"
+                description: "PT Prosper Witta Sejahtera adalah perusahaan perdagangan kimia yang didirikan pada tahun 2024. Kami melayani aplikasi industri seperti: Home & Personal Care, Institutional & Industrial Cleaning, Veterinary, Mining, Water Treatment, dan Metal Working , Oil & Gas."
             }
         },
 
@@ -70,7 +70,7 @@ const dictionary: Record<Lang, Dictionary> = {
                     badge: "Aspirasi",
                     title: "Visi Kami",
                     desc:
-                        "Untuk memantapkan diri sebagai perusahaan spesialis yang diakui secara global dalam industri Pembersihan, Pakan & Hewan, serta Pertambangan melalui penyediaan produk inovatif, layanan yang andal, dan solusi berkelanjutan.",
+                        "Untuk memantapkan diri sebagai perusahaan spesialis yang diakui secara global dalam Home & Personal Care, Institutional Industrial Cleaning, Veterinary, Mining, Water Treatment, Metal Working, , layanan yang andal, dan solusi berkelanjutan.",
                 },
                 mission: {
                     badge: "Strategi",
@@ -232,7 +232,7 @@ const dictionary: Record<Lang, Dictionary> = {
                 title1: "Supplying More Than Chemicals",
                 title2: "We Deliver Trust",
                 description:
-                    "PT Prosper Witta Sejahtera is a chemical trading company established in 2024. We serve industrial applications such as Home & Personal Care, Institutional & Industrial Cleaning, Veterinary, Mining, Water Treatment, and Metal Working.",
+                    "PT Prosper Witta Sejahtera is a chemical trading company established in 2024. We serve industrial applications such as Home & Personal Care, Institutional & Industrial Cleaning, Veterinary, Mining, Water Treatment, and Metal Working and Oil & Gas.",
             },
             principle: {
                 title: "Trusted by Our Partners",
@@ -266,7 +266,7 @@ const dictionary: Record<Lang, Dictionary> = {
                     badge: "Aspiration",
                     title: "Our Vision",
                     desc:
-                        "To establish ourselves as a globally recognized specialist company in the Cleaning, Feed & Veterinary, and Mining industries through innovative products, reliable services, and sustainable solutions.",
+                        "To establish ourselves as a globally recognized specialist company in the Home & Personal Care, Institutional Industrial Cleaning, Veterinary, Mining, Water Treatment, Metal Working,  reliable services, and sustainable solutions.",
                 },
                 mission: {
                     badge: "Strategy",
