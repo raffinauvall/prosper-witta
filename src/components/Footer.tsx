@@ -76,12 +76,15 @@ export default function Footer() {
         </p>
 
         <div className="flex space-x-6 mt-4 md:mt-0">
-          <a href="#" className="hover:text-white transition">
-            {t("footer.social_linkedin")}
-          </a>
-          <a href="#" className="hover:text-white transition">
+
+          <a
+            href="https://wa.me/62811854992"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white transition"
+            >
             {t("footer.social_whatsapp")}
-          </a>
+            </a>
         </div>
       </div>
     </footer>

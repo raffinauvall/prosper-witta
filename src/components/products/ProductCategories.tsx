@@ -44,6 +44,12 @@ export default function ProductCategories() {
       title: t("products.categories.metal.title"),
       desc: t("products.categories.metal.desc"),
     },
+    {
+      slug: "oil-gas",
+      image: "/images/oil-gas.jpg",
+      title: t("products.categories.oilGas.title"),
+      desc: t("products.categories.oilGas.desc"),
+    },
   ];
 
   return (

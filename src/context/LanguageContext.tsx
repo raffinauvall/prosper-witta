@@ -40,7 +40,7 @@ const dictionary: Record<Lang, Dictionary> = {
                 title1: "Memberdayakan Industri Dengan",
                 title2: "Solusi Kimia Yang Andal",
                 subtitle:
-                    "Pasokan bahan kimia canggih yang didukung oleh kepercayaan, konsistensi, dan kemitraan jangka panjang.",
+                    "Pasokan bahan kimia berkualitas yang didukung oleh kepercayaan, konsistensi, dan kemitraan jangka panjang.",
             },
             about: {
                 title1: "Menyuplai Lebih Dari Sekadar Bahan Kimia —",
@@ -136,6 +136,10 @@ const dictionary: Record<Lang, Dictionary> = {
                     title: "Pengolahan Logam",
                     desc: "Bahan kimia untuk proses logam, cairan mesin, dan perlakuan permukaan.",
                 },
+                oilGas: {
+                    title: "Minyak & Gas",
+                    desc: "Bahan kimia untuk aplikasi industri minyak dan gas, termasuk pengeboran, penyelesaian, dan produksi.",
+                },
 
             },
             search: "Cari Produk...",
@@ -205,7 +209,6 @@ const dictionary: Record<Lang, Dictionary> = {
             copyright:
                 "© {year} PT Prosper Witta Sejahtera. Hak cipta dilindungi undang-undang.",
 
-            social_linkedin: "LinkedIn",
             social_whatsapp: "WhatsApp",
         }
 
@@ -241,7 +244,7 @@ const dictionary: Record<Lang, Dictionary> = {
                 title1: "Powering Industries with",
                 title2: "Reliable Chemical Solutions",
                 subtitle:
-                    "Advanced chemical supply backed by trust, consistency, and long-term partnership.",
+                    "Supply of quality chemicals backed by trust, consistency and long-term partnerships.",
             },
         },
 
@@ -340,6 +343,11 @@ const dictionary: Record<Lang, Dictionary> = {
                     desc:
                         "Chemicals designed for metal processing, machining fluids, surface treatment, and corrosion control.",
                 },
+                oilGas: {
+                    title: "Oil & Gas",
+                    desc:
+                        "Chemicals designed for oil and gas industry applications, including drilling, completion, and production.",
+                },
             },
             search: "Search Product...",
             msds: "Provides safety, handling, storage, and regulatory information related to this product.",
@@ -409,7 +417,8 @@ const dictionary: Record<Lang, Dictionary> = {
             copyright:
                 "© {year} PT Prosper Witta Sejahtera. All rights reserved.",
 
-            social_linkedin: "LinkedIn",
+
+
             social_whatsapp: "WhatsApp",
         },
     },

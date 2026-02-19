@@ -119,8 +119,8 @@ export default function ProductContainer({ category }: ProductContainerProps) {
       <main className="min-h-screen bg-gray-50 px-6 py-12 pt-[90px]">
         <div className="max-w-7xl mx-auto">
           <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-sm text-blue-600"
+            onClick={() => router.push("/products")}
+            className="flex items-center gap-2 text-sm text-blue-600 mb-3 hover:underline mt-3"
           >
             <ArrowLeft size={18} /> Back
           </button>

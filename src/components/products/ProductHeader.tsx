@@ -8,7 +8,7 @@ type CardProps = {
 
 export default function ProductHeader({ selected, Icon, color, title, desc }: CardProps) {
   return (
-    <div className="mb-12">
+    <div className="mb-6">
       <div className={`flex items-center gap-2 text-${color}-600 mb-3`}>
         <Icon size={22} />
         <span className="text-sm pt-1 font-semibold uppercase">

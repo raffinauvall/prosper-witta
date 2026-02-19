@@ -17,7 +17,9 @@ export default function ProductCard({
   slug,
 }: Props) {
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition transform hover:-translate-y-1">
+    <div className="bg-white border border-gray-200 rounded-2xl h-98 overflow-hidden shadow-sm hover:shadow-xl transition transform hover:-translate-y-1 flex flex-col">
+
+      {/* Image */}
       <Link href={`/products/${slug}`} className="block relative w-full h-56">
         <div className="relative w-full h-full group">
           <Image
@@ -31,11 +33,15 @@ export default function ProductCard({
         </div>
       </Link>
 
-      <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <p className="text-gray-600 text-sm mb-4">{desc}</p>
+      {/* Content */}
+      <div className="p-6 flex flex-col flex-1">
+        <div>
+          <h3 className="text-xl font-semibold mb-2">{title}</h3>
+          <p className="text-gray-600 text-sm mb-4">{desc}</p>
+        </div>
 
-        <div className="flex items-center justify-between">
+        {/* Button Section */}
+        <div className="flex items-center justify-between mt-auto">
           <Link
             href={`/products/${slug}`}
             className="text-[#CFA54B] font-medium hover:underline"
