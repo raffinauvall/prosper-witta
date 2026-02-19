@@ -53,7 +53,7 @@ export default function HeroSection() {
             {/* Stat 2 */}
             <div>
               <h2 className="text-[42px] md:text-[50px] font-bold leading-[0.8]">
-                80+
+                20+
               </h2>
               <p className="text-gray-300 text-sm md:text-base">
                 <span>Industry</span>
@@ -64,7 +64,7 @@ export default function HeroSection() {
             {/* Stat 3 */}
             <div>
               <h2 className="text-[42px] md:text-[50px] font-bold leading-[0.8]">
-                99+
+                30+
               </h2>
               <p className="text-gray-300 text-sm md:text-base">
                 <span>Chemical</span>
