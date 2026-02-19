@@ -126,11 +126,11 @@ const dictionary: Record<Lang, Dictionary> = {
                 },
                 mining: {
                     title: "Pertambangan",
-                    desc: "Bahan kimia khusus untuk proses mineral, flotasi, dan peningkatan performa tambang.",
+                    desc: "Bahan kimia khusus untuk pengemulsi peledak.",
                 },
                 water: {
                     title: "Pengolahan Air",
-                    desc: "Solusi pemurnian dan pengolahan air untuk sektor industri dan komersial.",
+                    desc: "Solusi pemurnian dan pengolahan air untuk sektor industri dan biosida",
                 },
                 metal: {
                     title: "Pengolahan Logam",
@@ -328,12 +328,12 @@ const dictionary: Record<Lang, Dictionary> = {
                 mining: {
                     title: "Mining",
                     desc:
-                        "Specialized chemicals for mineral processing, flotation, extraction, and mining performance optimization.",
+                        "Specialized chemical for explosive emulsifiers.",
                 },
                 water: {
                     title: "Water Treatment",
                     desc:
-                        "Chemical solutions for water purification, treatment, and quality control in industrial and commercial applications.",
+                        "Chemical solutions for water purification, treatment, and biocides.",
                 },
                 metal: {
                     title: "Metal Working",
