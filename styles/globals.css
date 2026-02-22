@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "overlayscrollbars/styles/overlayscrollbars.css";
 
 /* =====================================================
    GLOBAL SCROLLBAR (THUMB ONLY - NO TRACK BOX)
