@@ -72,5 +72,14 @@ export const CATEGORY_INFO = {
     ingredient_desc:
       "Produk ini digunakan untuk kebutuhan industri minyak dan gas, termasuk pengolahan, pemurnian, dan aplikasi khusus dalam lingkungan industri.",
   },
+
+  "textile-auxiliaries": {
+    title: "Textile Auxiliary Division",
+    desc: "Textile Auxiliary Products",
+    theme: "purple",
+    icon: Sparkles,
+    ingredient_desc:
+      "Produk ini digunakan untuk kebutuhan auxiliaries dalam industri tekstil, seperti finishing, dyeing, dan pengolahan kain.",
+  },
 } as const;
 export type CategoryKey = keyof typeof CATEGORY_INFO;

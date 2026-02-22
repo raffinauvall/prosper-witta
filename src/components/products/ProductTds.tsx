@@ -27,9 +27,9 @@ export default function ProductTds({
     );
   }
   return (
-    <div className="max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+    <div className="w-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
       {/* TITLE */}
-      <h2 className="mb-2 flex items-center gap-2 text-lg font-semibold leading-tight text-gray-900">
+      <h2 className="mb-2 flex items-center justify-between gap-2 text-lg font-semibold leading-tight text-gray-900">
         Technical Data
         <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
           TDS

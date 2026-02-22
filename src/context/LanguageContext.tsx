@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { text } from "stream/consumers";
 
 type Lang = "id" | "en";
 
@@ -139,6 +140,10 @@ const dictionary: Record<Lang, Dictionary> = {
                 oilGas: {
                     title: "Minyak & Gas",
                     desc: "Bahan kimia untuk aplikasi industri minyak dan gas, termasuk pengeboran, penyelesaian, dan produksi.",
+                },
+                textile: {
+                    title: "Tekstil Auxiliaries",
+                    desc: "Bahan kimia untuk auxiliaries dalam industri tekstil, seperti finishing, dyeing, dan pengolahan kain.",
                 },
 
             },
@@ -347,6 +352,11 @@ const dictionary: Record<Lang, Dictionary> = {
                     title: "Oil & Gas",
                     desc:
                         "Chemicals designed for oil and gas industry applications, including drilling, completion, and production.",
+                },
+                textile: {
+                    title: "Textile Auxiliaries",
+                    desc:
+                        "Chemicals for auxiliaries in textile industry, such as finishing, dyeing, and fabric processing.",
                 },
             },
             search: "Search Product...",

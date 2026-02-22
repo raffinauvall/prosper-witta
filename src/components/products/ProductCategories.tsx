@@ -50,6 +50,12 @@ export default function ProductCategories() {
       title: t("products.categories.oilGas.title"),
       desc: t("products.categories.oilGas.desc"),
     },
+    {
+    slug: "textile-auxiliaries",
+      image: "/images/textile.png",
+      title: t("products.categories.textile.title"),
+      desc: t("products.categories.textile.desc"),
+    },
   ];
 
   return (

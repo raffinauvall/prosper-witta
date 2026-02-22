@@ -12,23 +12,23 @@ export default function ProductMsds({
   if (!hasDocument) {
     return (
       <div className="w-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-        <h2 className="mb-2 flex items-center gap-2 text-lg font-semibold leading-tight text-gray-900">
+        <h2 className="mb-2 flex items-center justify-between gap-2 text-lg font-semibold leading-tight text-gray-900">
           Material Safety Data
           <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
             MSDS
           </span>
         </h2>
 
-        <StatusBox
+         <StatusBox
           text={t("products.status.unavailable")}
-          className="bg-gray-50 text-gray-500"
+          className="bg-gray-50 text-gray-500 text-center mt-20"
         />
       </div>
     );
   }
   return (
-    <div className="max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-      <h2 className="mb-2 flex items-center gap-2 text-lg font-semibold leading-tight text-gray-900">
+    <div className="w-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+      <h2 className="mb-2 flex items-center justify-between gap-2 text-lg font-semibold leading-tight text-gray-900">
         Material Safety Data
         <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
           MSDS

@@ -1,27 +1,21 @@
 @import "tailwindcss";
 
-/* ---- FIX GLOBAL SCROLLBAR (html + body) ---- */
+/* =====================================================
+   GLOBAL SCROLLBAR (THUMB ONLY - NO TRACK BOX)
+===================================================== */
 
-html, body {
-  overflow-y: auto !important;
-}
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  display: none !important;
-}
-
-html, body {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
+/* =====================================================
+   GLOBAL SCROLLBAR (THUMB ONLY - NO TRACK BOX)
+===================================================== */
 
 
-/* ---- SIDEBAR CUSTOM SCROLLBAR ---- */
+/* =====================================================
+   SIDEBAR SCROLLBAR
+===================================================== */
 
 .product-sidebar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0,0,0,0.25) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
 }
 
 .product-sidebar::-webkit-scrollbar {
@@ -33,13 +27,18 @@ html, body {
 }
 
 .product-sidebar::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.25);
+  background: rgba(0, 0, 0, 0.25);
   border-radius: 9999px;
 }
 
 .product-sidebar::-webkit-scrollbar-thumb:hover {
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
 }
+
+
+/* =====================================================
+   ANIMATIONS
+===================================================== */
 
 @keyframes scale-in {
   0% {
