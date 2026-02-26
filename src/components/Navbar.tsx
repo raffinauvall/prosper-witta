@@ -17,15 +17,22 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+  const handleScroll = (e: any) => {
+    const scrollTop = e.detail;
+
     if (!allowTransparent) {
       setScrolled(true);
-      return;
+    } else {
+      setScrolled(scrollTop > 40);
     }
+  };
 
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [allowTransparent]);
+  window.addEventListener("custom-scroll", handleScroll);
+
+  return () => {
+    window.removeEventListener("custom-scroll", handleScroll);
+  };
+}, [allowTransparent]);
 
   const textColor =
     scrolled || !allowTransparent ? "text-black" : "text-white";

@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { text } from "stream/consumers";
 
 type Lang = "id" | "en";
 

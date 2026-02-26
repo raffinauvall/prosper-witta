@@ -2,8 +2,14 @@ export interface News {
   id: string;
   title: string;
   slug?: string;
-  excerpt?: string;
-  content?: string;
+  excerpt?: {
+    id: string;
+    en: string;
+  };
+  content?: {
+    id: string;
+    en: string;
+  };
   thumbnail_url?: string;
   is_published?: boolean;
   published_at?: string;
@@ -12,19 +18,31 @@ export interface News {
 export interface NewsForm {
   title: string;
   slug: string;
-  excerpt: string;
-  content: string;
+  excerpt: {
+    id: string;
+    en: string;
+  };
+  content: {
+    id: string;
+    en: string;
+  };
   thumbnail_url: string;
   is_published: boolean;
   published_at: string;
 }
 
 export type NewsFormData = {
-  title: string;              
+  title: string;
   slug?: string;
-  excerpt?: string;
-  content?: string;
+  excerpt?: {
+    id: string;
+    en: string;
+  };
+  content?: {
+    id: string;
+    en: string;
+  };
   thumbnail_url?: string;
-  is_published: boolean;     
+  is_published: boolean;
   published_at?: string;
 };

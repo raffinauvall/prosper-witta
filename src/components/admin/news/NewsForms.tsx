@@ -19,6 +19,9 @@ export default function NewsForm({
 }: Props) {
   const [uploading, setUploading] = useState(false);
 
+  const languages = ["id", "en"] as const;
+  type Lang = (typeof languages)[number];
+
   const handleFileChange = async (file?: File) => {
     if (!file) return;
 
@@ -42,7 +45,7 @@ export default function NewsForm({
   return (
     <div className="flex flex-col gap-6 pb-24">
 
-      {/* BASIC INFO */}
+      {/* ================= BASIC INFO ================= */}
       <div className="grid gap-4">
         <Input
           label="Title *"
@@ -56,21 +59,53 @@ export default function NewsForm({
           onChange={(v) => setForm({ ...form, slug: v })}
         />
 
-        <Textarea
-          label="Excerpt"
-          value={form.excerpt || ""}
-          onChange={(v) => setForm({ ...form, excerpt: v })}
-        />
+        {/* ================= EXCERPT MULTI LANGUAGE ================= */}
+        <div className="space-y-3">
+          <label className="font-medium">Excerpt</label>
 
-        <Textarea
-          label="Content"
-          rows={8}
-          value={form.content || ""}
-          onChange={(v) => setForm({ ...form, content: v })}
-        />
+          {languages.map((lang) => (
+            <Textarea
+              key={lang}
+              label={`Excerpt (${lang.toUpperCase()})`}
+              value={form.excerpt?.[lang] || ""}
+              onChange={(v) =>
+                setForm({
+                  ...form,
+                  excerpt: {
+                    ...form.excerpt,
+                    [lang]: v,
+                  },
+                })
+              }
+            />
+          ))}
+        </div>
+
+        {/* ================= CONTENT MULTI LANGUAGE ================= */}
+        <div className="space-y-3">
+          <label className="font-medium">Content</label>
+
+          {languages.map((lang) => (
+            <Textarea
+              key={lang}
+              rows={8}
+              label={`Content (${lang.toUpperCase()})`}
+              value={form.content?.[lang] || ""}
+              onChange={(v) =>
+                setForm({
+                  ...form,
+                  content: {
+                    ...form.content,
+                    [lang]: v,
+                  },
+                })
+              }
+            />
+          ))}
+        </div>
       </div>
 
-      {/* IMAGE UPLOAD */}
+      {/* ================= IMAGE UPLOAD ================= */}
       <div className="space-y-3">
         <label className="text-sm font-semibold">Thumbnail Image</label>
 
@@ -78,7 +113,9 @@ export default function NewsForm({
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => handleFileChange(e.target.files?.[0])}
+            onChange={(e) =>
+              handleFileChange(e.target.files?.[0])
+            }
             className="hidden"
             id="thumbnailUpload"
           />
@@ -87,11 +124,9 @@ export default function NewsForm({
             htmlFor="thumbnailUpload"
             className="cursor-pointer text-sm text-gray-600"
           >
-            {uploading ? (
-              "Uploading..."
-            ) : (
-              "Click to upload or replace image"
-            )}
+            {uploading
+              ? "Uploading..."
+              : "Click to upload or replace image"}
           </label>
         </div>
 
@@ -101,6 +136,7 @@ export default function NewsForm({
               src={form.thumbnail_url}
               className="h-48 w-full rounded-xl border object-cover shadow-sm"
             />
+
             <button
               type="button"
               onClick={removeImage}
@@ -112,18 +148,23 @@ export default function NewsForm({
         )}
       </div>
 
-      {/* META */}
+      {/* ================= META ================= */}
       <div className="grid gap-4">
         <div className="flex items-center gap-3">
           <input
             type="checkbox"
             checked={form.is_published}
             onChange={(e) =>
-              setForm({ ...form, is_published: e.target.checked })
+              setForm({
+                ...form,
+                is_published: e.target.checked,
+              })
             }
             className="h-4 w-4"
           />
-          <span className="text-sm font-medium">Published</span>
+          <span className="text-sm font-medium">
+            Published
+          </span>
         </div>
 
         <Input
@@ -131,18 +172,20 @@ export default function NewsForm({
           type="datetime-local"
           value={form.published_at || ""}
           onChange={(v) =>
-            setForm({ ...form, published_at: v })
+            setForm({
+              ...form,
+              published_at: v,
+            })
           }
         />
       </div>
 
-      {/* STICKY FOOTER */}
+      {/* ================= FOOTER ================= */}
       <div className="sticky bottom-0 bg-white border-t pt-4 flex justify-end">
         <button
           onClick={onSubmit}
           disabled={isDisabled}
-          className="px-6 py-2 rounded-lg bg-blue-600 text-white font-medium 
-    hover:bg-blue-700 transition disabled:opacity-50"
+          className="px-6 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition disabled:opacity-50"
         >
           {uploading ? "Uploading..." : submitText}
         </button>

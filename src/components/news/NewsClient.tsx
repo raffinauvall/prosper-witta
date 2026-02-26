@@ -4,8 +4,8 @@ import { News } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function NewsClient({ news }: { news: News[] }) {
-  const { t } = useLanguage();
 
+  const { lang } = useLanguage();
   if (news.length === 0) {
     return (
       <main className="flex-1">
@@ -48,7 +48,7 @@ export default function NewsClient({ news }: { news: News[] }) {
                 </h2>
 
                 <p className="text-sm text-gray-600 line-clamp-3">
-                  {item.excerpt}
+                  {item.excerpt?.[lang] ?? "-"}
                 </p>
 
                 <div className="flex items-center justify-between pt-2 text-xs text-gray-400">
