@@ -2,6 +2,20 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
+/**
+ * Remove html for preview text
+ */
+function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export async function sendNewsletterEmail({
   to,
   name,
@@ -12,80 +26,147 @@ export async function sendNewsletterEmail({
   to: string;
   name: string;
   title: string;
-  excerpt: string;
+  excerpt: string | { id: string; en: string };
   url: string;
 }) {
-  await resend.emails.send({
-    // 🔥 TEST pakai info@
-    from: "PT Prosper Witta Sejahtera <info@prosperwittasejahtera.com>",
+  const rawExcerpt =
+    typeof excerpt === "object" ? excerpt?.en || "" : excerpt || "";
 
-    to,
+  const cleanExcerpt = stripHtml(rawExcerpt);
 
-    // ❌ jangan ada kata newsletter/promo
-    subject: title,
+  const safeExcerpt =
+    cleanExcerpt.length > 200
+      ? cleanExcerpt.slice(0, 200) + "..."
+      : cleanExcerpt;
 
-    // ======================
-    // TEXT (penting banget)
-    // ======================
-    text: `
-Halo ${name},
+  const previewText = `${title} - ${safeExcerpt}`;
 
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${title}</title>
+</head>
+
+<body style="margin:0;padding:0;background:#f6f8fb;font-family:Arial,Helvetica,sans-serif;">
+
+<!-- ✅ Hidden Preview Text -->
+<span style="display:none;max-height:0;overflow:hidden;">
+${previewText}
+</span>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:32px 16px;">
+<tr>
+<td align="center">
+
+<!-- ✅ WHITE BOX -->
+<table width="100%"
+cellpadding="0"
+cellspacing="0"
+border="0"
+align="center"
+style="
+background:#ffffff;
+border-radius:10px;
+border:1px solid #e5e7eb;
+max-width:560px;
+table-layout:fixed;
+">
+
+<tr>
+<td style="
+padding:28px;
+font-family:Arial,Helvetica,sans-serif;
+word-break:break-word;
+overflow-wrap:break-word;
+">
+
+<!-- CONTENT -->
+
+<p style="margin:0 0 12px 0;">
+Hello <strong>${name}</strong>,
+</p>
+
+<h2 style="
+margin:0 0 10px 0;
+font-size:18px;
+color:#111;
+word-break:break-word;
+">
 ${title}
+</h2>
 
-${excerpt}
+<p style="
+margin:0 0 20px 0;
+color:#444;
+line-height:1.6;
+word-break:break-word;
+overflow-wrap:break-word;
+">
+${safeExcerpt}
+</p>
 
-Baca selengkapnya:
-${url}
+<!-- ✅ BUTTON -->
+<table role="presentation" cellspacing="0" cellpadding="0">
+<tr>
+<td bgcolor="#2563eb" style="border-radius:6px;">
+<a href="${url}"
+target="_blank"
+rel="noopener noreferrer"
+style="
+display:inline-block;
+padding:10px 18px;
+color:#ffffff;
+text-decoration:none;
+font-size:14px;
+font-weight:600;
+font-family:Arial,Helvetica,sans-serif;
+word-break:break-word;
+">
+Read More
+</a>
+</td>
+</tr>
+</table>
 
-Terima kasih,
-PT Prosper Witta Sejahtera
+<hr style="
+margin:26px 0;
+border:none;
+border-top:1px solid #eee;
+" />
 
-Anda menerima email ini karena berlangganan informasi dari website kami.
-    `,
+<!-- ✅ FOOTER -->
+<p style="
+font-size:11px;
+color:#666;
+margin:0;
+line-height:1.6;
+word-break:break-word;
+">
+You received this email because you subscribed to our newsletter.<br/>
+PT Prosper Witta Sejahtera<br/>
+Jakarta, Indonesia<br/>
 
-    // ======================
-    // HTML (cakep tapi aman)
-    // ======================
-    html: `
-<div style="font-family:Arial,Helvetica,sans-serif;background:#f6f8fb;padding:32px 16px;">
-  <div style="max-width:560px;margin:auto;background:#ffffff;border-radius:10px;padding:28px;border:1px solid #e5e7eb;">
+</p>
 
-    <p style="margin:0 0 12px 0;">Halo <strong>${name}</strong>,</p>
+</td>
+</tr>
+</table>
 
-    <h2 style="margin:0 0 10px 0;color:#111;font-size:18px;">
-      ${title}
-    </h2>
+</td>
+</tr>
+</table>
 
-    <p style="margin:0 0 18px 0;color:#444;line-height:1.6;">
-      ${excerpt}
-    </p>
+</body>
+</html>
+`;
 
-    <p style="margin:18px 0;">
-      <a 
-        href="${url}" 
-        style="
-          background:#2563eb;
-          color:#ffffff;
-          padding:10px 16px;
-          border-radius:6px;
-          text-decoration:none;
-          font-size:14px;
-          display:inline-block;
-        "
-      >
-        Baca selengkapnya
-      </a>
-    </p>
-
-    <hr style="margin:24px 0;border:none;border-top:1px solid #eee;" />
-
-    <p style="font-size:12px;color:#666;margin:0;">
-      Email ini dikirim karena Anda berlangganan informasi dari website kami.<br/>
-      PT Prosper Witta Sejahtera
-    </p>
-
-  </div>
-</div>
-    `,
+  await resend.emails.send({
+    from: "PT Prosper Witta Sejahtera <info@prosperwittasejahtera.com>",
+    to,
+    subject: title,
+    html,
   });
 }

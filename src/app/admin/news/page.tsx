@@ -39,6 +39,11 @@ export default function AdminNewsPage() {
         setNews(data);
         setLoading(false);
     };
+    useEffect(() => {
+        if (modal === "create") {
+            setForm(EMPTY_FORM);
+        }
+    }, [modal]);
 
     useEffect(() => {
         load();
