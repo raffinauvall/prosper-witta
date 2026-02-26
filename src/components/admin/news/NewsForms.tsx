@@ -22,6 +22,24 @@ export default function NewsForm({
   const languages = ["id", "en"] as const;
   type Lang = (typeof languages)[number];
 
+  /* ================= SAFE LOCALIZED UPDATE ================= */
+
+  const updateLocalized = (
+    key: "excerpt" | "content",
+    lang: Lang,
+    value: string
+  ) => {
+    setForm({
+      ...form,
+      [key]: {
+        ...(form[key] as Record<string, string>),
+        [lang]: value,
+      },
+    });
+  };
+
+  /* ================= IMAGE UPLOAD ================= */
+
   const handleFileChange = async (file?: File) => {
     if (!file) return;
 
@@ -46,6 +64,7 @@ export default function NewsForm({
     <div className="flex flex-col gap-6 pb-24">
 
       {/* ================= BASIC INFO ================= */}
+
       <div className="grid gap-4">
         <Input
           label="Title *"
@@ -59,7 +78,8 @@ export default function NewsForm({
           onChange={(v) => setForm({ ...form, slug: v })}
         />
 
-        {/* ================= EXCERPT MULTI LANGUAGE ================= */}
+        {/* ================= EXCERPT ================= */}
+
         <div className="space-y-3">
           <label className="font-medium">Excerpt</label>
 
@@ -69,19 +89,14 @@ export default function NewsForm({
               label={`Excerpt (${lang.toUpperCase()})`}
               value={form.excerpt?.[lang] || ""}
               onChange={(v) =>
-                setForm({
-                  ...form,
-                  excerpt: {
-                    ...form.excerpt,
-                    [lang]: v,
-                  },
-                })
+                updateLocalized("excerpt", lang, v)
               }
             />
           ))}
         </div>
 
-        {/* ================= CONTENT MULTI LANGUAGE ================= */}
+        {/* ================= CONTENT ================= */}
+
         <div className="space-y-3">
           <label className="font-medium">Content</label>
 
@@ -92,22 +107,19 @@ export default function NewsForm({
               label={`Content (${lang.toUpperCase()})`}
               value={form.content?.[lang] || ""}
               onChange={(v) =>
-                setForm({
-                  ...form,
-                  content: {
-                    ...form.content,
-                    [lang]: v,
-                  },
-                })
+                updateLocalized("content", lang, v)
               }
             />
           ))}
         </div>
       </div>
 
-      {/* ================= IMAGE UPLOAD ================= */}
+      {/* ================= IMAGE ================= */}
+
       <div className="space-y-3">
-        <label className="text-sm font-semibold">Thumbnail Image</label>
+        <label className="text-sm font-semibold">
+          Thumbnail Image
+        </label>
 
         <div className="border-2 border-dashed rounded-xl p-6 text-center hover:border-blue-500 transition">
           <input
@@ -149,6 +161,7 @@ export default function NewsForm({
       </div>
 
       {/* ================= META ================= */}
+
       <div className="grid gap-4">
         <div className="flex items-center gap-3">
           <input
@@ -181,6 +194,7 @@ export default function NewsForm({
       </div>
 
       {/* ================= FOOTER ================= */}
+
       <div className="sticky bottom-0 bg-white border-t pt-4 flex justify-end">
         <button
           onClick={onSubmit}
