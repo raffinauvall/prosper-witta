@@ -45,7 +45,7 @@ const dictionary: Record<Lang, Dictionary> = {
             about: {
                 title1: "Menyuplai Lebih Dari Sekadar Bahan Kimia —",
                 title2: "Kami Mengirimkan Kepercayaan",
-                description: "PT Prosper Witta Sejahtera adalah perusahaan perdagangan kimia yang didirikan pada tahun 2024. Kami melayani aplikasi industri seperti: Home & Personal Care, Institutional & Industrial Cleaning, Veterinary, Mining, Water Treatment, dan Metal Working , Oil & Gas."
+                description: "PT Prosper Witta Sejahtera adalah perusahaan perdagangan kimia yang didirikan pada tahun 2024. Kami melayani aplikasi industri seperti: Home & Personal Care, Institutional & Industrial Cleaning, Veterinary, Mining, Water Treatment, dan Metal Working , Oil & Gas, Textile Auxiliaries."
             }
         },
 
@@ -62,7 +62,7 @@ const dictionary: Record<Lang, Dictionary> = {
                 desc1:
                     "PT Prosper Witta Sejahtera didirikan pada tahun 2024 sebagai perusahaan perdagangan bahan kimia yang fokus menyediakan produk dan solusi untuk berbagai sektor industri.",
                 desc2:
-                    "Kami melayani aplikasi industri seperti: Home & Personal Care, Institutional & Industrial Cleaner, Veterinary, Mining, Water Treatment, Metal Working.",
+                    "Kami melayani aplikasi industri seperti: Home & Personal Care, Institutional & Industrial Cleaner, Veterinary, Mining, Water Treatment, Metal Working, Oil & Gas, Textile Auxiliaries.",
             },
 
             feature: {
@@ -121,7 +121,7 @@ const dictionary: Record<Lang, Dictionary> = {
                     desc: "Bahan kimia pembersih kelas industri untuk pabrik, fasilitas, dan peralatan berat.",
                 },
                 veterinary: {
-                    title: "Veteriner",
+                    title: "Veterinary",
                     desc: "Solusi kimia untuk mendukung kesehatan hewan dan sistem biosekuriti.",
                 },
                 mining: {

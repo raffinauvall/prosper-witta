@@ -4,6 +4,18 @@ import React from "react";
 import { LanguageProvider } from "@/context/LanguageContext";
 import ScrollWrapper from "@/components/ScrollWrapper";
 
+export const metadata = {
+  title: {
+    default: "PT Prosper Witta Sejahtera",
+    template: "%s | PT Prosper Witta Sejahtera",
+  },
+  description:
+    "PT Prosper Witta Sejahtera is a chemical trading company serving industrial applications such as Home & Personal Care and Institutional sectors.",
+  icons: {
+    icon: "/logo.png",
+  },
+};
+
 export default function RootLayout({
   children,
 }: {

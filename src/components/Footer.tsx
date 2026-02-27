@@ -52,6 +52,8 @@ export default function Footer() {
             <li><Link href="/products/mining">{t("products.categories.mining.title")}</Link></li>
             <li><Link href="/products/water-treatment">{t("products.categories.water.title")}</Link></li>
             <li><Link href="/products/metal-working">{t("products.categories.metal.title")}</Link></li>
+            <li><Link href="/products/oil-gas">{t("products.categories.oilGas.title")}</Link></li>
+            <li><Link href="/products/textile-auxiliaries">{t("products.categories.textile.title")}</Link></li>
           </ul>
         </div>
 

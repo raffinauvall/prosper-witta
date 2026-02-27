@@ -7,7 +7,7 @@ export default async function AdminRootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const payload = await verifyAdmin(); // BIAR THROW
+  const payload = await verifyAdmin(); 
 
   return (
     <AdminLayout adminName={payload.username}>
