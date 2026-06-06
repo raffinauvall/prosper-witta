@@ -113,11 +113,11 @@ const dictionary: Record<Lang, Dictionary> = {
                     "Solusi kimia khusus untuk mendukung berbagai sektor industri dengan kualitas dan keandalan yang konsisten.",
 
                 home: {
-                    title: "Perawatan Rumah & Personal",
+                    title: "Home & Personal Care",
                     desc: "Bahan kimia berkualitas tinggi untuk kebutuhan kebersihan, formulasi, dan produk perawatan pribadi.",
                 },
                 industrial: {
-                    title: "Pembersih Institusional & Industri",
+                    title: "Institutional & Industrial Cleaner",
                     desc: "Bahan kimia pembersih kelas industri untuk pabrik, fasilitas, dan peralatan berat.",
                 },
                 veterinary: {
@@ -125,23 +125,23 @@ const dictionary: Record<Lang, Dictionary> = {
                     desc: "Solusi kimia untuk mendukung kesehatan hewan dan sistem biosekuriti.",
                 },
                 mining: {
-                    title: "Pertambangan",
+                    title: "Mining",
                     desc: "Bahan kimia khusus untuk pengemulsi peledak.",
                 },
                 water: {
-                    title: "Pengolahan Air",
+                    title: "Water Treatment",
                     desc: "Solusi pemurnian dan pengolahan air untuk sektor industri dan biosida",
                 },
                 metal: {
-                    title: "Pengolahan Logam",
+                    title: "Metal Working",
                     desc: "Bahan kimia untuk proses logam, cairan mesin, dan perlakuan permukaan.",
                 },
                 oilGas: {
-                    title: "Minyak & Gas",
+                    title: "Oil & Gas",
                     desc: "Bahan kimia untuk aplikasi industri minyak dan gas, termasuk pengeboran, penyelesaian, dan produksi.",
                 },
                 textile: {
-                    title: "Tekstil Auxiliaries",
+                    title: "Textile Auxiliaries",
                     desc: "Bahan kimia untuk auxiliaries dalam industri tekstil, seperti finishing, dyeing, dan pengolahan kain.",
                 },
 
