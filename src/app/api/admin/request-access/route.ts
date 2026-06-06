@@ -1,10 +1,11 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { verifyAdmin } from "@/lib/authServer";
+import { requireAdminApi } from "@/lib/adminApi";
 import { success, failure } from "@/lib/api-response";
 
 export async function GET() {
   try {
-    await verifyAdmin();
+    const auth = await requireAdminApi();
+    if (auth.response) return auth.response;
 
     const { data, error: sbError } = await supabaseAdmin
       .from("document_access_requests")
@@ -19,6 +20,6 @@ export async function GET() {
     return success(data);
   } catch (err) {
     console.error("ADMIN API ERROR:", err);
-    return failure("Unauthorized", 401);
+    return failure("Server error", 500);
   }
 }

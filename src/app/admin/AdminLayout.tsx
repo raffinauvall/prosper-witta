@@ -12,6 +12,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronDown,
+  Menu,
+  X,
 } from "lucide-react";
 
 interface SidebarItem {
@@ -29,6 +31,11 @@ const sidebarItems: SidebarItem[] = [
   { href: "/admin/contact", label: "Contact", icon: <Mail className="w-5 h-5" /> },
 ];
 
+function isActivePath(pathname: string, href: string) {
+  if (href === "/admin") return pathname === "/admin";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export default function AdminLayout({
   children,
   adminName,
@@ -37,6 +44,7 @@ export default function AdminLayout({
   adminName: string;
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [time, setTime] = useState("");
   const [openUserMenu, setOpenUserMenu] = useState(false);
 
@@ -65,37 +73,43 @@ export default function AdminLayout({
     router.push("/login");
   };
 
+  const pageTitle = pathname.split("/").filter(Boolean).slice(-1)[0] || "Dashboard";
+
+  const nav = (
+    <nav className="flex-1 p-2 space-y-1">
+      {sidebarItems.map((item) => {
+        const active = isActivePath(pathname, item.href);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={() => setMobileSidebarOpen(false)}
+            className={`flex items-center gap-3 rounded px-3 py-2 text-sm transition-colors ${
+              active
+                ? "bg-gray-800 text-white"
+                : "text-gray-300 hover:bg-gray-800 hover:text-white"
+            }`}
+          >
+            {item.icon}
+            {(!sidebarCollapsed || mobileSidebarOpen) && item.label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* SIDEBAR */}
       <aside
-        className={`bg-gray-900 text-white flex flex-col relative transition-all duration-300 ${
+        className={`relative hidden flex-col bg-gray-900 text-white transition-all duration-300 md:flex ${
           sidebarCollapsed ? "w-20" : "w-64"
         }`}
       >
         <div className="h-16 px-4 flex items-center font-bold text-lg border-b border-gray-800">
-          {!sidebarCollapsed ? "🚀 Admin Panel" : "🚀"}
+          {!sidebarCollapsed ? "Prosper Admin" : "PA"}
         </div>
 
-        <nav className="flex-1 p-2 space-y-1">
-          {sidebarItems.map((item) => {
-            const active = pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded text-sm transition-colors ${
-                  active
-                    ? "bg-gray-800 text-white"
-                    : "text-gray-300 hover:bg-gray-800 hover:text-white"
-                }`}
-              >
-                {item.icon}
-                {!sidebarCollapsed && item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        {nav}
 
         <button
           className="absolute top-1/2 -right-3 transform -translate-y-1/2 w-6 h-6 bg-gray-700 text-white rounded-full flex items-center justify-center hover:bg-gray-600 transition"
@@ -105,23 +119,57 @@ export default function AdminLayout({
         </button>
       </aside>
 
-      <div className="flex-1 flex flex-col">
-        <header className="h-20 bg-white shadow-sm flex items-center justify-between px-6 ">
-          <span className="font-mono text-sm text-gray-500">{time} WIB</span>
+      {mobileSidebarOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          <button
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setMobileSidebarOpen(false)}
+            aria-label="Close navigation overlay"
+          />
+          <aside className="relative flex h-full w-72 max-w-[82vw] flex-col bg-gray-900 text-white shadow-xl">
+            <div className="flex h-16 items-center justify-between border-b border-gray-800 px-4">
+              <span className="font-bold">Prosper Admin</span>
+              <button
+                onClick={() => setMobileSidebarOpen(false)}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-md text-gray-300 hover:bg-gray-800 hover:text-white"
+                aria-label="Close navigation"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            {nav}
+          </aside>
+        </div>
+      )}
 
-          <h1 className="text-xl font-bold text-gray-700 capitalize">
-            {pathname.split("/").filter(Boolean).slice(-1)[0] || "Dashboard"}
-          </h1>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="flex min-h-16 items-center justify-between gap-3 bg-white px-4 shadow-sm sm:px-6 md:h-20">
+          <div className="flex min-w-0 items-center gap-3">
+            <button
+              onClick={() => setMobileSidebarOpen(true)}
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-gray-200 text-gray-700 md:hidden"
+              aria-label="Open navigation"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+
+            <div className="min-w-0">
+              <h1 className="truncate text-lg font-bold capitalize text-gray-700 sm:text-xl">
+                {pageTitle}
+              </h1>
+              <span className="hidden font-mono text-xs text-gray-500 sm:block">{time} WIB</span>
+            </div>
+          </div>
 
           <div className="relative">
             <button
               onClick={() => setOpenUserMenu(!openUserMenu)}
-              className="flex items-center gap-2 bg-gray-100 rounded-full px-3 py-1 hover:bg-gray-200 transition shadow-sm"
+              className="flex items-center gap-2 rounded-full bg-gray-100 px-2 py-1 shadow-sm transition hover:bg-gray-200 sm:px-3"
             >
               <span className="w-7 h-7 bg-gray-400 rounded-full flex items-center justify-center text-white text-sm">
                 {adminName[0].toUpperCase()}
               </span>
-              <span className="text-gray-700 font-medium">{adminName}</span>
+              <span className="hidden font-medium text-gray-700 sm:inline">{adminName}</span>
               <ChevronDown className="w-4 h-4" />
             </button>
 
@@ -144,8 +192,7 @@ export default function AdminLayout({
           </div>
         </header>
 
-        {/* MAIN CONTENT */}
-        <main className="flex-1 overflow-auto p-6">{children}</main>
+        <main className="flex-1 overflow-auto bg-gray-50 p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );

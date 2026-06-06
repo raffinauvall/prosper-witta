@@ -1,24 +1,13 @@
 import "server-only";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import jwt from "jsonwebtoken";
+import { getAdminSession } from "./adminSession";
 
 export async function verifyAdmin() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("session_token")?.value;
+  const session = await getAdminSession();
 
-  // ❌ token ga ada → redirect
-  if (!token) {
+  if (!session) {
     redirect("/login");
   }
 
-  try {
-    return jwt.verify(token, process.env.JWT_SECRET!) as {
-      sub: string;
-      username: string;
-    };
-  } catch {
-    // ❌ token invalid → redirect juga
-    redirect("/login");
-  }
+  return session;
 }

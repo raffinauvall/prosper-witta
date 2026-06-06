@@ -12,25 +12,26 @@ function Counter({ target }: { target: number }) {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true });
 
-    useEffect(() => {
-        if (!isInView) return;
+useEffect(() => {
+  if (!isInView) return;
 
-        let start = 0;
-        const duration = 1500;
-        const increment = target / (duration / 16);
+  let start = 0;
+  const duration = 1500;
+  const increment = target / (duration / 16);
 
-        const counter = setInterval(() => {
-            start += increment;
-            if (start >= target) {
-                setCount(target);
-                clearInterval(counter);
-            } else {
-                setCount(Math.floor(start));
-            }
-        }, 16);
+  const counter = setInterval(() => {
+    start += increment;
 
-        return () => clearInterval(counter);
-    }, [target, isInView]);
+    if (start >= target) {
+      setCount(target);
+      clearInterval(counter);
+    } else {
+      setCount(Math.floor(start));
+    }
+  }, 16);
+
+  return () => clearInterval(counter);
+}, [isInView, target]);
 
     return <span ref={ref}>{count}</span>;
 }

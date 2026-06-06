@@ -6,15 +6,18 @@ export async function fetchProducts(category: string): Promise<Product[]> {
     const res = await fetch(`/api/products/by-category?category=${category}`);
     if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
     return await res.json();
-  } catch (err: any) {
-    console.error("Fetch products error:", err.message);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("Fetch products error:", message);
     return [];
   }
 }
 
 export async function fetchAdminProducts(): Promise<Product[]> {
   try {
-    const res = await fetch("/api/admin/products");
+    const res = await fetch("/api/admin/products", {
+      credentials: "include",
+    });
     if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
     return await res.json();
   } catch (err) {
@@ -28,6 +31,7 @@ export async function createProductForm(data: FormData) {
     const res = await fetch("/api/admin/products", {
       method: "POST",
       body: data,
+      credentials: "include",
     });
 
     if (!res.ok) {
@@ -49,6 +53,7 @@ export async function createProduct(product: Product) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(product),
+      credentials: "include",
     });
 
     if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
@@ -64,6 +69,7 @@ export async function updateProduct(id: string, product: Product) {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(product),
+      credentials: "include",
     });
 
     if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
@@ -74,7 +80,10 @@ export async function updateProduct(id: string, product: Product) {
 }
 
 export async function deleteProduct(id: number) {
-  const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
+  const res = await fetch(`/api/admin/products/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
   if (!res.ok) {
     const text = await res.text();
     console.error("Delete response text:", text);  
@@ -82,8 +91,6 @@ export async function deleteProduct(id: number) {
   }
   return res.json();
 }
-
-
 
 
 

@@ -1,8 +1,13 @@
-// src/app/api/admin/products/route.ts
-"use server";
-
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { requireAdminApi } from "@/lib/adminApi";
+import { hasPdfSignature, isPdfFile, isWithinSize } from "@/lib/uploadValidation";
+
+type ProductCategoryJoin = {
+  categories?: {
+    name?: string | null;
+  } | null;
+};
 
 export async function GET() {
   try {
@@ -28,7 +33,9 @@ export async function GET() {
     const formatted = (products ?? []).map(product => ({
       ...product,
       categories: Array.isArray(product.product_categories)
-        ? product.product_categories.map((pc: any) => pc.categories?.name).filter(Boolean)
+        ? (product.product_categories as ProductCategoryJoin[])
+            .map((pc) => pc.categories?.name)
+            .filter(Boolean)
         : [],
     }));
 
@@ -42,6 +49,9 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const auth = await requireAdminApi();
+    if (auth.response) return auth.response;
+
     const formData = await req.formData();
 
     const name = formData.get("name") as string;
@@ -54,6 +64,20 @@ export async function POST(req: Request) {
 
     if (!name) {
       return NextResponse.json({ message: "Name is required" }, { status: 400 });
+    }
+
+    for (const file of [msdsFile, tdsFile].filter(Boolean) as File[]) {
+      if (!isPdfFile(file)) {
+        return NextResponse.json({ message: "Documents must be PDF files" }, { status: 400 });
+      }
+
+      if (!(await hasPdfSignature(file))) {
+        return NextResponse.json({ message: "Documents must be valid PDF files" }, { status: 400 });
+      }
+
+      if (!isWithinSize(file, 10)) {
+        return NextResponse.json({ message: "Documents must be 10MB or smaller" }, { status: 400 });
+      }
     }
 
     // ===== INSERT PRODUCT =====

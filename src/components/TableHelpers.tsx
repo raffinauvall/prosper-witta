@@ -1,5 +1,9 @@
 export function Th({ children }: { children: React.ReactNode }) {
-  return <th className="p-2 text-left font-medium text-gray-600">{children}</th>;
+  return (
+    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+      {children}
+    </th>
+  );
 }
 
 export function Td({
@@ -12,7 +16,7 @@ export function Td({
   className?: string;
 }) {
   return (
-    <td colSpan={colSpan} className={`p-2 ${className}`}>
+    <td colSpan={colSpan} className={`px-4 py-3 align-top text-gray-700 ${className}`}>
       {children}
     </td>
   );

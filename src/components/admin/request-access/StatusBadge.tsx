@@ -4,15 +4,15 @@ interface Props {
 
 export default function StatusBadge({ status }: Props) {
   const map: Record<string, string> = {
-    pending: "bg-yellow-100 text-yellow-800",
-    approved: "bg-green-100 text-green-800",
-    rejected: "bg-red-100 text-red-800",
+    pending: "bg-amber-50 text-amber-700 ring-amber-200",
+    approved: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+    rejected: "bg-rose-50 text-rose-700 ring-rose-200",
   };
 
   return (
     <span
-      className={`px-2 py-1 rounded text-xs font-medium ${
-        map[status] || "bg-gray-100 text-gray-600"
+      className={`inline-flex rounded-md px-2 py-1 text-xs font-medium capitalize ring-1 ${
+        map[status] || "bg-gray-50 text-gray-600 ring-gray-200"
       }`}
     >
       {status}

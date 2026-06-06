@@ -1,6 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { verifyAdmin } from "@/lib/authServer";
 import { success, failure } from "@/lib/api-response";
+import { extensionForImage, isAllowedImageFile, isWithinSize } from "@/lib/uploadValidation";
 
 export async function POST(req: Request) {
   try {
@@ -13,7 +14,19 @@ export async function POST(req: Request) {
       return failure("No file", 400);
     }
 
-    const ext = file.name.split(".").pop();
+    if (!isAllowedImageFile(file)) {
+      return failure("Only JPG, PNG, and WEBP images are allowed", 400);
+    }
+
+    if (!isWithinSize(file, 5)) {
+      return failure("Image must be 5MB or smaller", 400);
+    }
+
+    const ext = extensionForImage(file);
+    if (!ext) {
+      return failure("Unsupported image type", 400);
+    }
+
     const fileName = `news/${crypto.randomUUID()}.${ext}`;
 
     const { error: uploadError } = await supabaseAdmin.storage

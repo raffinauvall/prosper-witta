@@ -1,13 +1,16 @@
-"use server";
-
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { requireAdminApi } from "@/lib/adminApi";
+import { hasPdfSignature, isPdfFile, isWithinSize } from "@/lib/uploadValidation";
 
 export async function PUT(
   req: NextRequest,
   context: { params: Promise<{ id: string }> } // <- pakai Promise supaya aman di production
 ) {
   try {
+    const auth = await requireAdminApi();
+    if (auth.response) return auth.response;
+
     const { id } = await context.params;
     const productId = Number(id);
 
@@ -23,6 +26,20 @@ export async function PUT(
 
     const msdsFile = formData.get("msds") as File | null;
     const tdsFile = formData.get("tds") as File | null;
+
+    for (const file of [msdsFile, tdsFile].filter(Boolean) as File[]) {
+      if (!isPdfFile(file)) {
+        return NextResponse.json({ message: "Documents must be PDF files" }, { status: 400 });
+      }
+
+      if (!(await hasPdfSignature(file))) {
+        return NextResponse.json({ message: "Documents must be valid PDF files" }, { status: 400 });
+      }
+
+      if (!isWithinSize(file, 10)) {
+        return NextResponse.json({ message: "Documents must be 10MB or smaller" }, { status: 400 });
+      }
+    }
 
     // Update product
     const { data: updatedProduct, error: updateError } = await supabaseAdmin
@@ -77,6 +94,9 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> } // <- pakai Promise juga
 ) {
   try {
+    const auth = await requireAdminApi();
+    if (auth.response) return auth.response;
+
     const { id } = await context.params;
     const productId = Number(id);
 

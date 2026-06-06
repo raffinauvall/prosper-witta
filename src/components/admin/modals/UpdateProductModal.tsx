@@ -1,22 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Category } from "@/lib/types";
+import { useEffect, useMemo, useState } from "react";
+import { Category, Product } from "@/lib/types";
 import FileUploadField from "../FileUploadField";
 import { getProductDocumentStatus } from "@/lib/api/documents/documents";
 
 type Props = {
-  product: any;
+  product: Product;
   onClose: () => void;
   onUpdated: () => void;
 };
 
 export default function UpdateProductModal({ product, onClose, onUpdated }: Props) {
-  const initialCategoryIds = Array.isArray(product?.product_categories)
-    ? product.product_categories
-        .map((pc: any) => pc.categories?.id)
-        .filter(Boolean)
-    : [];
+  const initialCategoryIds = useMemo(
+    () =>
+      Array.isArray(product?.product_categories)
+        ? product.product_categories
+            .map((pc) => pc.categories?.id)
+            .filter((id): id is number => typeof id === "number")
+        : [],
+    [product]
+  );
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
@@ -54,7 +58,7 @@ export default function UpdateProductModal({ product, onClose, onUpdated }: Prop
     setRemoveTds(false);
     setMsdsFile(null);
     setTdsFile(null);
-  }, [product]);
+  }, [initialCategoryIds, product]);
 
   /* ==================== LOAD CATEGORIES ==================== */
   useEffect(() => {
@@ -119,6 +123,7 @@ export default function UpdateProductModal({ product, onClose, onUpdated }: Prop
       const res = await fetch(`/api/admin/products/${product.id}`, {
         method: "PUT",
         body: formData,
+        credentials: "include",
       });
 
       if (res.ok) {
