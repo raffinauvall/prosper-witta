@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
 import { CATEGORY_INFO } from "@/lib/category-info";
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { supabaseClient } from "@/lib/supabaseClient";
 import { absoluteUrl } from "@/lib/seo";
+
+export const revalidate = 3600;
 
 type NewsSitemapRow = {
   slug: string;
@@ -51,7 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  const { data: newsRows, error } = await supabaseAdmin
+  const { data: newsRows, error } = await supabaseClient
     .from("news")
     .select("slug, published_at")
     .eq("is_published", true)

@@ -1,36 +1,148 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PT Prosper Witta Sejahtera
 
-## Getting Started
+Company website and admin dashboard for PT Prosper Witta Sejahtera, built with Next.js App Router and Supabase.
 
-First, run the development server:
+## Stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Supabase database and storage
+- Resend email
+- JWT + bcrypt admin authentication
+
+## Features
+
+- Public company pages: home, about, products, news, and contact.
+- Product category pages with document access request flow.
+- News listing and dynamic news detail pages.
+- Admin dashboard for products, request samples, request access, contact inquiries, and news.
+- Admin-only API routes protected by signed session cookies.
+- SEO support with metadata, robots.txt, dynamic sitemap, Open Graph, Twitter metadata, and Organization JSON-LD.
+
+## Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+RESEND_API_KEY=
+BASE_URL=
+JWT_SECRET=
+```
+
+Recommended for production:
+
+```env
+NEXT_PUBLIC_SITE_URL=https://your-domain.com
+BASE_URL=https://your-domain.com
+```
+
+`NEXT_PUBLIC_SITE_URL` or `BASE_URL` is used for canonical URLs, sitemap URLs, email links, and SEO metadata. Make sure it points to the final production domain.
+
+## Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```txt
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+```
 
-To learn more about Next.js, take a look at the following resources:
+## SEO
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The project includes:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `src/app/sitemap.ts` for dynamic sitemap generation.
+- `src/app/robots.ts` for crawler rules.
+- Root metadata in `src/app/layout.tsx`.
+- Page-level metadata for public pages.
+- Dynamic metadata for product categories and news detail pages.
 
-## Deploy on Vercel
+The sitemap includes:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `/`
+- `/about`
+- `/products`
+- `/products/[category]`
+- `/news`
+- `/news/[slug]`
+- `/contact`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The sitemap intentionally excludes admin, API, login, and internal request-status pages.
+
+After deployment, check:
+
+```txt
+https://your-domain.com/sitemap.xml
+https://your-domain.com/robots.txt
+```
+
+Submit the sitemap in Google Search Console.
+
+## Admin Security
+
+Admin authentication uses:
+
+- bcrypt password verification
+- JWT session cookie
+- `httpOnly` cookie
+- `sameSite=strict`
+- production-only secure cookie
+- protected admin API helpers
+
+Important:
+
+- Keep `SUPABASE_SERVICE_ROLE_KEY` server-side only.
+- Never expose service role keys in client code.
+- Rotate keys if they are leaked.
+
+## Supabase Notes
+
+The app expects tables/buckets for:
+
+- admin users
+- products
+- categories
+- product category mapping
+- document access requests
+- request samples
+- contact inquiries
+- newsletter subscribers
+- news
+- document/news storage buckets
+
+Public read operations should use the anon key. Admin mutations use the service role key server-side.
+
+## Deployment Checklist
+
+- Set all environment variables in the hosting provider.
+- Set `NEXT_PUBLIC_SITE_URL` or `BASE_URL` to the production domain.
+- Confirm `/sitemap.xml` returns public URLs.
+- Confirm `/robots.txt` references the correct sitemap URL.
+- Confirm admin login works with the production Supabase project.
+- Run `npm run build` before release.
