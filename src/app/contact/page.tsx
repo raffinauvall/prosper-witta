@@ -6,8 +6,12 @@ import ContactForm from "@/components/contact/ContactForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact | PT Prosper Witta Sejahtera",
-  description: "Home Page",
+  title: "Contact",
+  description:
+    "Contact PT Prosper Witta Sejahtera for specialty chemical product inquiries, document access, and sample requests.",
+  alternates: {
+    canonical: "/contact",
+  },
 };
 
 export default function ContactUs() {

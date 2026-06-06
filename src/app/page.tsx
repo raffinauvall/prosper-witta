@@ -7,9 +7,12 @@ import Footer from "@/components/Footer"
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "PT Prosper Witta Sejahtera - Chemical Trading Company",
+  title: "Chemical Trading Company in Indonesia",
   description:
-    "PT Prosper Witta Sejahtera is a chemical trading company established in 2024 serving industrial applications such as Home & Personal Care and Institutional sectors.",
+    "PT Prosper Witta Sejahtera supplies specialty chemicals for home care, industrial cleaner, water treatment, mining, oil & gas, textile, metal working, and veterinary applications.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function Home() {

@@ -7,8 +7,12 @@ import CoreValues from "@/components/about/CoreValues";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About | PT Prosper Witta Sejahtera",
-  description: "Home Page"
+  title: "About",
+  description:
+    "Learn about PT Prosper Witta Sejahtera, a chemical trading company serving industrial and specialty chemical markets in Indonesia.",
+  alternates: {
+    canonical: "/about",
+  },
 }
 export default function AboutPage() {
   return (

@@ -7,8 +7,12 @@ import NewsHeader from "@/components/news/NewsHeader";
 
 
 export const metadata: Metadata = {
-  title: "News | PT Prosper Witta Sejahtera",
-  description: "Home Page",
+  title: "News",
+  description:
+    "Read news and updates from PT Prosper Witta Sejahtera about chemical products, industry applications, and company activities.",
+  alternates: {
+    canonical: "/news",
+  },
 };
 
 export default async function NewsPage() {

@@ -4,8 +4,12 @@ import ProductCategories from "@/components/products/ProductCategories";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Product | PT Prosper Witta Sejahtera",
-  description: "Home Page",
+  title: "Products",
+  description:
+    "Explore PT Prosper Witta Sejahtera chemical product divisions for home care, industrial cleaner, water treatment, mining, oil & gas, textile, metal working, and veterinary applications.",
+  alternates: {
+    canonical: "/products",
+  },
 };
 
 export default function ProductPage() {
