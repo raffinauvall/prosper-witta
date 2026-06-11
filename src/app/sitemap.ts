@@ -13,6 +13,7 @@ type NewsSitemapRow = {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
+  /* ─── Static pages ─── */
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: absoluteUrl("/"),
@@ -35,8 +36,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: absoluteUrl("/news"),
       lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.7,
+      changeFrequency: "daily",
+      priority: 0.8,
     },
     {
       url: absoluteUrl("/contact"),
@@ -46,31 +47,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const categoryRoutes: MetadataRoute.Sitemap = Object.keys(CATEGORY_INFO).map((category) => ({
-    url: absoluteUrl(`/products/${category}`),
-    lastModified: now,
-    changeFrequency: "weekly",
-    priority: 0.8,
-  }));
+  /* ─── Product category pages ─── */
+  const categoryRoutes: MetadataRoute.Sitemap = Object.keys(CATEGORY_INFO).map(
+    (category) => ({
+      url: absoluteUrl(`/products/${category}`),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    })
+  );
 
-  const { data: newsRows, error } = await supabaseClient
-    .from("news")
-    .select("slug, published_at")
-    .eq("is_published", true)
-    .order("published_at", { ascending: false });
+  /* ─── Dynamic news article pages ─── */
+  let newsRoutes: MetadataRoute.Sitemap = [];
 
-  if (error) {
-    console.error("SITEMAP NEWS ERROR:", error);
+  try {
+    const { data: newsRows, error } = await supabaseClient
+      .from("news")
+      .select("slug, published_at")
+      .eq("is_published", true)
+      .order("published_at", { ascending: false });
+
+    if (error) {
+      console.error("SITEMAP NEWS ERROR:", error);
+    }
+
+    newsRoutes = ((newsRows ?? []) as NewsSitemapRow[])
+      .filter((news) => Boolean(news.slug))
+      .map((news) => ({
+        url: absoluteUrl(`/news/${news.slug}`),
+        lastModified: news.published_at ? new Date(news.published_at) : now,
+        changeFrequency: "monthly",
+        priority: 0.6,
+      }));
+  } catch (err) {
+    console.error("SITEMAP: Failed to fetch news", err);
   }
-
-  const newsRoutes: MetadataRoute.Sitemap = ((newsRows ?? []) as NewsSitemapRow[])
-    .filter((news) => Boolean(news.slug))
-    .map((news) => ({
-      url: absoluteUrl(`/news/${news.slug}`),
-      lastModified: news.published_at ? new Date(news.published_at) : now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    }));
 
   return [...staticRoutes, ...categoryRoutes, ...newsRoutes];
 }

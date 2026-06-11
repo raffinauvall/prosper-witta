@@ -6,11 +6,17 @@ import ContactForm from "@/components/contact/ContactForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact Us — Get in Touch",
   description:
-    "Contact PT Prosper Witta Sejahtera for specialty chemical product inquiries, document access, and sample requests.",
+    "Contact PT Prosper Witta Sejahtera for specialty chemical product inquiries, quotation requests, technical support, document access, and sample requests. We are ready to help.",
   alternates: {
     canonical: "/contact",
+  },
+  openGraph: {
+    title: "Contact PT Prosper Witta Sejahtera",
+    description:
+      "Reach out for product inquiries, quotations, and technical support for specialty chemicals.",
+    url: "/contact",
   },
 };
 

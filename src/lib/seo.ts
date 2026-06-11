@@ -1,4 +1,4 @@
-const fallbackSiteUrl = "https://prosperwitta.com";
+const fallbackSiteUrl = "https://prosperwittasejahtera.com";
 
 export function getSiteUrl() {
   const raw =

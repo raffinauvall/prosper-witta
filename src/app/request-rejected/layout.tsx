@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import LoginGuard from "./LoginGuard";
 
 export const metadata: Metadata = {
   robots: {
@@ -8,10 +7,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function LoginLayout({
+export default function RequestRejectedLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <LoginGuard>{children}</LoginGuard>;
+  return <>{children}</>;
 }

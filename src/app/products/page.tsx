@@ -4,11 +4,17 @@ import ProductCategories from "@/components/products/ProductCategories";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Products",
+  title: "Products — Specialty Chemical Divisions",
   description:
-    "Explore PT Prosper Witta Sejahtera chemical product divisions for home care, industrial cleaner, water treatment, mining, oil & gas, textile, metal working, and veterinary applications.",
+    "Explore PT Prosper Witta Sejahtera specialty chemical product divisions: home care, industrial cleaner, water treatment, mining, oil & gas, textile, metal working, and veterinary chemicals.",
   alternates: {
     canonical: "/products",
+  },
+  openGraph: {
+    title: "Chemical Products — PT Prosper Witta Sejahtera",
+    description:
+      "Browse our complete range of specialty chemical products across 8 industry divisions.",
+    url: "/products",
   },
 };
 

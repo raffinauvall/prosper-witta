@@ -7,13 +7,19 @@ import CoreValues from "@/components/about/CoreValues";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About Us — Company Profile & Vision",
   description:
-    "Learn about PT Prosper Witta Sejahtera, a chemical trading company serving industrial and specialty chemical markets in Indonesia.",
+    "Learn about PT Prosper Witta Sejahtera, a chemical trading company with expertise in specialty chemical distribution for industrial and commercial markets across Indonesia.",
   alternates: {
     canonical: "/about",
   },
-}
+  openGraph: {
+    title: "About PT Prosper Witta Sejahtera",
+    description:
+      "Discover our company profile, vision, mission, and core values as a leading chemical trading company in Indonesia.",
+    url: "/about",
+  },
+};
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white text-gray-900">

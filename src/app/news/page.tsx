@@ -7,11 +7,17 @@ import NewsHeader from "@/components/news/NewsHeader";
 
 
 export const metadata: Metadata = {
-  title: "News",
+  title: "News & Updates — Latest Industry Insights",
   description:
-    "Read news and updates from PT Prosper Witta Sejahtera about chemical products, industry applications, and company activities.",
+    "Read the latest news, articles, and industry updates from PT Prosper Witta Sejahtera about specialty chemical products, market trends, and company activities.",
   alternates: {
     canonical: "/news",
+  },
+  openGraph: {
+    title: "News & Updates — PT Prosper Witta Sejahtera",
+    description:
+      "Stay updated with the latest chemical industry news, product updates, and company activities.",
+    url: "/news",
   },
 };
 

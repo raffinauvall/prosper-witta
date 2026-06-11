@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://prosperwittasejahtera.com
-
-# Sitemaps
-Sitemap: https://prosperwittasejahtera.com/sitemap.xml
