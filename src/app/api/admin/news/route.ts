@@ -47,7 +47,7 @@ export async function PUT(req: Request) {
     if (!id) return failure("ID is required", 400);
 
     const cleanPayload = Object.fromEntries(
-      Object.entries(payload).filter(([_, v]) => v !== undefined)
+      Object.entries(payload).filter((entry) => entry[1] !== undefined)
     );
 
     const { data, error: sbError } = await supabaseAdmin

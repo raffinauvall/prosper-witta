@@ -1,4 +1,3 @@
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { NextResponse } from "next/server";
 import { supabaseClient } from "@/lib/supabaseClient";
 

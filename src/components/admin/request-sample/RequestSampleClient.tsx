@@ -54,8 +54,8 @@ export default function RequestSampleClient() {
       }
 
       toast.success("Delete berhasil!");
-    } catch (err: any) {
-      toast.error(err?.message || "Delete gagal");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Delete gagal");
     }
   };
 

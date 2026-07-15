@@ -24,7 +24,7 @@ export const useProducts = (category: string) => {
         } else {
           setSelected(null);
         }
-      } catch (err) {
+      } catch {
         setError("Failed to load products");
       } finally {
         setLoading(false);

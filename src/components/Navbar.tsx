@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -17,8 +18,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-  const handleScroll = (e: any) => {
-    const scrollTop = e.detail;
+  const handleScroll = (e: Event) => {
+    const scrollTop = e instanceof CustomEvent ? e.detail : window.scrollY;
 
     if (!allowTransparent) {
       setScrolled(true);
@@ -56,9 +57,11 @@ export default function Navbar() {
 
           {/* LOGO */}
           <div className="flex items-center gap-3">
-            <img
+            <Image
               src="/logo.png"
               alt="Logo"
+              width={56}
+              height={56}
               className="w-14 h-auto object-contain"
             />
 

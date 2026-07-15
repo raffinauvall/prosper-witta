@@ -1,7 +1,6 @@
 import {
   Sparkles,
   FlaskRound,
-  HeartPulse,
   Hammer,
   Layers,
   Droplets,

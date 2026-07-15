@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getNews, createNews, updateNews, deleteNews } from "@/lib/api/admin/news";
 import { News, NewsFormData } from "@/lib/types";
 
@@ -27,26 +27,26 @@ const EMPTY_FORM: NewsFormData = {
 
 export default function AdminNewsPage() {
     const [news, setNews] = useState<News[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const [form, setForm] = useState<NewsFormData>(EMPTY_FORM);
     const [selected, setSelected] = useState<News | null>(null);
     const [modal, setModal] = useState<"create" | "edit" | "delete" | null>(null);
 
-    const load = async () => {
+    const load = useCallback(async () => {
         setLoading(true);
-        const data = await getNews();
-        setNews(data);
-        setLoading(false);
-    };
-    useEffect(() => {
-        if (modal === "create") {
-            setForm(EMPTY_FORM);
+        try {
+            const data = await getNews();
+            setNews(data);
+        } finally {
+            setLoading(false);
         }
-    }, [modal]);
+    }, []);
 
     useEffect(() => {
-        load();
+        void getNews()
+            .then(setNews)
+            .finally(() => setLoading(false));
     }, []);
 
     return (

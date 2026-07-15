@@ -2,6 +2,7 @@
 
 import Navbar from "@/components/Navbar";
 import { useLanguage } from "@/context/LanguageContext";
+import Image from "next/image";
 
 export default function ProductHero() {
   const { t } = useLanguage();
@@ -9,9 +10,12 @@ export default function ProductHero() {
   return (
     <section className="relative flex flex-col">
       <div className="absolute inset-0">
-        <img
+        <Image
           src="/productsec.png"
           alt="Chemical Industry"
+          fill
+          priority
+          sizes="100vw"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/70" />

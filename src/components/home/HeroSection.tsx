@@ -2,6 +2,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 import { motion, useInView } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 /* =========================
@@ -18,7 +19,6 @@ function Counter({ target }: { target: number }) {
   useEffect(() => {
     if (!isInView) return;
 
-    let start = 0;
     const duration = 1500;
     const startTime = performance.now();
 
@@ -57,9 +57,12 @@ export default function HeroSection() {
 
             {/* Background */}
             <div className="absolute inset-0 -z-10">
-                <img
+                <Image
                     src="/header.png"
                     alt="Chemical Lab"
+                    fill
+                    priority
+                    sizes="100vw"
                     className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/60" />

@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ status: "none", accessId: null });
   }
 
-  const { data, error } = await supabaseAdmin
+  const { data } = await supabaseAdmin
     .from("document_access_requests")
     .select("id,status")
     .eq("product_id", productId)

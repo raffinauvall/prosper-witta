@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Check, X } from "lucide-react";
+import { X } from "lucide-react";
 
 export default function RequestApprovedPage() {
   useEffect(() => {

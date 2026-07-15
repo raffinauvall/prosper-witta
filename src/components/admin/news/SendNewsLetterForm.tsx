@@ -28,7 +28,7 @@ export default function SendNewsletterModal({
             try {
                 const list = await fetchNewsList();
                 setNewsList(list);
-            } catch (e) {
+            } catch {
                 alert("Gagal ambil berita");
             } finally {
                 setFetching(false);
@@ -55,8 +55,8 @@ export default function SendNewsletterModal({
 
             alert("Newsletter berhasil dikirim 🚀");
             onClose();
-        } catch (err: any) {
-            alert(err.message);
+        } catch (err) {
+            alert(err instanceof Error ? err.message : "Gagal kirim newsletter");
         } finally {
             setLoading(false);
         }

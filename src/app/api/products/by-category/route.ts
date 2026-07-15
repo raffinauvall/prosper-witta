@@ -1,6 +1,24 @@
 import { NextResponse } from "next/server";
 import { supabaseClient } from "@/lib/supabaseClient";
 
+type ProductCategoryRow = {
+  categories: {
+    id: number;
+    name: string;
+  } | {
+    id: number;
+    name: string;
+  }[] | null;
+};
+
+type ProductRow = {
+  id: number;
+  name: string;
+  description: unknown;
+  display: boolean;
+  product_categories: ProductCategoryRow[];
+};
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const category = searchParams.get("category");
@@ -53,14 +71,14 @@ export async function GET(req: Request) {
       );
     }
 
-    const formatted = (products ?? []).map((p: any) => ({
+    const formatted = ((products ?? []) as ProductRow[]).map((p) => ({
       
       id: p.id,
       name: p.name,
       description: p.description,
       display: p.display,
       categories: p.product_categories.map(
-        (pc: any) => pc.categories
+        (pc) => Array.isArray(pc.categories) ? pc.categories[0] : pc.categories
       ),
       
     }));

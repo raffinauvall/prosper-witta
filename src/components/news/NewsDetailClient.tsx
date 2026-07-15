@@ -5,8 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { News } from "@/lib/types";
 
-export default function NewsDetailClient({ news }: any) {
+export default function NewsDetailClient({ news }: { news: News }) {
   const { lang } = useLanguage();
 
   return (

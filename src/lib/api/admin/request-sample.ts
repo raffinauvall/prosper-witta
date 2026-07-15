@@ -1,6 +1,6 @@
 import { RequestSampleResponse } from "@/lib/types";
 
-export async function getRequestSample(page = 1, limit = 10) {
+export async function getRequestSample(page = 1, limit = 10): Promise<RequestSampleResponse> {
   const res = await fetch(
     `/api/admin/request-sample?page=${page}&limit=${limit}`,
     {
@@ -25,6 +25,5 @@ export async function deleteRequestSample(id?: string) {
     method: "DELETE",
   });
 }
-
 
 

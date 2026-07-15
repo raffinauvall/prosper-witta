@@ -18,7 +18,7 @@ import RequestSampleWidget from "./RequestSample";
 import RequestSampleModal from "./modals/RequestSampleModal";
 
 import { AccessStatusItem, fetchAccessStatus } from "@/lib/api/documents/document-access";
-import type { DocumentAccessStatus, DocumentStatus } from "@/lib/types";
+import type { DocumentStatus } from "@/lib/types";
 import { getProductDocumentAvailability } from "@/lib/api/documents/documents";
 import Footer from "../Footer";
 import Navbar from "../Navbar";
@@ -127,7 +127,6 @@ export default function ProductContainer({ category }: ProductContainerProps) {
 
           <div className="flex justify-between items-center">
             <ProductHeader
-              selected={selected?.id}
               Icon={info.icon}
               color={info.theme}
               title={info.title}
