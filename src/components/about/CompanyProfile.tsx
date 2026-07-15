@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import Image from "next/image";
 
 export default function CompanyProfile() {
   const { t } = useLanguage();
@@ -15,11 +16,15 @@ export default function CompanyProfile() {
         transition={{ duration: 0.6 }}
         className="grid md:grid-cols-2 gap-12 items-center"
       >
-        <img
-          src="productsec.png"
-          className="rounded-2xl shadow-lg object-cover w-full h-80"
-          alt="factory"
-        />
+        <div className="relative h-80 w-full">
+          <Image
+            src="/productsec.png"
+            className="rounded-2xl shadow-lg object-cover"
+            alt="factory"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </div>
 
         <div>
           <h2 className="text-3xl font-bold mb-4 text-[#CFA54B]">

@@ -2,6 +2,7 @@
 
 import { News } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
+import Image from "next/image";
 
 export default function NewsClient({ news }: { news: News[] }) {
 
@@ -29,9 +30,11 @@ export default function NewsClient({ news }: { news: News[] }) {
               {/* THUMBNAIL */}
               {item.thumbnail_url ? (
                 <div className="relative h-44 overflow-hidden">
-                  <img
+                  <Image
                     src={item.thumbnail_url}
                     alt={item.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>

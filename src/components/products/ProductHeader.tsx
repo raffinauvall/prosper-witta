@@ -1,12 +1,11 @@
 type CardProps = {
-  selected?: number | null
   Icon: React.ElementType
   color: string
   title: string
   desc: string
 }
 
-export default function ProductHeader({ selected, Icon, color, title, desc }: CardProps) {
+export default function ProductHeader({ Icon, color, title, desc }: CardProps) {
   return (
     <div className="mb-6">
       <div className={`flex items-center gap-2 text-${color}-600 mb-3`}>

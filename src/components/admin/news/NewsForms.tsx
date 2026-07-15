@@ -2,6 +2,7 @@ import Input from "@/components/ui/Input";
 import Textarea from "@/components/ui/TextArea";
 import { uploadNewsImage } from "@/lib/api/admin/news";
 import { NewsFormData } from "@/lib/types";
+import Image from "next/image";
 import { useState } from "react";
 
 interface Props {
@@ -143,9 +144,12 @@ export default function NewsForm({
         </div>
 
         {form.thumbnail_url && (
-          <div className="relative">
-            <img
+          <div className="relative h-48 w-full">
+            <Image
               src={form.thumbnail_url}
+              alt="News thumbnail preview"
+              fill
+              sizes="(max-width: 768px) 100vw, 640px"
               className="h-48 w-full rounded-xl border object-cover shadow-sm"
             />
 
