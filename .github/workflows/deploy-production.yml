@@ -14,6 +14,7 @@ jobs:
   ci:
     name: CI - Install and Build
     runs-on: ubuntu-latest
+
     env:
       NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder
@@ -26,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version: "20"
           cache: npm
 
       - name: Install dependencies
@@ -41,55 +42,176 @@ jobs:
       - name: Build application
         run: npm run build
 
-deploy:
-  name: Deploy to Production
-  runs-on: ubuntu-latest
-  needs: ci
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: ci
 
-  steps:
-    - name: Configure SSH
-      env:
-        PROD_SSH_KEY_B64: ${{ secrets.PROD_SSH_KEY_B64 }}
-        PROD_KNOWN_HOSTS: ${{ secrets.PROD_KNOWN_HOSTS }}
-      run: |
-        set -e
+    steps:
+      - name: Configure SSH
+        env:
+          PROD_SSH_KEY_B64: ${{ secrets.PROD_SSH_KEY_B64 }}
+          PROD_KNOWN_HOSTS: ${{ secrets.PROD_KNOWN_HOSTS }}
+          PROD_HOST: ${{ secrets.PROD_HOST }}
+          PROD_PORT: ${{ secrets.PROD_PORT }}
+        run: |
+          set -Eeuo pipefail
 
-        mkdir -p ~/.ssh
-        chmod 700 ~/.ssh
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
 
-        printf '%s' "$PROD_SSH_KEY_B64" \
-          | base64 --decode \
-          > ~/.ssh/prosper_witta_actions
+          printf '%s' "$PROD_SSH_KEY_B64" \
+            | base64 --decode \
+            > ~/.ssh/prosper_witta_actions
 
-        printf '%s\n' "$PROD_KNOWN_HOSTS" \
-          | tr -d '\r' \
-          > ~/.ssh/known_hosts
+          printf '%s\n' "$PROD_KNOWN_HOSTS" \
+            | tr -d '\r' \
+            > ~/.ssh/known_hosts
 
-        chmod 600 ~/.ssh/prosper_witta_actions
-        chmod 600 ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/prosper_witta_actions
+          chmod 600 ~/.ssh/known_hosts
 
-        ssh-keygen -y \
-          -f ~/.ssh/prosper_witta_actions \
-          > /dev/null
+          echo "Validating private key..."
 
-        echo "SSH private key valid"
+          ssh-keygen -y \
+            -f ~/.ssh/prosper_witta_actions \
+            > /dev/null
 
-    - name: Deploy application
-      env:
-        PROD_HOST: ${{ secrets.PROD_HOST }}
-        PROD_PORT: ${{ secrets.PROD_PORT }}
-        PROD_USER: ${{ secrets.PROD_USER }}
-      run: |
-        ssh \
-          -o BatchMode=yes \
-          -o StrictHostKeyChecking=yes \
-          -o IdentitiesOnly=yes \
-          -o ConnectTimeout=15 \
-          -i ~/.ssh/prosper_witta_actions \
-          -p "$PROD_PORT" \
-          "$PROD_USER@$PROD_HOST" \
-          'bash -se' << 'DEPLOY_SCRIPT'
+          echo "Checking server host key..."
 
-          # isi script deployment lu tetap di sini
+          ssh-keygen \
+            -F "[$PROD_HOST]:$PROD_PORT" \
+            -f ~/.ssh/known_hosts \
+            > /dev/null
 
-        DEPLOY_SCRIPT
+          echo "SSH configuration valid."
+
+      - name: Deploy application
+        env:
+          PROD_HOST: ${{ secrets.PROD_HOST }}
+          PROD_PORT: ${{ secrets.PROD_PORT }}
+          PROD_USER: ${{ secrets.PROD_USER }}
+        run: |
+          ssh \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            -o IdentitiesOnly=yes \
+            -o ConnectTimeout=15 \
+            -i ~/.ssh/prosper_witta_actions \
+            -p "$PROD_PORT" \
+            "$PROD_USER@$PROD_HOST" \
+            'bash -se' << 'DEPLOY_SCRIPT'
+
+              set -Eeuo pipefail
+
+              export PATH="/usr/local/bin:/usr/bin:/bin:$PATH"
+
+              APP_DIR="/var/www/prosper-witta"
+              APP_NAME="prosper-witta"
+              BRANCH="master"
+              HEALTH_URL="http://127.0.0.1:3000"
+
+              cd "$APP_DIR"
+
+              echo "=== Pre-deployment information ==="
+              echo "User: $(whoami)"
+              echo "Directory: $(pwd)"
+              echo "Node: $(node --version)"
+              echo "NPM: $(npm --version)"
+              echo "PM2: $(pm2 --version)"
+
+              CURRENT_BRANCH="$(git branch --show-current)"
+
+              if [ "$CURRENT_BRANCH" != "$BRANCH" ]; then
+                echo "Deployment dibatalkan."
+                echo "Branch server: $CURRENT_BRANCH"
+                echo "Branch target: $BRANCH"
+                exit 1
+              fi
+
+              if [ -n "$(git status --porcelain)" ]; then
+                echo "Deployment dibatalkan karena ada perubahan lokal:"
+                git status --short
+                exit 1
+              fi
+
+              OLD_COMMIT="$(git rev-parse HEAD)"
+
+              rollback() {
+                EXIT_CODE=$?
+
+                trap - ERR
+                set +e
+
+                echo "=== Deployment gagal, rollback dimulai ==="
+                echo "Mengembalikan commit: $OLD_COMMIT"
+
+                git reset --hard "$OLD_COMMIT"
+                npm ci
+                npm run build
+                pm2 restart "$APP_NAME" --update-env
+                pm2 save
+
+                echo "=== Rollback selesai ==="
+
+                exit "$EXIT_CODE"
+              }
+
+              trap rollback ERR
+
+              echo "=== Fetching source code ==="
+
+              git fetch origin "$BRANCH"
+              git reset --hard "origin/$BRANCH"
+
+              NEW_COMMIT="$(git rev-parse HEAD)"
+
+              echo "Old commit: $OLD_COMMIT"
+              echo "New commit: $NEW_COMMIT"
+
+              echo "=== Installing dependencies ==="
+
+              npm ci
+
+              echo "=== Building application ==="
+
+              npm run build
+
+              echo "=== Restarting application ==="
+
+              pm2 restart "$APP_NAME" --update-env
+
+              echo "=== Running health check ==="
+
+              HEALTHY=false
+
+              for ATTEMPT in $(seq 1 12); do
+                if curl \
+                  --fail \
+                  --silent \
+                  --show-error \
+                  "$HEALTH_URL" \
+                  > /dev/null; then
+
+                  HEALTHY=true
+                  echo "Health check berhasil."
+                  break
+                fi
+
+                echo "Health check percobaan $ATTEMPT gagal."
+                sleep 5
+              done
+
+              if [ "$HEALTHY" != "true" ]; then
+                echo "Aplikasi tidak sehat setelah deployment."
+                exit 1
+              fi
+
+              pm2 save
+              trap - ERR
+
+              echo "=== Deployment successful ==="
+              echo "Active commit: $(git rev-parse --short HEAD)"
+              pm2 list
+
+          DEPLOY_SCRIPT
