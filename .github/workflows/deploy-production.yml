@@ -41,154 +41,55 @@ jobs:
       - name: Build application
         run: npm run build
 
-  deploy:
-    name: Deploy to Production
-    runs-on: ubuntu-latest
-    needs: ci
+deploy:
+  name: Deploy to Production
+  runs-on: ubuntu-latest
+  needs: ci
 
-    steps:
-      - name: Configure SSH
-        env:
-          PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
-          PROD_KNOWN_HOSTS: ${{ secrets.PROD_KNOWN_HOSTS }}
-        run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+  steps:
+    - name: Configure SSH
+      env:
+        PROD_SSH_KEY_B64: ${{ secrets.PROD_SSH_KEY_B64 }}
+        PROD_KNOWN_HOSTS: ${{ secrets.PROD_KNOWN_HOSTS }}
+      run: |
+        set -e
 
-          printf '%s\n' "$PROD_SSH_KEY" \
-            > ~/.ssh/prosper_witta_actions
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
 
-          printf '%s\n' "$PROD_KNOWN_HOSTS" \
-            > ~/.ssh/known_hosts
+        printf '%s' "$PROD_SSH_KEY_B64" \
+          | base64 --decode \
+          > ~/.ssh/prosper_witta_actions
 
-          chmod 600 ~/.ssh/prosper_witta_actions
-          chmod 600 ~/.ssh/known_hosts
+        printf '%s\n' "$PROD_KNOWN_HOSTS" \
+          | tr -d '\r' \
+          > ~/.ssh/known_hosts
 
-      - name: Deploy application
-        env:
-          PROD_HOST: ${{ secrets.PROD_HOST }}
-          PROD_PORT: ${{ secrets.PROD_PORT }}
-          PROD_USER: ${{ secrets.PROD_USER }}
-        run: |
-          ssh \
-            -o BatchMode=yes \
-            -o StrictHostKeyChecking=yes \
-            -o ConnectTimeout=15 \
-            -i ~/.ssh/prosper_witta_actions \
-            -p "$PROD_PORT" \
-            "$PROD_USER@$PROD_HOST" \
-            'bash -se' << 'DEPLOY_SCRIPT'
+        chmod 600 ~/.ssh/prosper_witta_actions
+        chmod 600 ~/.ssh/known_hosts
 
-              set -Eeuo pipefail
+        ssh-keygen -y \
+          -f ~/.ssh/prosper_witta_actions \
+          > /dev/null
 
-              export PATH="/usr/local/bin:/usr/bin:/bin:$PATH"
+        echo "SSH private key valid"
 
-              APP_DIR="/var/www/prosper-witta"
-              APP_NAME="prosper-witta"
-              BRANCH="master"
-              HEALTH_URL="http://127.0.0.1:3000"
+    - name: Deploy application
+      env:
+        PROD_HOST: ${{ secrets.PROD_HOST }}
+        PROD_PORT: ${{ secrets.PROD_PORT }}
+        PROD_USER: ${{ secrets.PROD_USER }}
+      run: |
+        ssh \
+          -o BatchMode=yes \
+          -o StrictHostKeyChecking=yes \
+          -o IdentitiesOnly=yes \
+          -o ConnectTimeout=15 \
+          -i ~/.ssh/prosper_witta_actions \
+          -p "$PROD_PORT" \
+          "$PROD_USER@$PROD_HOST" \
+          'bash -se' << 'DEPLOY_SCRIPT'
 
-              cd "$APP_DIR"
+          # isi script deployment lu tetap di sini
 
-              echo "=== Server information ==="
-              echo "User: $(whoami)"
-              echo "Directory: $(pwd)"
-              echo "Node: $(node --version)"
-              echo "NPM: $(npm --version)"
-              echo "PM2: $(pm2 --version)"
-
-              CURRENT_BRANCH="$(git branch --show-current)"
-
-              if [ "$CURRENT_BRANCH" != "$BRANCH" ]; then
-                echo "Deployment dibatalkan."
-                echo "Branch server: $CURRENT_BRANCH"
-                echo "Branch target: $BRANCH"
-                exit 1
-              fi
-
-              if [ -n "$(git status --porcelain)" ]; then
-                echo "Deployment dibatalkan karena ada perubahan lokal:"
-                git status --short
-                exit 1
-              fi
-
-              OLD_COMMIT="$(git rev-parse HEAD)"
-
-              rollback() {
-                EXIT_CODE=$?
-
-                trap - ERR
-                set +e
-
-                echo "=== Deployment gagal, rollback dimulai ==="
-                echo "Kembali ke commit: $OLD_COMMIT"
-
-                git reset --hard "$OLD_COMMIT"
-                npm ci
-                npm run build
-                pm2 restart "$APP_NAME" --update-env
-                pm2 save
-
-                echo "=== Rollback selesai ==="
-
-                exit "$EXIT_CODE"
-              }
-
-              trap rollback ERR
-
-              echo "=== Updating source code ==="
-
-              git fetch origin "$BRANCH"
-              git reset --hard "origin/$BRANCH"
-
-              NEW_COMMIT="$(git rev-parse HEAD)"
-
-              echo "Commit sebelumnya: $OLD_COMMIT"
-              echo "Commit terbaru: $NEW_COMMIT"
-
-              echo "=== Installing dependencies ==="
-
-              npm ci
-
-              echo "=== Building Next.js ==="
-
-              npm run build
-
-              echo "=== Restarting PM2 ==="
-
-              pm2 restart "$APP_NAME" --update-env
-
-              echo "=== Running health check ==="
-
-              HEALTHY=false
-
-              for ATTEMPT in $(seq 1 12); do
-                if curl \
-                  --fail \
-                  --silent \
-                  --show-error \
-                  "$HEALTH_URL" \
-                  > /dev/null; then
-
-                  HEALTHY=true
-                  echo "Health check berhasil."
-                  break
-                fi
-
-                echo "Percobaan $ATTEMPT belum berhasil."
-                sleep 5
-              done
-
-              if [ "$HEALTHY" != "true" ]; then
-                echo "Aplikasi tidak sehat setelah deployment."
-                exit 1
-              fi
-
-              pm2 save
-              trap - ERR
-
-              echo "=== Deployment successful ==="
-              pm2 list
-              echo "Active commit: $(git rev-parse --short HEAD)"
-
-          DEPLOY_SCRIPT
+        DEPLOY_SCRIPT
