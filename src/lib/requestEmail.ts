@@ -1,7 +1,5 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
-
 interface RequestAccessEmailProps {
   productId: number;
   productName: string;
@@ -25,7 +23,7 @@ export async function sendRequestAccessEmail({
   rejectUrl,
   to = ["prosperweb123@gmail.com"],
 }: RequestAccessEmailProps) {
-  return resend.emails.send({
+  return new Resend(process.env.RESEND_API_KEY).emails.send({
     from: "PT Prosper Witta Sejahtera <info@prosperwittasejahtera.com>",
     to,
     subject: `Access Request – Product ${productId}`,

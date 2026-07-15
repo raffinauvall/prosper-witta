@@ -1,6 +1,4 @@
 import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY!);
 export async function sendApprovedUserEmail({
   to,
   name,
@@ -14,7 +12,7 @@ export async function sendApprovedUserEmail({
   type: string;
   productUrl: string;
 }) {
-  await resend.emails.send({
+  await new Resend(process.env.RESEND_API_KEY).emails.send({
     from: "PT Prosper Witta Sejahtera <info@prosperwittasejahtera.com>",
     to,
     subject: "Akses Dokumen Disetujui",

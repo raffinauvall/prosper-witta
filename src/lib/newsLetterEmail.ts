@@ -1,7 +1,5 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
-
 /**
  * Remove html for preview text
  */
@@ -163,7 +161,7 @@ Jakarta, Indonesia<br/>
 </html>
 `;
 
-  await resend.emails.send({
+  await new Resend(process.env.RESEND_API_KEY).emails.send({
     from: "PT Prosper Witta Sejahtera <info@prosperwittasejahtera.com>",
     to,
     subject: title,
