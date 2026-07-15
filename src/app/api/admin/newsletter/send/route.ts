@@ -90,7 +90,7 @@ export async function POST(req: Request) {
       message: `Berhasil kirim ke ${targets.length} email`,
       sent: targets.length,
     });
-  } catch (err: any) {
+  } catch (err) {
     console.error(err);
 
     return NextResponse.json(

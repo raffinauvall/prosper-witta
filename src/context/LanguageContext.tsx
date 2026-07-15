@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 type Lang = "id" | "en";
 
@@ -14,7 +14,9 @@ const LanguageContext = createContext<LanguageContextType | null>(null);
 
 /* ================= TRANSLATIONS ================= */
 
-type Dictionary = Record<string, any>;
+type Dictionary = {
+    [key: string]: string | Dictionary;
+};
 
 const dictionary: Record<Lang, Dictionary> = {
     id: {
@@ -436,19 +438,25 @@ const dictionary: Record<Lang, Dictionary> = {
 
 /* ================= HELPER ================= */
 
-function getNestedValue(obj: any, path: string) {
-    return path.split(".").reduce((acc, key) => acc?.[key], obj);
+function getNestedValue(obj: Dictionary, path: string): string | undefined {
+    let value: string | Dictionary | undefined = obj;
+
+    for (const key of path.split(".")) {
+        if (!value || typeof value === "string") return undefined;
+        value = value[key];
+    }
+
+    return typeof value === "string" ? value : undefined;
 }
 
 /* ================= PROVIDER ================= */
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [lang, setLang] = useState<Lang>("en");
-
-    useEffect(() => {
-        const saved = localStorage.getItem("lang") as Lang | null;
-        if (saved) setLang(saved);
-    }, []);
+    const [lang, setLang] = useState<Lang>(() => {
+        if (typeof window === "undefined") return "en";
+        const saved = localStorage.getItem("lang");
+        return saved === "id" || saved === "en" ? saved : "en";
+    });
 
     const changeLang = (value: Lang) => {
         setLang(value);

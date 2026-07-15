@@ -1,4 +1,10 @@
-export default function DeleteConfirm({ title, onCancel, onConfirm }: any) {
+type Props = {
+  title: string;
+  onCancel: () => void;
+  onConfirm: () => void;
+};
+
+export default function DeleteConfirm({ title, onCancel, onConfirm }: Props) {
   return (
     <div className="text-center space-y-4">
       <p>

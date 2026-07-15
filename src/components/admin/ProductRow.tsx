@@ -31,7 +31,9 @@ export default function ProductRow({ product, onDelete, onUpdate }: Props) {
     };
   }, [product.id]);
 
-  const flattenedCategories = (product.product_categories ?? []).map((pc: any) => pc.categories ?? []);
+  const flattenedCategories = (product.product_categories ?? [])
+    .map((pc) => pc.categories)
+    .filter((category): category is NonNullable<typeof category> => Boolean(category));
   const visible = flattenedCategories.slice(0, 2);
   const extra = flattenedCategories.length - visible.length;
 
@@ -42,7 +44,7 @@ export default function ProductRow({ product, onDelete, onUpdate }: Props) {
 
         <td className="px-4 py-3 max-w-[250px]">
           <div className="flex gap-1 overflow-x-auto no-scrollbar whitespace-nowrap">
-            {visible.map((c: any, idx: number) => (
+            {visible.map((c, idx) => (
               <span
                 key={idx}
                 className="px-2 py-1 text-xs bg-gray-200 rounded capitalize"

@@ -58,8 +58,8 @@ export default function RequestSampleModal({
       }
 
       onClose();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to submit request");
     } finally {
       setLoading(false);
     }

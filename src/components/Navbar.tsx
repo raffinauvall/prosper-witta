@@ -17,8 +17,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-  const handleScroll = (e: any) => {
-    const scrollTop = e.detail;
+  const handleScroll = (e: Event) => {
+    const scrollTop = e instanceof CustomEvent ? e.detail : window.scrollY;
 
     if (!allowTransparent) {
       setScrolled(true);

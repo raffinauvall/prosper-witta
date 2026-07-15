@@ -18,7 +18,6 @@ function Counter({ target }: { target: number }) {
   useEffect(() => {
     if (!isInView) return;
 
-    let start = 0;
     const duration = 1500;
     const startTime = performance.now();
 

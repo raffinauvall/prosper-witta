@@ -4,11 +4,8 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { login } from "@/lib/api/auth";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const router = useRouter();
-
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -19,8 +16,8 @@ export default function LoginPage() {
     try {
       await login({ username, password }); 
       window.location.href = "/admin";
-    } catch (err: any) {
-      alert(err.message || "Login gagal");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Login gagal");
     } finally {
       setLoading(false);
     }

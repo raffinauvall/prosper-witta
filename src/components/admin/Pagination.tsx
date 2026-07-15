@@ -1,4 +1,10 @@
-export default function Pagination({ page, pages, onChange }: any) {
+type Props = {
+  page: number;
+  pages: number;
+  onChange: (page: number) => void;
+};
+
+export default function Pagination({ page, pages, onChange }: Props) {
   return (
     <div className="flex justify-center items-center gap-2 mt-5">
       <button

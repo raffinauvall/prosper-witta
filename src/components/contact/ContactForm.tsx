@@ -39,8 +39,8 @@ export default function ContactForm() {
       setEmail("");
       setMessage("");
       setSubscribe(false);
-    } catch (err: any) {
-      setError(err.message || "Gagal mengirim pesan");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Gagal mengirim pesan");
     } finally {
       setLoading(false);
     }

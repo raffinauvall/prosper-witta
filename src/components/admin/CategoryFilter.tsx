@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { Product } from "@/lib/types";
 
-export default function CategoryFilter({ products, setFilteredProducts }: any) {
+type Props = {
+  products: Product[];
+  setFilteredProducts: (products: Product[]) => void;
+};
+
+export default function CategoryFilter({ products, setFilteredProducts }: Props) {
   const [category, setCategory] = useState("all");
 
   const handleCategoryFilter = (value: string) => {
@@ -10,7 +16,11 @@ export default function CategoryFilter({ products, setFilteredProducts }: any) {
 
     if (value === "all") return setFilteredProducts(products);
 
-    setFilteredProducts(products.filter((p: any) => p.categories?.includes(value)));
+    setFilteredProducts(
+      products.filter((p) =>
+        p.product_categories?.some((pc) => pc.categories?.slug === value)
+      )
+    );
   };
 
   return (

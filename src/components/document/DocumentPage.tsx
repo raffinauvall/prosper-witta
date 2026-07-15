@@ -8,10 +8,7 @@ export default function DocumentPage() {
   const searchParams = useSearchParams();
   const accessId = searchParams.get("accessId"); // query string
   const type = searchParams.get("type") as "msds" | "tds";
-
-  if (!accessId) return <p className="text-red-500 p-4">No accessId provided</p>;
-  if (!type || (type !== "msds" && type !== "tds"))
-    return <p className="text-red-500 p-4">Invalid document type</p>;
+  const validType = type === "msds" || type === "tds";
 
   const containerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -25,6 +22,7 @@ export default function DocumentPage() {
 
   /* ================= LOAD PDF ================= */
   useEffect(() => {
+    if (!accessId || !validType) return;
     if (!containerRef.current) return;
 
     let cancelled = false;
@@ -90,7 +88,7 @@ export default function DocumentPage() {
     return () => {
       cancelled = true;
     };
-  }, [accessId, type]);
+  }, [accessId, validType, SCALE]);
 
   /* ================= PAGE TRACKER ================= */
   useEffect(() => {
@@ -111,6 +109,9 @@ export default function DocumentPage() {
     el.addEventListener("scroll", onScroll);
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
+
+  if (!accessId) return <p className="text-red-500 p-4">No accessId provided</p>;
+  if (!validType) return <p className="text-red-500 p-4">Invalid document type</p>;
 
   /* ================= UI ================= */
   return (
