@@ -1,18 +1,6 @@
 
 import { Product } from "@/lib/types";
 
-export async function fetchProducts(category: string): Promise<Product[]> {
-  try {
-    const res = await fetch(`/api/products/by-category?category=${category}`);
-    if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-    return await res.json();
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error("Fetch products error:", message);
-    return [];
-  }
-}
-
 export async function fetchAdminProducts(): Promise<Product[]> {
   try {
     const res = await fetch("/api/admin/products", {
@@ -91,7 +79,6 @@ export async function deleteProduct(id: number) {
   }
   return res.json();
 }
-
 
 
 

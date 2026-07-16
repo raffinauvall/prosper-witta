@@ -4,6 +4,7 @@ import ContactHeader from "@/components/contact/ContactHeader";
 import ContactInfo from "@/components/contact/ContactInfo";
 import ContactForm from "@/components/contact/ContactForm";
 import { Metadata } from "next";
+import { defaultOpenGraphImages } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Contact Us — Get in Touch",
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
     description:
       "Reach out for product inquiries, quotations, and technical support for specialty chemicals.",
     url: "/contact",
+    images: defaultOpenGraphImages,
   },
 };
 

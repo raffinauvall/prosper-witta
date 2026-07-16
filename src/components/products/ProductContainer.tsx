@@ -2,15 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-import { useProducts } from "@/hooks/useProduct";
 import ProductHeader from "@/components/products/ProductHeader";
 import ProductSidebar from "@/components/products/ProductSidebar";
 import ProductDetail from "@/components/products/ProductDetail";
 import ProductMsds from "./ProductMsds";
 import ProductTds from "./ProductTds";
-import DetailSkeleton from "@/components/products/DetailSkeleton";
 import { CATEGORY_INFO, CategoryKey } from "@/lib/category-info";
 
 import RequestAccessModal from "./modals/RequestAccessModal";
@@ -18,18 +17,26 @@ import RequestSampleWidget from "./RequestSample";
 import RequestSampleModal from "./modals/RequestSampleModal";
 
 import { AccessStatusItem, fetchAccessStatus } from "@/lib/api/documents/document-access";
-import type { DocumentStatus } from "@/lib/types";
+import type { DocumentStatus, PublicProduct } from "@/lib/types";
 import { getProductDocumentAvailability } from "@/lib/api/documents/documents";
 import Footer from "../Footer";
 import Navbar from "../Navbar";
 
 interface ProductContainerProps {
   category: CategoryKey;
+  products: PublicProduct[];
+  selectedId?: number;
 }
 
-export default function ProductContainer({ category }: ProductContainerProps) {
+export default function ProductContainer({
+  category,
+  products,
+  selectedId,
+}: ProductContainerProps) {
   const router = useRouter();
   const info = CATEGORY_INFO[category];
+  const selected =
+    products.find((product) => product.id === selectedId) ?? products[0] ?? null;
 
   const [modalOpen, setModalOpen] = useState(false);
   const [docType, setDocType] = useState<"msds" | "tds">("msds");
@@ -46,13 +53,16 @@ export default function ProductContainer({ category }: ProductContainerProps) {
     tds: { status: "none", accessId: null },
   });
 
-  const { products, selected, setSelected, loading, error } = useProducts(category);
-
   useEffect(() => {
     if (!selected) return;
 
     const loadData = async () => {
       try {
+        setAvailability({ msds: false, tds: false });
+        setAccessStatus({
+          msds: { status: "none", accessId: null },
+          tds: { status: "none", accessId: null },
+        });
         const avail = await getProductDocumentAvailability(selected.id);
         setAvailability(avail);
 
@@ -99,11 +109,6 @@ export default function ProductContainer({ category }: ProductContainerProps) {
     setModalOpen(true);
   };
 
-  const handleSelectProduct = (id: number) => {
-    const product = products.find((p) => p.id === id) || null;
-    setSelected(product);
-  };
-
   const handleView = (type: "msds" | "tds") => {
     const accessId = accessStatus[type].accessId;
     if (!accessId) {
@@ -118,12 +123,12 @@ export default function ProductContainer({ category }: ProductContainerProps) {
       <Navbar />
       <main className="min-h-screen bg-gray-50 px-6 py-12 pt-[90px]">
         <div className="max-w-7xl mx-auto">
-          <button
-            onClick={() => router.push("/products")}
+          <Link
+            href="/products"
             className="flex items-center gap-2 text-sm text-blue-600 mb-3 hover:underline mt-3"
           >
             <ArrowLeft size={18} /> Back
-          </button>
+          </Link>
 
           <div className="flex justify-between items-center">
             <ProductHeader
@@ -131,28 +136,26 @@ export default function ProductContainer({ category }: ProductContainerProps) {
               color={info.theme}
               title={info.title}
               desc={info.desc}
+              headingTag={selectedId ? "p" : "h1"}
             />
           </div>
-
-          {error && <p className="text-red-600 my-4">{error}</p>}
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-3">
               <ProductSidebar
                 products={products}
                 selected={selected?.id}
-                setSelected={handleSelectProduct}
                 themeColor={info.theme}
-                loading={loading}
               />
             </div>
 
             <div className="lg:col-span-6">
-              {loading && <DetailSkeleton />}
-
-              {!loading && selected && (
+              {selected && (
                 <>
-                  <ProductDetail selected={selected} />
+                  <ProductDetail
+                    selected={selected}
+                    headingTag={selectedId ? "h1" : "h2"}
+                  />
 
                   <div className="mt-6 flex flex-col gap-4 md:flex-row">
                     <ProductMsds

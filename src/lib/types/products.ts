@@ -28,3 +28,10 @@ export interface Product {
 export interface ProductWithCategories extends Omit<Product, "product_categories"> {
   categories: Category[];
 }
+
+export type PublicProduct = Pick<
+  Product,
+  "id" | "name" | "description" | "display"
+> & {
+  categories: Category[];
+};

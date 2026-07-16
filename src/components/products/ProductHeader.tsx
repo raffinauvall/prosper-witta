@@ -3,9 +3,16 @@ type CardProps = {
   color: string
   title: string
   desc: string
+  headingTag?: "h1" | "p"
 }
 
-export default function ProductHeader({ Icon, color, title, desc }: CardProps) {
+export default function ProductHeader({
+  Icon,
+  color,
+  title,
+  desc,
+  headingTag: Heading = "h1",
+}: CardProps) {
   return (
     <div className="mb-6">
       <div className={`flex items-center gap-2 text-${color}-600 mb-3`}>
@@ -15,9 +22,9 @@ export default function ProductHeader({ Icon, color, title, desc }: CardProps) {
         </span>
       </div>
 
-      <h1 className="text-4xl font-bold text-gray-900 leading-tight">
+      <Heading className="text-4xl font-bold text-gray-900 leading-tight">
         {desc}
-      </h1>
+      </Heading>
     </div>
   );
 }

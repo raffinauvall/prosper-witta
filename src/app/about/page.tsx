@@ -5,6 +5,7 @@ import AboutHero from "@/components/about/AboutHero";
 import CompanyProfile from "@/components/about/CompanyProfile";
 import CoreValues from "@/components/about/CoreValues";
 import { Metadata } from "next";
+import { defaultOpenGraphImages } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "About Us — Company Profile & Vision",
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
     description:
       "Discover our company profile, vision, mission, and core values as a leading chemical trading company in Indonesia.",
     url: "/about",
+    images: defaultOpenGraphImages,
   },
 };
 export default function AboutPage() {

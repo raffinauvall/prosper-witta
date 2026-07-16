@@ -2,6 +2,7 @@ import Footer from "@/components/Footer";
 import ProductHero from "@/components/products/ProductHero";
 import ProductCategories from "@/components/products/ProductCategories";
 import { Metadata } from "next";
+import { defaultOpenGraphImages } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Products — Specialty Chemical Divisions",
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
     description:
       "Browse our complete range of specialty chemical products across 8 industry divisions.",
     url: "/products",
+    images: defaultOpenGraphImages,
   },
 };
 

@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NewsClient from "@/components/news/NewsClient";
 import NewsHeader from "@/components/news/NewsHeader";
+import { defaultOpenGraphImages } from "@/lib/seo";
 
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
     description:
       "Stay updated with the latest chemical industry news, product updates, and company activities.",
     url: "/news",
+    images: defaultOpenGraphImages,
   },
 };
 
