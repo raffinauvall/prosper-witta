@@ -1,7 +1,7 @@
 import ProductContainer from "@/components/products/ProductContainer";
 import { CATEGORY_INFO, CategoryKey } from "@/lib/category-info";
 import { absoluteUrl, defaultOpenGraphImages } from "@/lib/seo";
-import { productPath } from "@/lib/product-url";
+import { productPath } from "@/lib/product-url.mjs";
 import { getProductsByCategory } from "@/lib/publicProducts";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";

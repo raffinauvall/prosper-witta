@@ -1,6 +1,9 @@
 import ProductContainer from "@/components/products/ProductContainer";
 import { CATEGORY_INFO, CategoryKey } from "@/lib/category-info";
-import { productPath, productSlug as slugifyProduct } from "@/lib/product-url";
+import {
+  productPath,
+  productSlug as slugifyProduct,
+} from "@/lib/product-url.mjs";
 import { getProductsByCategory, getPublicProduct } from "@/lib/publicProducts";
 import { absoluteUrl, defaultOpenGraphImages } from "@/lib/seo";
 import type { Metadata } from "next";

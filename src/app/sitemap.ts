@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { CATEGORY_INFO } from "@/lib/category-info";
 import { supabaseClient } from "@/lib/supabaseClient";
 import { absoluteUrl } from "@/lib/seo";
-import { productPath } from "@/lib/product-url";
+import { productPath } from "@/lib/product-url.mjs";
 import { getPublicProducts } from "@/lib/publicProducts";
 
 export const revalidate = 3600;

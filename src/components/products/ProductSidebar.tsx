@@ -3,7 +3,7 @@ import { Search } from "lucide-react";
 import Link from "next/link";
 import { PublicProduct } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
-import { productPath } from "@/lib/product-url";
+import { productPath } from "@/lib/product-url.mjs";
 
 type ProductSelectorProps = {
   products: PublicProduct[];
