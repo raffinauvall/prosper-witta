@@ -5,6 +5,7 @@ import PrincipleCarousel from "../components/home/PrincipleCarousel";
 import ProductSection from "@/components/home/ProductSection"
 import Footer from "@/components/Footer"
 import { Metadata } from "next";
+import { defaultOpenGraphImages } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Chemical Trading Company in Indonesia | PT Prosper Witta Sejahtera",
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
     description:
       "Trusted supplier of specialty chemicals for diverse industrial applications across Indonesia.",
     url: "/",
+    images: defaultOpenGraphImages,
   },
 };
 

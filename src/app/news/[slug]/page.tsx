@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getNewsDetail } from "@/lib/api/news";
 import NewsDetailClient from "@/components/news/NewsDetailClient";
+import { defaultOpenGraphImages } from "@/lib/seo";
 
 type Props = {
   params: Promise<{
@@ -47,13 +48,13 @@ export async function generateMetadata(
       publishedTime: news.published_at,
       images: news.thumbnail_url
         ? [{ url: news.thumbnail_url }]
-        : [],
+        : defaultOpenGraphImages,
     },
     twitter: {
       card: "summary_large_image",
       title: news.title,
       description: news.excerpt?.en || news.title,
-      images: news.thumbnail_url ? [news.thumbnail_url] : [],
+      images: news.thumbnail_url ? [news.thumbnail_url] : ["/og-image.jpg"],
     },
   };
 }

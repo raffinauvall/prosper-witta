@@ -1,90 +1,20 @@
 import { NextResponse } from "next/server";
-import { supabaseClient } from "@/lib/supabaseClient";
-
-type ProductCategoryRow = {
-  categories: {
-    id: number;
-    name: string;
-  } | {
-    id: number;
-    name: string;
-  }[] | null;
-};
-
-type ProductRow = {
-  id: number;
-  name: string;
-  description: unknown;
-  display: boolean;
-  product_categories: ProductCategoryRow[];
-};
+import { CATEGORY_INFO } from "@/lib/category-info";
+import { getProductsByCategory } from "@/lib/publicProducts";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const category = searchParams.get("category");
 
-  if (!category) {
+  if (!category || !(category in CATEGORY_INFO)) {
     return NextResponse.json(
-      { error: "Category is required" },
-      { status: 400 }
+      { error: "Category not found" },
+      { status: 404 }
     );
   }
 
   try {
-    const { data: categoryData, error: catErr } = await supabaseClient
-      .from("categories")
-      .select("id")
-      .eq("name", category)
-      .single();
-
-    if (catErr || !categoryData) {
-      return NextResponse.json(
-        { error: "Category not found" },
-        { status: 404 }
-      );
-    }
-
-    const categoryId = categoryData.id; 
-
-    const { data: products, error: prodErr } = await supabaseClient
-      .from("products")
-      .select(`
-        id,
-        name,
-        description,
-        display,
-        product_categories!inner (
-          category_id,
-          categories (
-            id,
-            name
-          )
-        )
-      `)
-      .eq("product_categories.category_id", categoryId)
-      .eq("display", true);
-
-    if (prodErr) {
-      return NextResponse.json(
-        { error: prodErr.message },
-        { status: 500 }
-      );
-    }
-
-    const formatted = ((products ?? []) as ProductRow[]).map((p) => ({
-      
-      id: p.id,
-      name: p.name,
-      description: p.description,
-      display: p.display,
-      categories: p.product_categories.map(
-        (pc) => Array.isArray(pc.categories) ? pc.categories[0] : pc.categories
-      ),
-      
-    }));
-   
-
-    return NextResponse.json(formatted);
+    return NextResponse.json(await getProductsByCategory(category));
   } catch (err) {
     console.error("SERVER ERROR:", err);
     return NextResponse.json(

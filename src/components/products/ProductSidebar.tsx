@@ -1,22 +1,20 @@
 import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
-import { Product } from "@/lib/types";
+import Link from "next/link";
+import { PublicProduct } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
+import { productPath } from "@/lib/product-url.mjs";
 
 type ProductSelectorProps = {
-  products: Product[];
+  products: PublicProduct[];
   selected?: number | null;
-  setSelected: (id: number) => void;
-  themeColor: string; 
-  loading?: boolean;
+  themeColor: string;
 };
 
 export default function ProductSidebar({
   products,
   selected,
-  setSelected,
   themeColor,
-  loading,
 }: ProductSelectorProps) {
 
   const [search, setSearch] = useState("");
@@ -27,27 +25,6 @@ export default function ProductSidebar({
       (p.name ?? "").toLowerCase().includes(search.toLowerCase())
     );
   }, [search, products]);
-
-  if (loading) {
-    return (
-      <div className="flex flex-col gap-4">
-        {/* Search loading */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <div className="h-10 bg-gray-200 rounded-xl animate-pulse" />
-        </div>
-
-        {/* Product list loading */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm max-h-[400px] overflow-y-auto">
-          <h3 className="font-semibold text-lg mb-4 text-gray-800">Product List</h3>
-          <div className="flex flex-col gap-3 animate-pulse">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-12 bg-gray-200 rounded-xl" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -73,9 +50,10 @@ export default function ProductSidebar({
             filteredProducts.map((item) => {
               const active = selected === item.id;
               return (
-                <button
+                <Link
                   key={item.id}
-                  onClick={() => setSelected(item.id)}
+                  href={productPath(item)}
+                  aria-current={active ? "page" : undefined}
                   className={`group text-left p-4 rounded-xl border border-${themeColor}-900 transition 
                     ${active ? `border-${themeColor}-500 bg-${themeColor}-100` : "border-gray-200 bg-white"}`}
                 >
@@ -84,7 +62,7 @@ export default function ProductSidebar({
                   >
                     {item.name}
                   </p>
-                </button>
+                </Link>
               );
             })
           ) : (

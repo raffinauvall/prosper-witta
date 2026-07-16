@@ -1,13 +1,17 @@
 "use client";
 
-import { Product } from "@/lib/types";
+import { PublicProduct } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
 
 type ProductDetailProps = {
-  selected?: Product;
+  selected?: PublicProduct;
+  headingTag?: "h1" | "h2";
 };
 
-export default function ProductDetail({ selected }: ProductDetailProps) {
+export default function ProductDetail({
+  selected,
+  headingTag: Heading = "h2",
+}: ProductDetailProps) {
   const { lang } = useLanguage();
 
   if (!selected) {
@@ -23,12 +27,15 @@ export default function ProductDetail({ selected }: ProductDetailProps) {
   return (
     <div className="bg-white rounded-2xl mb-3 shadow-sm">
       <div className="p-6">
-        <h2 className="text-2xl font-bold text-gray-900">
+        <Heading className="text-2xl font-bold text-gray-900">
           {selected.name}
-        </h2>
+        </Heading>
 
         <p className="text-gray-600 mt-3 leading-relaxed">
-          {selected.description?.[lang] ?? "-"}
+          {selected.description?.[lang] ||
+            selected.description?.en ||
+            selected.description?.id ||
+            "-"}
         </p>
       </div>
     </div>

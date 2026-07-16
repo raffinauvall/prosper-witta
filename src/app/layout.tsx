@@ -3,7 +3,11 @@ import "../../styles/font.css";
 import React from "react";
 import { LanguageProvider } from "@/context/LanguageContext";
 import ScrollWrapper from "@/components/ScrollWrapper";
-import { absoluteUrl, getSiteUrl } from "@/lib/seo";
+import {
+  absoluteUrl,
+  defaultOpenGraphImages,
+  getSiteUrl,
+} from "@/lib/seo";
 
 export const metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -14,21 +18,6 @@ export const metadata = {
   },
   description:
     "PT Prosper Witta Sejahtera is a leading chemical trading company in Indonesia, supplying specialty chemicals for home care, industrial cleaner, water treatment, mining, oil & gas, textile, metal working, and veterinary applications.",
-  keywords: [
-    "chemical trading company Indonesia",
-    "specialty chemicals supplier",
-    "chemical distributor Indonesia",
-    "home care chemicals",
-    "industrial cleaner chemicals",
-    "water treatment chemicals",
-    "mining chemicals",
-    "oil gas chemicals",
-    "textile chemicals",
-    "metal working chemicals",
-    "veterinary chemicals",
-    "PT Prosper Witta Sejahtera",
-    "chemical supplier Jakarta",
-  ],
   alternates: {
     canonical: absoluteUrl("/"),
   },
@@ -41,14 +30,7 @@ export const metadata = {
       "PT Prosper Witta Sejahtera — Chemical Trading Company in Indonesia",
     description:
       "Leading chemical trading company serving industrial applications across home care, industrial cleaner, water treatment, mining, oil & gas, textile, metal working, and veterinary sectors in Indonesia.",
-    images: [
-      {
-        url: absoluteUrl("/logo.png"),
-        width: 512,
-        height: 512,
-        alt: "PT Prosper Witta Sejahtera logo",
-      },
-    ],
+    images: defaultOpenGraphImages,
   },
   twitter: {
     card: "summary_large_image",
@@ -56,7 +38,7 @@ export const metadata = {
       "PT Prosper Witta Sejahtera — Chemical Trading Company in Indonesia",
     description:
       "Leading chemical trading company serving industrial and specialty chemical applications in Indonesia.",
-    images: [absoluteUrl("/logo.png")],
+    images: [absoluteUrl("/og-image.jpg")],
   },
   robots: {
     index: true,
@@ -66,11 +48,17 @@ export const metadata = {
     "max-video-preview": -1,
   },
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-96.png", type: "image/png", sizes: "96x96" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: {
+      url: "/apple-touch-icon.png",
+      type: "image/png",
+      sizes: "180x180",
+    },
   },
-  verification: {},
-  category: "Chemical Trading",
 };
 
 export default function RootLayout({
@@ -92,7 +80,14 @@ export default function RootLayout({
       "@type": "PostalAddress",
       addressCountry: "ID",
     },
-    sameAs: [],
+    sameAs: ["https://id.linkedin.com/company/pt-prosper-witta-sejahtera"],
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: "+62-21-2188-5249",
+      email: "admin@prosperwittasejahtera.com",
+      contactType: "sales",
+      areaServed: "ID",
+    },
   };
 
   const websiteJsonLd = {
@@ -100,11 +95,6 @@ export default function RootLayout({
     "@type": "WebSite",
     name: "PT Prosper Witta Sejahtera",
     url: siteUrl,
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${siteUrl}/products?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
   };
 
   return (
