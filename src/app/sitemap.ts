@@ -5,7 +5,7 @@ import { absoluteUrl } from "@/lib/seo";
 import { productPath } from "@/lib/product-url.mjs";
 import { getPublicProducts } from "@/lib/publicProducts";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 type NewsSitemapRow = {
   slug: string;
